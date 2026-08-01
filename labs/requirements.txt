@@ -1,0 +1,2 @@
+# Optional framework support; core labs use only the Python standard library.
+langgraph>=0.2,<1
