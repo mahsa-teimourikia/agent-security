@@ -20,14 +20,7 @@ jobs:
       - name: Validate Python labs
         run: python -m compileall -q labs
       - name: Validate notebooks
-        run: python - <<'PY'
-          import json
-          from pathlib import Path
-          for path in Path('labs/notebooks').glob('*.ipynb'):
-              data=json.loads(path.read_text())
-              assert data['nbformat'] == 4 and isinstance(data['cells'], list)
-          print('notebooks valid')
-        shell: bash
+        run: python scripts/validate_notebooks.py
       - name: Assemble Pages site
         run: |
           mkdir -p site/quiz
