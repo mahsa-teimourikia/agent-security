@@ -19,5 +19,12 @@ def authorize(request: Request) -> str:
     return "allow"
 
 if __name__ == "__main__":
-    for request in (Request("user-1", "tenant-a", "read", "doc-1"), Request("user-1", "tenant-a", "write", "doc-1")):
-        print(authorize(request))
+    scenarios = [
+        Request("user-1", "tenant-a", "read", "doc-1"),
+        Request("user-1", "tenant-a", "write", "doc-1"),
+        Request("user-1", "tenant-b", "read", "doc-1"),
+        Request("user-1", "tenant-a", "admin", "doc-1"),
+    ]
+    results = [authorize(request) for request in scenarios]
+    assert results == ["allow", "pause: human approval required", "deny: tenant boundary", "deny: operation is not allowlisted"]
+    print(list(zip(scenarios, results)))

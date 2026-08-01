@@ -44,3 +44,9 @@ each: for example, “no cross-tenant reads,” “zero unapproved writes,” �
 high-risk calls have an approval receipt,” and “a run can be replayed safely.”
 
 References: [NIST AI Agent Standards Initiative](https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative), [OWASP Securing Agentic Applications Guide](https://genai.owasp.org/resource/securing-agentic-applications-guide-1-0/), [Google SAIF](https://cloud.google.com/use-cases/secure-ai-framework).
+
+## Scenario workshop: expense assistant
+
+An expense assistant can read receipts, calculate totals, and submit a reimbursement. Model the receipt as untrusted input, the employee identity as authenticated context, and submission as a consequential side effect. Ask which asset is damaged by a wrong total, who can approve submission, and what is the maximum amount before human review. A useful threat model names the asset, actor, entry point, trust boundary, control, owner, and evidence for every row.
+
+Create a control table for `read_receipt`, `calculate_total`, `submit_claim`, `refund`, and `export_data`. Mark each as read-only, reversible, or irreversible; assign a principal and tenant check; then add a budget and stop condition. The key lesson is that a model can propose an action, but application code decides whether it is authorized.

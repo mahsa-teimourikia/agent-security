@@ -37,3 +37,9 @@ sequenceDiagram
 ```
 
 References: [NIST identity and authorization initiative](https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative), [OpenAI Agents SDK human-in-the-loop](https://openai.github.io/openai-agents-python/human_in_the_loop/), [Google SAIF guidance](https://cloud.google.com/blog/products/identity-security/cloud-ciso-perspectives-practical-guidance-building-with-saif).
+
+## Scenario: cross-tenant memory leak
+
+A support agent writes a preference for tenant A, then receives a request from tenant B using the same email address. A secure memory key includes tenant, subject, purpose, classification, expiry, and provenance. Reads and writes re-check the current principal; a previous conversation is not proof of current authorization.
+
+Extend the lab with a `save_preference` policy: only low-sensitivity values, 30-day expiry, and a matching tenant. Require explicit approval for `export_transcript`. Test a mismatched tenant, expired record, and delegated agent with a narrower scope.
