@@ -1,0 +1,8 @@
+export const questions = [
+ {id:"trust",topic:"Foundations",prompt:"Which controls must be enforced outside the model?",options:["Authorization","Tool schemas","Approval gates","A prompt alone"],correct:[0,1,2],explanation:"Prompts influence behavior; application policy must enforce access and execution."},
+ {id:"injection",topic:"Prompt injection",prompt:"Which are indirect prompt-injection sources?",options:["Documents","Tool results","Memory","A typed policy decision"],correct:[0,1,2],explanation:"Untrusted content can arrive through documents, tools, and memory."},
+ {id:"identity",topic:"Identity",prompt:"What should authorization include?",options:["Tenant","Resource","Operation","Only the model name"],correct:[0,1,2],explanation:"Authorization is contextual and must include the principal, tenant, resource, and operation."},
+ {id:"mcp",topic:"MCP",prompt:"Which MCP controls are important?",options:["Authentication","Scopes","Tool-schema validation","Trust every discovered server"],correct:[0,1,2],explanation:"Dynamic tool connectivity requires explicit trust and authorization controls."},
+ {id:"multi",topic:"Multi-agent",prompt:"What limits delegated agents?",options:["Parent authority","Role contracts","Budgets","Unbounded permissions"],correct:[0,1,2],explanation:"Delegation must be down-scoped, typed, and bounded."},
+ {id:"eval",topic:"Evaluation",prompt:"What belongs in a security release gate?",options:["Attack outcomes","Traceability","Authorization tests","Only final answer fluency"],correct:[0,1,2],explanation:"Security evaluation tests behavior, policy, and evidence—not just prose quality."}
+];

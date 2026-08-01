@@ -1,0 +1,17 @@
+export const lessons = [
+ {id:"b1",level:"Beginner",step:"01",title:"Security foundations",summary:"Map assets, actors, trust boundaries, and blast radius.",material:"docs/security-foundations.md",lab:"labs/beginner/01_tool_policy.py",outcome:"Draw a threat model and place controls at the correct boundary.",refs:["docs/security-foundations.md","https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative"]},
+ {id:"b2",level:"Beginner",step:"02",title:"Prompt injection",summary:"Recognize untrusted instructions in documents, tools, and memory.",material:"docs/prompt-injection-and-mcp.md",lab:"labs/beginner/02_prompt_injection.py",outcome:"Contain untrusted content without granting it authority.",refs:["docs/prompt-injection-and-mcp.md","https://atlas.mitre.org/"]},
+ {id:"i1",level:"Intermediate",step:"01",title:"Identity and memory",summary:"Propagate identity and secure state, memory, and tenant boundaries.",material:"docs/tools-identity-and-memory.md",lab:"labs/intermediate/01_identity_propagation.py",outcome:"Enforce down-scoped authorization and safe memory writes.",refs:["docs/tools-identity-and-memory.md","https://cloud.google.com/blog/products/identity-security/cloud-ciso-perspectives-practical-guidance-building-with-saif"]},
+ {id:"i2",level:"Intermediate",step:"02",title:"MCP gateway security",summary:"Secure tool discovery, scopes, transports, and audit trails.",material:"docs/prompt-injection-and-mcp.md",lab:"labs/intermediate/02_mcp_gateway.py",outcome:"Design a gateway that authenticates, scopes, rate-limits, and audits tool calls.",refs:["https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices","https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html"]},
+ {id:"a1",level:"Advanced",step:"01",title:"Security evaluation",summary:"Turn attack cases into release gates and measurable evidence.",material:"docs/production-and-evaluation.md",lab:"labs/advanced/01_attack_evaluation.py",outcome:"Block unsafe releases using reproducible trajectory and policy tests.",refs:["https://genai.owasp.org/initiatives/agentic-security-initiative/","https://atlas.mitre.org/"]},
+ {id:"a2",level:"Advanced",step:"02",title:"Multi-agent security",summary:"Constrain delegation, roles, messages, and cascading failure.",material:"docs/production-and-evaluation.md",lab:"labs/advanced/02_multi_agent_security.py",outcome:"Down-scope delegated authority and preserve accountability across a team.",refs:["https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative","https://learn.microsoft.com/en-us/agent-framework/agents/safety"]}
+];
+
+export const checks = {
+  b1: ["Where does authorization belong?", "At the application and tool boundary, outside model instructions."],
+  b2: ["What is indirect prompt injection?", "Untrusted instructions arriving through documents, tools, memory, or other content."],
+  i1: ["What should identity propagation preserve?", "The user, tenant, resource, operation, and down-scoped permissions."],
+  i2: ["What must an MCP gateway enforce?", "Authentication, scopes, schema validation, rate limits, and auditability."],
+  a1: ["What proves a security control works?", "Reproducible attack cases, policy decisions, traces, and release-gate evidence."],
+  a2: ["How should delegation be constrained?", "Explicit roles, parent authority, typed messages, budgets, and termination rules."]
+};
