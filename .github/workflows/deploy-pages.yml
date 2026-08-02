@@ -26,6 +26,8 @@ jobs:
           mkdir -p site/quiz
           cp -R hub/. site/
           cp -R quiz/. site/quiz/
+          mkdir -p site/assets
+          cp assets/one-plus-i.png site/assets/one-plus-i.png
           cp README.md site/README.md
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
