@@ -8,7 +8,9 @@ A comprehensive, source-linked curriculum for securing AI agents, agentic workfl
 
 The Hub is organized into Beginner, Intermediate, and Advanced paths. Each lesson follows **Learn → Lab → Checkpoint**, includes theory and references, links to runnable Python code and notebooks, and records completion locally in the browser.
 
-Take the [Agent Security Knowledge Check](https://mahsa-teimourikia.github.io/agent-security/quiz/) after completing the lessons.
+### Knowledge check
+
+Ready to test your understanding? Take the interactive [Agent Security Knowledge Check](https://mahsa-teimourikia.github.io/agent-security/quiz/) after completing the lessons. It includes multi-select questions, explanations, scoring, and retry support.
 
 ## Curriculum
 
