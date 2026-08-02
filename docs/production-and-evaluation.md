@@ -34,3 +34,9 @@ flowchart LR
 ```
 
 References: [OWASP Agentic Security Initiative](https://genai.owasp.org/initiatives/agentic-security-initiative/), [MITRE ATLAS](https://atlas.mitre.org/), [Google SAIF](https://cloud.google.com/use-cases/secure-ai-framework), [Microsoft Agent Safety](https://learn.microsoft.com/en-us/agent-framework/agents/safety).
+
+## Scenario: release a claims assistant
+
+The assistant drafts insurance claims from uploaded documents and may request human review. Build a matrix across direct requests, injected instructions, missing evidence, tool errors, and repeated retries. Define thresholds before testing: zero unauthorized side effects, complete traceability, and a bounded unsupported-claim rate. A passing average is not enough if one high-impact attack succeeds.
+
+For every case capture provenance, model/tool trajectory, policy decisions, approval events, final output, and expected control. Label failures as confidentiality, integrity, availability, or governance. Re-run the versioned suite after every model, prompt, tool, or policy change.

@@ -7,4 +7,9 @@ def authorize(user: dict, agent: dict, resource: str, operation: str) -> dict:
     return {"allowed": resource in user["resources"], "principal": user["id"], "tenant": user["tenant"]}
 
 if __name__ == "__main__":
-    print(authorize({"id":"u1","tenant":"a","resources":["doc-1"]},{"tenant":"a","allowed_operations":["read"]},"doc-1","read"))
+    user = {"id":"u1","tenant":"a","resources":["doc-1"]}
+    agent = {"tenant":"a","allowed_operations":["read"]}
+    assert authorize(user, agent, "doc-1", "read")["allowed"]
+    assert not authorize(user, agent, "doc-2", "read")["allowed"]
+    assert not authorize(user, {"tenant":"b","allowed_operations":["read"]}, "doc-1", "read")["allowed"]
+    print(authorize(user, agent, "doc-1", "read"))
