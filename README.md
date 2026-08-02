@@ -47,6 +47,7 @@ Take the [Agent Security Knowledge Check](https://mahsa-teimourikia.github.io/ag
 - [Secure research agent capstone](docs/secure-agent-capstone.md)
 - [Incident response and recovery](docs/incident-response-and-recovery.md)
 - [Governance and production readiness](docs/governance-and-production-readiness.md)
+- [Security tools and technologies](docs/security-tools-and-technologies.md) — tool selection guide, maintained documentation, and research papers
 
 The core labs use only the Python standard library and deterministic fixtures. LangGraph and provider integrations are optional and should remain behind tested policy and evaluation boundaries.
 
