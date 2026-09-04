@@ -1,4 +1,4 @@
-name: Deploy Agent Security Learning Hub
+name: Deploy learning hub to GitHub Pages
 on:
   push:
     branches: [main]
@@ -16,22 +16,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: {node-version: 22}
-      - name: Validate Python labs
-        run: python -m compileall -q labs
-      - name: Validate notebooks
-        run: python scripts/validate_notebooks.py
-      - name: Assemble Pages site
-        run: |
-          mkdir -p site/quiz
-          cp -R hub/. site/
-          cp -R quiz/. site/quiz/
-          mkdir -p site/assets
-          cp assets/one-plus-i.png site/assets/one-plus-i.png
-          cp README.md site/README.md
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate learning links
+        run: npm run check:pages-links
+      - name: Build static site (includes smoke test)
+        run: npm run test:pages
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
-        with: {path: site}
+        with:
+          path: ./out
   deploy:
     environment:
       name: github-pages
@@ -39,5 +35,5 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4
+        id: deployment
