@@ -135,14 +135,16 @@ class PolicyRule:
         risk:            Risk classification.
         max_amount:      Maximum ``amount`` argument value (``None`` = no limit).
         cost:            Budget cost per invocation.
-        expected_args:   Set of allowed argument keys (empty = no arguments).
+        required_args:   Set of argument keys that MUST be present.
+        allowed_args:    Set of all argument keys that MAY be present.
     """
     operation: str
     required_scope: str
     risk: RiskLevel
     max_amount: Optional[float] = None
     cost: int = 1
-    expected_args: frozenset[str] = frozenset()
+    required_args: frozenset[str] = frozenset()
+    allowed_args: frozenset[str] = frozenset()
 
 
 @dataclass
@@ -229,19 +231,19 @@ RESOURCE_REGISTRY: dict[str, ResourceMeta] = {
 POLICY_RULES: dict[str, PolicyRule] = {
     "read_receipt":    PolicyRule(
         "read_receipt", "expense:read", RiskLevel.LOW,
-        cost=1, expected_args=frozenset(),
+        cost=1, required_args=frozenset(), allowed_args=frozenset(),
     ),
     "calculate_total": PolicyRule(
         "calculate_total", "expense:read", RiskLevel.LOW,
-        cost=1, expected_args=frozenset({"receipt_ids"}),
+        cost=1, required_args=frozenset({"receipt_ids"}), allowed_args=frozenset({"receipt_ids"}),
     ),
     "preview_claim":   PolicyRule(
         "preview_claim", "expense:read", RiskLevel.LOW,
-        cost=1, expected_args=frozenset({"receipt_ids"}),
+        cost=1, required_args=frozenset({"receipt_ids"}), allowed_args=frozenset({"receipt_ids"}),
     ),
     "submit_claim":    PolicyRule(
         "submit_claim", "expense:submit", RiskLevel.HIGH,
-        max_amount=5000.0, cost=5, expected_args=frozenset({"amount"}),
+        max_amount=5000.0, cost=5, required_args=frozenset({"amount"}), allowed_args=frozenset({"amount"}),
     ),
 }
 
@@ -383,14 +385,21 @@ def validate_arguments(
     """
     arg_keys = set(arguments.keys())
 
+    # Check required arguments
+    missing = rule.required_args - arg_keys
+    if missing:
+        return PolicyDecision(
+            Decision.DENY, "missing_argument",
+            f"Missing required argument(s): {sorted(missing)}.",
+        )
+
     # Reject unexpected arguments
-    if rule.expected_args is not None:
-        unexpected = arg_keys - rule.expected_args
-        if unexpected:
-            return PolicyDecision(
-                Decision.DENY, "unexpected_argument",
-                f"Unexpected argument(s): {sorted(unexpected)}.",
-            )
+    unexpected = arg_keys - rule.allowed_args
+    if unexpected:
+        return PolicyDecision(
+            Decision.DENY, "unexpected_argument",
+            f"Unexpected argument(s): {sorted(unexpected)}.",
+        )
 
     # Per-operation schema checks
     if operation == "read_receipt":
@@ -399,20 +408,25 @@ def validate_arguments(
 
     elif operation in ("calculate_total", "preview_claim"):
         receipt_ids = arguments.get("receipt_ids")
-        if receipt_ids is not None:
-            if not isinstance(receipt_ids, list):
+        if not isinstance(receipt_ids, list):
+            return PolicyDecision(
+                Decision.DENY, "invalid_argument",
+                "Argument 'receipt_ids' must be a list.",
+            )
+        if not receipt_ids:
+            return PolicyDecision(
+                Decision.DENY, "invalid_argument",
+                "Argument 'receipt_ids' must not be empty.",
+            )
+        for rid in receipt_ids:
+            if not isinstance(rid, str) or not rid:
                 return PolicyDecision(
                     Decision.DENY, "invalid_argument",
-                    "Argument 'receipt_ids' must be a list.",
+                    "Elements in 'receipt_ids' must be non-empty strings.",
                 )
 
     elif operation == "submit_claim":
         amount = arguments.get("amount")
-        if amount is None:
-            return PolicyDecision(
-                Decision.DENY, "missing_argument",
-                "Argument 'amount' is required for submit_claim.",
-            )
         if not _is_finite_positive_number(amount):
             return PolicyDecision(
                 Decision.DENY, "invalid_argument",
@@ -494,7 +508,7 @@ class PolicyEngine:
         if now is None:
             now = datetime.now(timezone.utc)
 
-        decision = self._apply_controls(actor, proposal, approval, now)
+        decision, consume_approval = self._apply_controls(actor, proposal, approval, now)
 
         event = AuditEvent(
             correlation_id=actor.run_id,
@@ -511,9 +525,8 @@ class PolicyEngine:
         if decision.state is Decision.ALLOW:
             self._execute_stub(proposal)
             event.terminal_state = "executed"
-            # Consume the approval receipt after successful execution
-            if (approval is not None
-                    and self._approval_store is not None):
+            # Consume the approval receipt only if verified, required, and executed
+            if consume_approval and approval is not None and self._approval_store is not None:
                 self._approval_store.consume(approval.receipt_id)
         else:
             event.terminal_state = "blocked"
@@ -529,29 +542,33 @@ class PolicyEngine:
         proposal: ActionProposal,
         approval: Optional[ApprovalReceipt],
         now: datetime,
-    ) -> PolicyDecision:
-        """Seven-step deterministic control sequence."""
-
+    ) -> tuple[PolicyDecision, bool]:
+        """Seven-step deterministic control sequence.
+        
+        Returns:
+            (PolicyDecision, consume_approval: bool)
+        """
+        
         # Step 1 — Authenticate subject and resolve authoritative tenant/scopes
         identity = IDENTITY_REGISTRY.get(actor.subject) if actor.subject else None
         if identity is None:
             return PolicyDecision(
                 Decision.DENY, "unknown_subject",
                 f"Subject '{actor.subject}' is not in the identity registry.",
-            )
+            ), False
         if actor.tenant != identity.tenant:
             return PolicyDecision(
                 Decision.DENY, "subject_tenant_mismatch",
                 f"Subject '{actor.subject}' belongs to tenant "
                 f"'{identity.tenant}', not '{actor.tenant}'.",
-            )
+            ), False
         if not actor.scopes <= identity.scopes:
             escalated = actor.scopes - identity.scopes
             return PolicyDecision(
                 Decision.DENY, "invalid_scope_grant",
                 f"Scopes {sorted(escalated)} are not granted to "
                 f"'{actor.subject}'.",
-            )
+            ), False
 
         # Step 2 — Operation allowlist and required scope
         rule = POLICY_RULES.get(proposal.operation)
@@ -559,12 +576,12 @@ class PolicyEngine:
             return PolicyDecision(
                 Decision.DENY, "operation_not_allowed",
                 f"Operation '{proposal.operation}' is not allowlisted.",
-            )
+            ), False
         if rule.required_scope not in actor.scopes:
             return PolicyDecision(
                 Decision.DENY, "missing_scope",
                 f"Scope '{rule.required_scope}' is required.",
-            )
+            ), False
 
         # Step 3 — Resolve resource metadata and enforce tenant ownership
         resource = RESOURCE_REGISTRY.get(proposal.resource_id)
@@ -572,41 +589,44 @@ class PolicyEngine:
             return PolicyDecision(
                 Decision.DENY, "unknown_resource",
                 f"Resource '{proposal.resource_id}' is not in the registry.",
-            )
+            ), False
         if resource.owning_tenant != actor.tenant:
             return PolicyDecision(
                 Decision.DENY, "cross_tenant",
                 f"Resource belongs to '{resource.owning_tenant}', "
                 f"not '{actor.tenant}'.",
-            )
+            ), False
 
         # Step 4 — Validate argument schema and business rules
         arg_error = validate_arguments(
             proposal.operation, rule, proposal.arguments,
         )
         if arg_error is not None:
-            return arg_error
+            return arg_error, False
 
         # Step 5 — Classify risk and determine approval requirement
         if rule.risk is RiskLevel.HIGH and approval is None:
             return PolicyDecision(
                 Decision.PAUSE, "approval_required",
                 "High-risk operation requires human approval.",
-            )
+            ), False
 
         # Step 6 — Verify approval authenticity + binding + expiry + replay
+        consume_approval = False
         if rule.risk is RiskLevel.HIGH and approval is not None:
-            if self._approval_store is not None:
-                verification_error = self._approval_store.verify(
-                    approval, actor, proposal, now,
-                )
-            else:
-                # Fallback: binding-only checks when no store is configured
-                verification_error = self._check_approval_binding(
-                    actor, proposal, approval, now,
-                )
+            if self._approval_store is None:
+                # The absence of a security dependency must fail closed.
+                return PolicyDecision(
+                    Decision.DENY, "approval_verifier_unavailable",
+                    "No trusted approval store is configured to verify the receipt.",
+                ), False
+            
+            verification_error = self._approval_store.verify(
+                approval, actor, proposal, now,
+            )
             if verification_error is not None:
-                return verification_error
+                return verification_error, False
+            consume_approval = True
 
         # Step 7 — Enforce per-run execution budget
         if self._budget_remaining < rule.cost:
@@ -614,45 +634,12 @@ class PolicyEngine:
                 Decision.DENY, "budget_exhausted",
                 f"Run budget exhausted ({self._budget_remaining} "
                 f"remaining, {rule.cost} required).",
-            )
+            ), False
         self._budget_remaining -= rule.cost
 
-        return PolicyDecision(Decision.ALLOW, "all_checks_passed")
+        return PolicyDecision(Decision.ALLOW, "all_checks_passed"), consume_approval
 
-    @staticmethod
-    def _check_approval_binding(
-        actor: ActorContext,
-        proposal: ActionProposal,
-        receipt: ApprovalReceipt,
-        now: datetime,
-    ) -> Optional[PolicyDecision]:
-        """Fallback binding-only verification (no authenticity or replay)."""
-        if receipt.subject != actor.subject:
-            return PolicyDecision(
-                Decision.DENY, "approval_subject_mismatch",
-                "Approval receipt is bound to a different subject.",
-            )
-        if receipt.tenant != actor.tenant:
-            return PolicyDecision(
-                Decision.DENY, "approval_tenant_mismatch",
-                "Approval receipt is bound to a different tenant.",
-            )
-        if receipt.operation != proposal.operation:
-            return PolicyDecision(
-                Decision.DENY, "approval_operation_mismatch",
-                "Approval receipt is for a different operation.",
-            )
-        if receipt.resource_id != proposal.resource_id:
-            return PolicyDecision(
-                Decision.DENY, "approval_resource_mismatch",
-                "Approval receipt is for a different resource.",
-            )
-        if now >= receipt.expires_at:
-            return PolicyDecision(
-                Decision.DENY, "approval_expired",
-                "Approval receipt has expired.",
-            )
-        return None
+
 
     def _execute_stub(self, proposal: ActionProposal) -> None:
         """Safe, in-memory side-effect stub.

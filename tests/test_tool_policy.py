@@ -247,6 +247,54 @@ class TestToolPolicy(unittest.TestCase):
         self.assertEqual(d.state, Decision.DENY)
         self.assertEqual(d.reason, "unexpected_argument")
 
+    def test_missing_receipt_ids(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("calculate_total", "receipt-101", {}),
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "missing_argument")
+
+    def test_empty_receipt_ids(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("calculate_total", "receipt-101", {"receipt_ids": []}),
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "invalid_argument")
+
+    def test_receipt_ids_not_list(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("calculate_total", "receipt-101", {"receipt_ids": "receipt-101"}),
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "invalid_argument")
+
+    def test_receipt_ids_contains_int(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("calculate_total", "receipt-101", {"receipt_ids": ["receipt-101", 42]}),
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "invalid_argument")
+
+    def test_receipt_ids_contains_none(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("calculate_total", "receipt-101", {"receipt_ids": [None]}),
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "invalid_argument")
+
+    def test_valid_receipt_ids(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("calculate_total", "receipt-101", {"receipt_ids": ["receipt-101", "receipt-102"]}),
+        )
+        self.assertEqual(d.state, Decision.ALLOW)
+        self.assertEqual(d.reason, "all_checks_passed")
+
     # --- Approval ---
 
     def test_approval_required_pause(self):
@@ -256,6 +304,27 @@ class TestToolPolicy(unittest.TestCase):
         )
         self.assertEqual(d.state, Decision.PAUSE)
         self.assertEqual(d.reason, "approval_required")
+
+    def test_approval_verifier_unavailable(self):
+        engine = PolicyEngine(budget=RUN_BUDGET) # No approval store
+        fake = ApprovalReceipt(
+            receipt_id="fabricated",
+            subject="emp-42",
+            tenant="acme",
+            operation="submit_claim",
+            resource_id="claim-501",
+            approver="mgr-10",
+            expires_at=NOW + timedelta(minutes=30)
+        )
+        d = engine.evaluate(
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            fake,
+            now=NOW
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "approval_verifier_unavailable")
+        self.assertEqual(engine.execution_count, 0)
 
     def test_fabricated_approval(self):
         fabricated = ApprovalReceipt(
@@ -280,6 +349,26 @@ class TestToolPolicy(unittest.TestCase):
         )
         self.assertEqual(d.state, Decision.DENY)
         self.assertEqual(d.reason, "approval_subject_mismatch")
+
+    def test_approval_tenant_mismatch(self):
+        wrong_tenant = self.store.issue("emp-42", "globex", "submit_claim", "claim-501", now=NOW)
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            wrong_tenant,
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "approval_tenant_mismatch")
+
+    def test_approval_operation_mismatch(self):
+        wrong_op = self.store.issue("emp-42", "acme", "delete_claim", "claim-501", now=NOW)
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            wrong_op,
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "approval_operation_mismatch")
 
     def test_expired_approval(self):
         expired = self.store.issue(
@@ -337,6 +426,38 @@ class TestToolPolicy(unittest.TestCase):
         self.assertEqual(d2.state, Decision.DENY)
         self.assertEqual(d2.reason, "approval_replayed")
         self.assertEqual(eng2.execution_count, 0)
+
+    def test_unrelated_low_risk_action_does_not_consume_approval(self):
+        receipt = self.store.issue("emp-42", "acme", "submit_claim", "claim-501", now=NOW)
+        engine = PolicyEngine(budget=RUN_BUDGET, approval_store=self.store)
+        
+        # Unrelated read request passes with the receipt, but shouldn't consume it
+        d1 = engine.evaluate(
+            ACME_EMPLOYEE,
+            ActionProposal("read_receipt", "receipt-101"),
+            receipt,
+            now=NOW
+        )
+        self.assertEqual(d1.state, Decision.ALLOW)
+        
+        # Now submit claim should succeed because the receipt wasn't consumed
+        d2 = engine.evaluate(
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            receipt,
+            now=NOW
+        )
+        self.assertEqual(d2.state, Decision.ALLOW)
+        
+        # Replay should now fail
+        d3 = engine.evaluate(
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            receipt,
+            now=NOW
+        )
+        self.assertEqual(d3.state, Decision.DENY)
+        self.assertEqual(d3.reason, "approval_replayed")
 
     # --- Budget ---
 
@@ -412,20 +533,89 @@ class TestToolPolicy(unittest.TestCase):
             self.assertEqual(event.terminal_state, "blocked")
 
     def test_audit_log_fields_populated(self):
-        engine = PolicyEngine()
+        engine = PolicyEngine(approval_store=self.store)
+        
+        # 1. ALLOW (low risk, no approval)
         engine.evaluate(
             ACME_EMPLOYEE,
             ActionProposal("read_receipt", "receipt-101"),
             now=NOW,
         )
-        event = engine.audit_log[0]
-        self.assertEqual(event.correlation_id, "test-run-001")
-        self.assertEqual(event.subject, "emp-42")
-        self.assertEqual(event.tenant, "acme")
-        self.assertEqual(event.operation, "read_receipt")
-        self.assertEqual(event.resource_id, "receipt-101")
-        self.assertEqual(event.policy_state, "allow")
-        self.assertEqual(event.terminal_state, "executed")
+        
+        # 2. DENY (cross-tenant)
+        engine.evaluate(
+            ACME_EMPLOYEE,
+            ActionProposal("read_receipt", "receipt-200"),
+            now=NOW,
+        )
+        
+        # 3. PAUSE (missing approval)
+        engine.evaluate(
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            now=NOW,
+        )
+
+        events = engine.audit_log
+        self.assertEqual(len(events), 3)
+
+        e_allow = events[0]
+        self.assertEqual(e_allow.correlation_id, "test-run-001")
+        self.assertEqual(e_allow.subject, "emp-42")
+        self.assertEqual(e_allow.tenant, "acme")
+        self.assertEqual(e_allow.operation, "read_receipt")
+        self.assertEqual(e_allow.resource_id, "receipt-101")
+        self.assertEqual(e_allow.policy_state, "allow")
+        self.assertEqual(e_allow.terminal_state, "executed")
+        self.assertIsNone(e_allow.approval_receipt_id)
+
+        e_deny = events[1]
+        self.assertEqual(e_deny.policy_state, "deny")
+        self.assertEqual(e_deny.reason, "cross_tenant")
+        self.assertEqual(e_deny.terminal_state, "blocked")
+
+        e_pause = events[2]
+        self.assertEqual(e_pause.policy_state, "pause")
+        self.assertEqual(e_pause.reason, "approval_required")
+        self.assertEqual(e_pause.terminal_state, "blocked")
+
+    # --- Control Ordering Invariant ---
+
+    def test_first_failed_control_ordering(self):
+        # 1. unknown actor + malformed arguments -> unknown_subject
+        d1, _ = self._eval(
+            UNKNOWN_ACTOR,
+            ActionProposal("submit_claim", "claim-501", {"amount": -100}),
+        )
+        self.assertEqual(d1.reason, "unknown_subject")
+
+        # 2. missing scope + cross-tenant resource -> missing_scope
+        d2, _ = self._eval(
+            READ_ONLY_EMPLOYEE,
+            ActionProposal("submit_claim", "receipt-200", {"amount": 100.0}),
+        )
+        self.assertEqual(d2.reason, "missing_scope")
+
+        # 3. cross-tenant resource + malformed amount -> cross_tenant
+        d3, _ = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "receipt-200", {"amount": -100}),
+        )
+        self.assertEqual(d3.reason, "cross_tenant")
+
+        # 4. invalid arguments + no approval -> invalid_argument
+        d4, _ = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "claim-501", {"amount": -100}),
+        )
+        self.assertEqual(d4.reason, "invalid_argument")
+
+        # 5. valid request + missing approval -> approval_required
+        d5, _ = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "claim-501", {"amount": 100}),
+        )
+        self.assertEqual(d5.reason, "approval_required")
 
 
 if __name__ == "__main__":

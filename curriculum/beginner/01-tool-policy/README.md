@@ -29,8 +29,6 @@ evidence.  The model may propose an action, but it must not grant itself access.
 
 ## Architecture
 
-## Architecture
-
 ```mermaid
 flowchart TD
     Auth[Authenticated Session] -->|creates| AC[ActorContext]
@@ -79,12 +77,10 @@ Before any tool executes, the policy engine checks in order:
 3. **Resource ownership / tenant match** — reject cross-tenant access using a trusted registry lookup.
 4. **Argument schema and business rules** — reject malformed or out-of-range values.
 5. **Risk classification and approval requirement** — pause high-risk writes that lack approval evidence.
-6. **Approval binding and expiry** — reject forged, expired, or incorrectly bound approval receipts.
+6. **Approval authenticity, binding, expiry, and replay** — verify that the receipt was issued by the trusted approval service, is bound to the requesting subject/tenant/operation/resource, is unexpired, and has not been replayed.
 7. **Per-run budget and stop condition** — reject when the run's cost budget is exhausted.
 
 Only after all seven checks pass does the action reach the execution stub.
-
-### Data Boundaries
 
 ### Data Boundaries
 
@@ -113,7 +109,7 @@ Only after all seven checks pass does the action reach the execution stub.
    - At the application and tool boundary, not in a prompt.
 
 2. An attacker sends a request with `approved=True` to submit a claim.  Why does the improved policy deny it?
-   - The policy verifies that the approval receipt is bound to the correct subject, tenant, operation, resource, and has not expired.  A self-asserted Boolean is not an approval.
+   - A self-asserted Boolean is not an approval. The policy verifies that an approval receipt was actually issued by the trusted approval service, is bound to the correct subject, tenant, operation, and resource, and has not expired or been replayed.
 
 3. An employee at Acme Corp tries to read `receipt-200`, which belongs to Globex.  What control catches this?
    - Step 3 (resource ownership / tenant match) looks up the resource's owning tenant from a trusted registry and rejects the cross-tenant access.
