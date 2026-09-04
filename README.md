@@ -16,42 +16,45 @@ Ready to test your understanding? Take the interactive [Agent Security Knowledge
 
 ### Beginner
 
-- Security foundations and threat modeling
-- Tool policy, authorization, and approval
-- Prompt injection and untrusted content
-- Secure research-assistant capstone
-- Secure research assistant: narrow tools, evidence, and policy boundaries
+| # | Title | Lab | Notebook |
+|---|---|---|---|
+| 01 | [Security Foundations and Tool Policy](curriculum/beginner/01-tool-policy/README.md) | [01_tool_policy.py](curriculum/beginner/01-tool-policy/01_tool_policy.py) | [01_tool_policy.ipynb](curriculum/beginner/01-tool-policy/01_tool_policy.ipynb) |
+| 02 | Prompt Injection and Untrusted Content | [02_prompt_injection.py](curriculum/beginner/02-prompt-injection/02_prompt_injection.py) | — |
+| 03 | Secure Research Agent | [03_secure_research_agent.py](curriculum/beginner/03-secure-research-agent/03_secure_research_agent.py) | [03_secure_research_agent.ipynb](curriculum/beginner/03-secure-research-agent/03_secure_research_agent.ipynb) |
 
 ### Intermediate
 
-- Identity propagation and memory security
-- MCP gateway security
-- Workflow policy and release gates
-- Secure support-workflow scenarios
-- Incident response, containment, idempotent recovery, and safe replay
+| # | Title | Lab |
+|---|---|---|
+| 01 | Identity Propagation and Memory Security | [01_identity_propagation.py](curriculum/intermediate/01-identity-propagation/01_identity_propagation.py) |
+| 02 | MCP Gateway Security | [02_mcp_gateway.py](curriculum/intermediate/02-mcp-gateway/02_mcp_gateway.py) |
+| 03 | Incident Response and Recovery | [03_incident_recovery.py](curriculum/intermediate/03-incident-recovery/03_incident_recovery.py) |
 
 ### Advanced
 
-- Security attack evaluation
-- Multi-agent delegation and cascading failures
-- Durable execution, rollback, and kill switches
-- Production readiness and incident response
-- Governance, release gates, autonomy measurement, and rollback drills
+| # | Title | Lab |
+|---|---|---|
+| 01 | Security Attack Evaluation | [01_attack_evaluation.py](curriculum/advanced/01-attack-evaluation/01_attack_evaluation.py) |
+| 02 | Multi-Agent Delegation and Security | [02_multi_agent_security.py](curriculum/advanced/02-multi-agent-security/02_multi_agent_security.py) |
+| 03 | Governance and Production Readiness | [03_production_gate.py](curriculum/advanced/03-production-gate/03_production_gate.py) |
 
-## Practical material
+## Running locally
 
-- [Security foundations](docs/security-foundations.md)
-- [Tools, identity, and memory](docs/tools-identity-and-memory.md)
-- [Prompt injection and MCP](docs/prompt-injection-and-mcp.md)
-- [Production security and evaluation](docs/production-and-evaluation.md)
-- [Python labs](labs/)
-- [Notebook companions](labs/notebooks/)
-- [Secure research agent capstone](docs/secure-agent-capstone.md)
-- [Incident response and recovery](docs/incident-response-and-recovery.md)
-- [Governance and production readiness](docs/governance-and-production-readiness.md)
-- [Security tools and technologies](docs/security-tools-and-technologies.md) — tool selection guide, maintained documentation, and research papers
+The core labs use only the Python standard library and deterministic fixtures. No credentials, API keys, or cloud services are required.
 
-The core labs use only the Python standard library and deterministic fixtures. LangGraph and provider integrations are optional and should remain behind tested policy and evaluation boundaries.
+```bash
+# Run Lesson 01 scenario evaluation
+python3 curriculum/beginner/01-tool-policy/01_tool_policy.py
+
+# Run focused tests
+python3 -m pytest tests/test_tool_policy.py -v
+
+# Compile all Python
+python3 -m compileall -q curriculum tests
+
+# Run the guided notebook
+jupyter notebook curriculum/beginner/01-tool-policy/01_tool_policy.ipynb
+```
 
 ## Security references
 
@@ -65,12 +68,5 @@ The core labs use only the Python standard library and deterministic fixtures. L
 - [NSA MCP Security Design Considerations](https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/4496698/nsa-releases-security-design-considerations-for-ai-driven-automation-leveraging/)
 - [Microsoft Agent Safety](https://learn.microsoft.com/en-us/agent-framework/agents/safety)
 - [OpenAI Agents SDK human-in-the-loop](https://openai.github.io/openai-agents-python/human_in_the_loop/)
-
-## Validation
-
-```bash
-python -m compileall labs
-python -m json.tool labs/notebooks/01_tool_policy.ipynb >/dev/null
-```
 
 Learning with One+i · responsible AI, real-world impact — [oneplusi.io](https://oneplusi.io)
