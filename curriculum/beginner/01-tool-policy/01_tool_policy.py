@@ -12,6 +12,7 @@ control sequence before reaching the (simulated) side-effect boundary.
 
 from __future__ import annotations
 
+import math
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -20,7 +21,7 @@ from typing import Any, Optional
 
 
 # ---------------------------------------------------------------------------
-# 1. Trust-boundary data structures
+# 1. Data structures
 # ---------------------------------------------------------------------------
 
 class Decision(Enum):
@@ -38,12 +39,20 @@ class RiskLevel(Enum):
 
 @dataclass(frozen=True)
 class ActorContext:
-    """Trusted session context — set by authentication, never by model text.
+    """Trusted application context — created from an authenticated session.
+
+    In production this would be populated by an IAM / OIDC session layer
+    or workload-identity system.  In this lab it is constructed from
+    ``IDENTITY_REGISTRY``, a deterministic teaching substitute.
+
+    A Python dataclass is not inherently trusted.  Trust comes from
+    *provenance* — the fact that application code, not model output,
+    created this instance using the authoritative identity registry.
 
     Fields:
         subject:  Authenticated principal identifier (e.g. ``"emp-42"``).
         tenant:   Tenant the principal belongs to (e.g. ``"acme"``).
-        scopes:   Granted permission scopes (e.g. ``{"expense:read", "expense:submit"}``).
+        scopes:   Granted permission scopes (e.g. ``{"expense:read"}``).
         run_id:   Correlation identifier for the current agent run.
     """
     subject: str
@@ -56,10 +65,13 @@ class ActorContext:
 class ActionProposal:
     """Untrusted action proposed by the model.
 
+    This structure carries no identity, authorization, or approval.
+    The policy engine treats every field as untrusted input.
+
     Fields:
         operation:    Requested operation name.
         resource_id:  Target resource identifier.
-        arguments:    Operation-specific arguments (untrusted, must be validated).
+        arguments:    Operation-specific arguments (untrusted, validated by policy).
     """
     operation: str
     resource_id: str
@@ -68,12 +80,15 @@ class ActionProposal:
 
 @dataclass(frozen=True)
 class ResourceMeta:
-    """Trusted resource metadata — looked up from a registry, not from the request.
+    """Trusted lookup result from the application resource registry.
+
+    In production this would come from an authoritative catalog or
+    database.  In this lab it is looked up from ``RESOURCE_REGISTRY``.
 
     Fields:
         resource_id:    Canonical resource identifier.
         owning_tenant:  Tenant that owns this resource.
-        classification: Data classification label (e.g. ``"internal"``).
+        classification: Data classification label.
     """
     resource_id: str
     owning_tenant: str
@@ -82,10 +97,15 @@ class ResourceMeta:
 
 @dataclass(frozen=True)
 class ApprovalReceipt:
-    """Cryptographically-verifiable approval evidence (simulated here).
+    """Approval evidence — untrusted until verified by the approval store.
 
-    In production this would be a signed token or server-stored record.
-    The lab uses in-memory binding checks only.
+    Having a structurally correct ``ApprovalReceipt`` object does NOT
+    mean the approval is authentic.  The ``ApprovalStore`` must confirm
+    that the receipt was actually issued and has not been consumed.
+
+    In production this would be a signed token or server-stored record
+    verified through a durable approval service.  In this lab, the
+    ``ApprovalStore`` provides deterministic in-memory verification.
 
     Fields:
         receipt_id:  Stable receipt identifier.
@@ -115,17 +135,19 @@ class PolicyRule:
         risk:            Risk classification.
         max_amount:      Maximum ``amount`` argument value (``None`` = no limit).
         cost:            Budget cost per invocation.
+        expected_args:   Set of allowed argument keys (empty = no arguments).
     """
     operation: str
     required_scope: str
     risk: RiskLevel
     max_amount: Optional[float] = None
     cost: int = 1
+    expected_args: frozenset[str] = frozenset()
 
 
 @dataclass
 class PolicyDecision:
-    """Immutable record of a single policy evaluation.
+    """Trusted decision output from the deterministic policy engine.
 
     Fields:
         state:       Terminal decision (allow / deny / pause).
@@ -143,19 +165,23 @@ class PolicyDecision:
 
 @dataclass
 class AuditEvent:
-    """Redacted, structured record of a policy decision or execution attempt.
+    """Application-produced evidence for the audit pipeline.
 
-    No hidden reasoning, sensitive argument values, or raw payloads.
+    One event is emitted per policy evaluation.  No hidden reasoning,
+    sensitive argument values, secrets, or raw payloads are recorded.
+
+    ``policy_state`` records the decision: allow | deny | pause.
+    ``terminal_state`` records the lifecycle outcome: executed | blocked.
     """
     correlation_id: str
     subject: str
     tenant: str
     operation: str
     resource_id: str
-    policy_state: str
+    policy_state: str      # "allow" | "deny" | "pause"
     reason: str
     approval_receipt_id: Optional[str] = None
-    terminal_state: str = "decided"  # "decided" | "executed" | "blocked"
+    terminal_state: str = "decided"  # "executed" | "blocked"
     timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def __post_init__(self) -> None:
@@ -164,42 +190,285 @@ class AuditEvent:
 
 
 # ---------------------------------------------------------------------------
-# 3. Policy engine
+# 3. Trusted registries and stores (simulated application services)
 # ---------------------------------------------------------------------------
 
-# --- Synthetic resource registry (trusted lookup) ---
+@dataclass(frozen=True)
+class IdentityRecord:
+    """A single entry in the identity registry."""
+    subject: str
+    tenant: str
+    scopes: frozenset[str]
+
+
+# --- Identity registry (deterministic teaching substitute for IAM) ---
+IDENTITY_REGISTRY: dict[str, IdentityRecord] = {
+    "emp-42": IdentityRecord(
+        "emp-42", "acme",
+        frozenset({"expense:read", "expense:submit"}),
+    ),
+    "emp-77": IdentityRecord(
+        "emp-77", "acme",
+        frozenset({"expense:read"}),
+    ),
+    "mgr-10": IdentityRecord(
+        "mgr-10", "acme",
+        frozenset({"expense:read", "expense:submit", "expense:approve"}),
+    ),
+}
+
+# --- Resource registry (authoritative catalog) ---
 RESOURCE_REGISTRY: dict[str, ResourceMeta] = {
-    "receipt-101":  ResourceMeta("receipt-101",  "acme", "internal"),
-    "receipt-102":  ResourceMeta("receipt-102",  "acme", "internal"),
-    "receipt-200":  ResourceMeta("receipt-200",  "globex", "confidential"),
-    "claim-501":    ResourceMeta("claim-501",    "acme", "internal"),
+    "receipt-101": ResourceMeta("receipt-101", "acme", "internal"),
+    "receipt-102": ResourceMeta("receipt-102", "acme", "internal"),
+    "receipt-200": ResourceMeta("receipt-200", "globex", "confidential"),
+    "claim-501":   ResourceMeta("claim-501",   "acme", "internal"),
 }
 
 # --- Policy configuration ---
 POLICY_RULES: dict[str, PolicyRule] = {
-    "read_receipt":    PolicyRule("read_receipt",    "expense:read",    RiskLevel.LOW,  cost=1),
-    "calculate_total": PolicyRule("calculate_total", "expense:read",    RiskLevel.LOW,  cost=1),
-    "preview_claim":   PolicyRule("preview_claim",   "expense:read",    RiskLevel.LOW,  cost=1),
-    "submit_claim":    PolicyRule("submit_claim",    "expense:submit",  RiskLevel.HIGH, max_amount=5000.0, cost=5),
+    "read_receipt":    PolicyRule(
+        "read_receipt", "expense:read", RiskLevel.LOW,
+        cost=1, expected_args=frozenset(),
+    ),
+    "calculate_total": PolicyRule(
+        "calculate_total", "expense:read", RiskLevel.LOW,
+        cost=1, expected_args=frozenset({"receipt_ids"}),
+    ),
+    "preview_claim":   PolicyRule(
+        "preview_claim", "expense:read", RiskLevel.LOW,
+        cost=1, expected_args=frozenset({"receipt_ids"}),
+    ),
+    "submit_claim":    PolicyRule(
+        "submit_claim", "expense:submit", RiskLevel.HIGH,
+        max_amount=5000.0, cost=5, expected_args=frozenset({"amount"}),
+    ),
 }
-
-KNOWN_SUBJECTS: set[str] = {"emp-42", "emp-77", "mgr-10"}
 
 RUN_BUDGET: int = 20  # max total cost per run
 
 
+# --- Approval store (simulated trusted approval service) ---
+
+class ApprovalStore:
+    """In-memory simulated approval service.
+
+    In production this would be a durable workflow/approval service
+    with server-side storage, signed tokens, or nonce/JTI tracking.
+
+    This deterministic in-memory store demonstrates that having a
+    structurally correct ``ApprovalReceipt`` object is NOT the same as
+    possessing authentic approval evidence — the receipt must exist in
+    the store and must not have been consumed.
+    """
+
+    def __init__(self) -> None:
+        self._issued: dict[str, ApprovalReceipt] = {}
+        self._consumed: set[str] = set()
+
+    def issue(
+        self,
+        subject: str,
+        tenant: str,
+        operation: str,
+        resource_id: str,
+        *,
+        approver: str = "mgr-10",
+        minutes_valid: int = 30,
+        now: Optional[datetime] = None,
+    ) -> ApprovalReceipt:
+        """Issue a new approval receipt and store it."""
+        if now is None:
+            now = datetime.now(timezone.utc)
+        receipt = ApprovalReceipt(
+            receipt_id=uuid.uuid4().hex[:12],
+            subject=subject,
+            tenant=tenant,
+            operation=operation,
+            resource_id=resource_id,
+            approver=approver,
+            expires_at=now + timedelta(minutes=minutes_valid),
+        )
+        self._issued[receipt.receipt_id] = receipt
+        return receipt
+
+    def verify(
+        self,
+        receipt: ApprovalReceipt,
+        actor: ActorContext,
+        proposal: ActionProposal,
+        now: datetime,
+    ) -> Optional[PolicyDecision]:
+        """Verify a receipt's authenticity, binding, expiry, and replay state.
+
+        Returns ``None`` if the receipt is valid, or a ``PolicyDecision``
+        describing why verification failed.
+        """
+        # Authenticity: receipt must have been issued by this store
+        stored = self._issued.get(receipt.receipt_id)
+        if stored is None or stored != receipt:
+            return PolicyDecision(
+                Decision.DENY, "approval_unknown",
+                "Approval receipt was not issued by the trusted approval service.",
+            )
+
+        # Replay: receipt must not have been consumed
+        if receipt.receipt_id in self._consumed:
+            return PolicyDecision(
+                Decision.DENY, "approval_replayed",
+                "Approval receipt has already been consumed.",
+            )
+
+        # Binding: receipt must match the requesting actor and proposal
+        if receipt.subject != actor.subject:
+            return PolicyDecision(
+                Decision.DENY, "approval_subject_mismatch",
+                "Approval receipt is bound to a different subject.",
+            )
+        if receipt.tenant != actor.tenant:
+            return PolicyDecision(
+                Decision.DENY, "approval_tenant_mismatch",
+                "Approval receipt is bound to a different tenant.",
+            )
+        if receipt.operation != proposal.operation:
+            return PolicyDecision(
+                Decision.DENY, "approval_operation_mismatch",
+                "Approval receipt is for a different operation.",
+            )
+        if receipt.resource_id != proposal.resource_id:
+            return PolicyDecision(
+                Decision.DENY, "approval_resource_mismatch",
+                "Approval receipt is for a different resource.",
+            )
+
+        # Expiry
+        if now >= receipt.expires_at:
+            return PolicyDecision(
+                Decision.DENY, "approval_expired",
+                "Approval receipt has expired.",
+            )
+
+        return None  # receipt is valid
+
+    def consume(self, receipt_id: str) -> None:
+        """Mark a receipt as consumed (one-time use)."""
+        self._consumed.add(receipt_id)
+
+
+# ---------------------------------------------------------------------------
+# 4. Argument validation
+# ---------------------------------------------------------------------------
+
+def _is_finite_positive_number(value: Any) -> bool:
+    """True if value is a finite positive number, excluding booleans."""
+    # isinstance(True, int) is True, so reject booleans explicitly
+    if isinstance(value, bool):
+        return False
+    if not isinstance(value, (int, float)):
+        return False
+    if math.isnan(value) or math.isinf(value):
+        return False
+    return value > 0
+
+
+def validate_arguments(
+    operation: str,
+    rule: PolicyRule,
+    arguments: dict[str, Any],
+) -> Optional[PolicyDecision]:
+    """Deterministic per-operation argument validation.
+
+    Returns ``None`` if arguments are valid, or a ``PolicyDecision``
+    describing the validation failure.
+    """
+    arg_keys = set(arguments.keys())
+
+    # Reject unexpected arguments
+    if rule.expected_args is not None:
+        unexpected = arg_keys - rule.expected_args
+        if unexpected:
+            return PolicyDecision(
+                Decision.DENY, "unexpected_argument",
+                f"Unexpected argument(s): {sorted(unexpected)}.",
+            )
+
+    # Per-operation schema checks
+    if operation == "read_receipt":
+        # No arguments expected
+        pass
+
+    elif operation in ("calculate_total", "preview_claim"):
+        receipt_ids = arguments.get("receipt_ids")
+        if receipt_ids is not None:
+            if not isinstance(receipt_ids, list):
+                return PolicyDecision(
+                    Decision.DENY, "invalid_argument",
+                    "Argument 'receipt_ids' must be a list.",
+                )
+
+    elif operation == "submit_claim":
+        amount = arguments.get("amount")
+        if amount is None:
+            return PolicyDecision(
+                Decision.DENY, "missing_argument",
+                "Argument 'amount' is required for submit_claim.",
+            )
+        if not _is_finite_positive_number(amount):
+            return PolicyDecision(
+                Decision.DENY, "invalid_argument",
+                f"Amount must be a finite positive number, got {amount!r}.",
+            )
+        if rule.max_amount is not None and amount > rule.max_amount:
+            return PolicyDecision(
+                Decision.DENY, "amount_exceeded",
+                f"Amount {amount} exceeds limit {rule.max_amount}.",
+            )
+
+    return None  # arguments are valid
+
+
+# ---------------------------------------------------------------------------
+# 5. Policy engine
+# ---------------------------------------------------------------------------
+
 class PolicyEngine:
     """Deterministic pre-execution policy enforcer.
 
-    Checks are applied in a fixed order.  The first failing check produces
-    a ``deny`` or ``pause`` and short-circuits.  Only ``allow`` reaches the
-    execution stub.  Every evaluation emits exactly one ``AuditEvent``.
+    Checks are applied in a fixed seven-step sequence.  The first
+    failing check produces a ``deny`` or ``pause`` and short-circuits.
+    Only ``allow`` reaches the execution stub.  Every evaluation emits
+    exactly one ``AuditEvent``.
+
+    Budget is charged only for actions that pass all controls and
+    are allowed to execute.
     """
 
-    def __init__(self, budget: int = RUN_BUDGET) -> None:
+    def __init__(
+        self,
+        budget: int = RUN_BUDGET,
+        approval_store: Optional[ApprovalStore] = None,
+    ) -> None:
         self._budget_remaining: int = budget
-        self.audit_log: list[AuditEvent] = []
+        self._audit_log: list[AuditEvent] = []
         self._execution_log: list[str] = []
+        self._approval_store: Optional[ApprovalStore] = approval_store
+
+    # --- Public read-only properties ---
+
+    @property
+    def budget_remaining(self) -> int:
+        """Remaining execution budget for this run."""
+        return self._budget_remaining
+
+    @property
+    def execution_count(self) -> int:
+        """Number of actions that reached the execution stub."""
+        return len(self._execution_log)
+
+    @property
+    def audit_log(self) -> list[AuditEvent]:
+        """Chronological list of audit events for this run."""
+        return list(self._audit_log)
 
     # --- Public API ---
 
@@ -214,9 +483,9 @@ class PolicyEngine:
         """Run the seven-step control sequence and record an audit event.
 
         Args:
-            actor:     Trusted session context.
+            actor:     Trusted application context.
             proposal:  Untrusted action from the model.
-            approval:  Optional approval evidence for high-risk actions.
+            approval:  Optional approval evidence (untrusted until verified).
             now:       Override wall-clock for deterministic testing.
 
         Returns:
@@ -242,10 +511,14 @@ class PolicyEngine:
         if decision.state is Decision.ALLOW:
             self._execute_stub(proposal)
             event.terminal_state = "executed"
+            # Consume the approval receipt after successful execution
+            if (approval is not None
+                    and self._approval_store is not None):
+                self._approval_store.consume(approval.receipt_id)
         else:
             event.terminal_state = "blocked"
 
-        self.audit_log.append(event)
+        self._audit_log.append(event)
         return decision
 
     # --- Control sequence (private) ---
@@ -259,64 +532,89 @@ class PolicyEngine:
     ) -> PolicyDecision:
         """Seven-step deterministic control sequence."""
 
-        # Step 1 — Known authenticated subject and tenant
-        if not actor.subject or actor.subject not in KNOWN_SUBJECTS:
-            return PolicyDecision(Decision.DENY, "unknown_subject",
-                                 f"Subject '{actor.subject}' is not recognised.")
-        if not actor.tenant:
-            return PolicyDecision(Decision.DENY, "missing_tenant",
-                                 "Actor context has no tenant.")
+        # Step 1 — Authenticate subject and resolve authoritative tenant/scopes
+        identity = IDENTITY_REGISTRY.get(actor.subject) if actor.subject else None
+        if identity is None:
+            return PolicyDecision(
+                Decision.DENY, "unknown_subject",
+                f"Subject '{actor.subject}' is not in the identity registry.",
+            )
+        if actor.tenant != identity.tenant:
+            return PolicyDecision(
+                Decision.DENY, "subject_tenant_mismatch",
+                f"Subject '{actor.subject}' belongs to tenant "
+                f"'{identity.tenant}', not '{actor.tenant}'.",
+            )
+        if not actor.scopes <= identity.scopes:
+            escalated = actor.scopes - identity.scopes
+            return PolicyDecision(
+                Decision.DENY, "invalid_scope_grant",
+                f"Scopes {sorted(escalated)} are not granted to "
+                f"'{actor.subject}'.",
+            )
 
         # Step 2 — Operation allowlist and required scope
         rule = POLICY_RULES.get(proposal.operation)
         if rule is None:
-            return PolicyDecision(Decision.DENY, "operation_not_allowed",
-                                 f"Operation '{proposal.operation}' is not allowlisted.")
+            return PolicyDecision(
+                Decision.DENY, "operation_not_allowed",
+                f"Operation '{proposal.operation}' is not allowlisted.",
+            )
         if rule.required_scope not in actor.scopes:
-            return PolicyDecision(Decision.DENY, "missing_scope",
-                                 f"Scope '{rule.required_scope}' is required.")
+            return PolicyDecision(
+                Decision.DENY, "missing_scope",
+                f"Scope '{rule.required_scope}' is required.",
+            )
 
-        # Step 3 — Resource ownership / tenant match
+        # Step 3 — Resolve resource metadata and enforce tenant ownership
         resource = RESOURCE_REGISTRY.get(proposal.resource_id)
         if resource is None:
-            return PolicyDecision(Decision.DENY, "unknown_resource",
-                                 f"Resource '{proposal.resource_id}' is not in the registry.")
-        if resource.owning_tenant != actor.tenant:
-            return PolicyDecision(Decision.DENY, "cross_tenant",
-                                 f"Resource belongs to '{resource.owning_tenant}', "
-                                 f"not '{actor.tenant}'.")
-
-        # Step 4 — Argument schema and business rules
-        if proposal.operation == "submit_claim":
-            amount = proposal.arguments.get("amount")
-            if amount is None:
-                return PolicyDecision(Decision.DENY, "missing_argument",
-                                     "Argument 'amount' is required for submit_claim.")
-            if not isinstance(amount, (int, float)) or amount <= 0:
-                return PolicyDecision(Decision.DENY, "invalid_argument",
-                                     f"Amount must be a positive number, got {amount!r}.")
-            if rule.max_amount is not None and amount > rule.max_amount:
-                return PolicyDecision(Decision.DENY, "amount_exceeded",
-                                     f"Amount {amount} exceeds limit {rule.max_amount}.")
-
-        # Step 5 — Risk classification and approval requirement
-        if rule.risk is RiskLevel.HIGH and approval is None:
-            return PolicyDecision(Decision.PAUSE, "approval_required",
-                                 "High-risk operation requires human approval.")
-
-        # Step 6 — Approval binding and expiry
-        if rule.risk is RiskLevel.HIGH and approval is not None:
-            binding_error = self._check_approval_binding(
-                actor, proposal, approval, now
+            return PolicyDecision(
+                Decision.DENY, "unknown_resource",
+                f"Resource '{proposal.resource_id}' is not in the registry.",
             )
-            if binding_error is not None:
-                return binding_error
+        if resource.owning_tenant != actor.tenant:
+            return PolicyDecision(
+                Decision.DENY, "cross_tenant",
+                f"Resource belongs to '{resource.owning_tenant}', "
+                f"not '{actor.tenant}'.",
+            )
 
-        # Step 7 — Per-run budget
+        # Step 4 — Validate argument schema and business rules
+        arg_error = validate_arguments(
+            proposal.operation, rule, proposal.arguments,
+        )
+        if arg_error is not None:
+            return arg_error
+
+        # Step 5 — Classify risk and determine approval requirement
+        if rule.risk is RiskLevel.HIGH and approval is None:
+            return PolicyDecision(
+                Decision.PAUSE, "approval_required",
+                "High-risk operation requires human approval.",
+            )
+
+        # Step 6 — Verify approval authenticity + binding + expiry + replay
+        if rule.risk is RiskLevel.HIGH and approval is not None:
+            if self._approval_store is not None:
+                verification_error = self._approval_store.verify(
+                    approval, actor, proposal, now,
+                )
+            else:
+                # Fallback: binding-only checks when no store is configured
+                verification_error = self._check_approval_binding(
+                    actor, proposal, approval, now,
+                )
+            if verification_error is not None:
+                return verification_error
+
+        # Step 7 — Enforce per-run execution budget
         if self._budget_remaining < rule.cost:
-            return PolicyDecision(Decision.DENY, "budget_exhausted",
-                                 f"Run budget exhausted ({self._budget_remaining} "
-                                 f"remaining, {rule.cost} required).")
+            return PolicyDecision(
+                Decision.DENY, "budget_exhausted",
+                f"Run budget exhausted ({self._budget_remaining} "
+                f"remaining, {rule.cost} required).",
+            )
         self._budget_remaining -= rule.cost
 
         return PolicyDecision(Decision.ALLOW, "all_checks_passed")
@@ -328,30 +626,39 @@ class PolicyEngine:
         receipt: ApprovalReceipt,
         now: datetime,
     ) -> Optional[PolicyDecision]:
-        """Validate that an approval receipt is correctly bound and current."""
+        """Fallback binding-only verification (no authenticity or replay)."""
         if receipt.subject != actor.subject:
-            return PolicyDecision(Decision.DENY, "approval_subject_mismatch",
-                                 "Approval receipt is bound to a different subject.")
+            return PolicyDecision(
+                Decision.DENY, "approval_subject_mismatch",
+                "Approval receipt is bound to a different subject.",
+            )
         if receipt.tenant != actor.tenant:
-            return PolicyDecision(Decision.DENY, "approval_tenant_mismatch",
-                                 "Approval receipt is bound to a different tenant.")
+            return PolicyDecision(
+                Decision.DENY, "approval_tenant_mismatch",
+                "Approval receipt is bound to a different tenant.",
+            )
         if receipt.operation != proposal.operation:
-            return PolicyDecision(Decision.DENY, "approval_operation_mismatch",
-                                 "Approval receipt is for a different operation.")
+            return PolicyDecision(
+                Decision.DENY, "approval_operation_mismatch",
+                "Approval receipt is for a different operation.",
+            )
         if receipt.resource_id != proposal.resource_id:
-            return PolicyDecision(Decision.DENY, "approval_resource_mismatch",
-                                 "Approval receipt is for a different resource.")
+            return PolicyDecision(
+                Decision.DENY, "approval_resource_mismatch",
+                "Approval receipt is for a different resource.",
+            )
         if now >= receipt.expires_at:
-            return PolicyDecision(Decision.DENY, "approval_expired",
-                                 "Approval receipt has expired.")
-        return None  # binding is valid
+            return PolicyDecision(
+                Decision.DENY, "approval_expired",
+                "Approval receipt has expired.",
+            )
+        return None
 
     def _execute_stub(self, proposal: ActionProposal) -> None:
         """Safe, in-memory side-effect stub.
 
-        In production, this is where the real tool call would happen
-        (database write, API call, etc.).  In the lab it only records
-        that execution was reached.
+        In production this would be an idempotent tool/API call.
+        In the lab it only records that execution was reached.
         """
         self._execution_log.append(
             f"EXECUTED: {proposal.operation} on {proposal.resource_id}"
@@ -359,76 +666,93 @@ class PolicyEngine:
 
 
 # ---------------------------------------------------------------------------
-# 4. Demonstration (runs when the module is executed directly)
+# 6. Helper for creating actor contexts from the identity registry
 # ---------------------------------------------------------------------------
 
-def _make_receipt(
+def make_actor(
     subject: str,
-    tenant: str,
-    operation: str,
-    resource_id: str,
     *,
-    approver: str = "mgr-10",
-    minutes_valid: int = 30,
-    now: Optional[datetime] = None,
-) -> ApprovalReceipt:
-    """Helper: create a correctly-bound approval receipt."""
-    if now is None:
-        now = datetime.now(timezone.utc)
-    return ApprovalReceipt(
-        receipt_id=uuid.uuid4().hex[:12],
-        subject=subject,
-        tenant=tenant,
-        operation=operation,
-        resource_id=resource_id,
-        approver=approver,
-        expires_at=now + timedelta(minutes=minutes_valid),
+    run_id: Optional[str] = None,
+) -> ActorContext:
+    """Create an ``ActorContext`` from the trusted identity registry.
+
+    This is the correct way to create actor contexts in this lab.
+    Identity, tenant, and scopes are resolved from ``IDENTITY_REGISTRY``,
+    not from untrusted input.
+
+    Raises ``KeyError`` if the subject is not in the registry.
+    """
+    record = IDENTITY_REGISTRY[subject]
+    return ActorContext(
+        subject=record.subject,
+        tenant=record.tenant,
+        scopes=record.scopes,
+        run_id=run_id or uuid.uuid4().hex[:12],
     )
 
+
+# ---------------------------------------------------------------------------
+# 7. Demonstration (runs when the module is executed directly)
+# ---------------------------------------------------------------------------
 
 def run_demo() -> None:
     """Run a labelled set of scenarios and print structured results."""
 
     NOW = datetime(2026, 1, 15, 12, 0, 0, tzinfo=timezone.utc)
 
-    # --- Trusted actor contexts ---
-    acme_employee = ActorContext(
-        subject="emp-42", tenant="acme",
-        scopes=frozenset({"expense:read", "expense:submit"}),
-        run_id="demo-run-001",
-    )
+    # --- Trusted approval store ---
+    store = ApprovalStore()
+
+    # --- Trusted actor contexts (from identity registry) ---
+    acme_employee = make_actor("emp-42", run_id="demo-run-001")
+    read_only_emp = make_actor("emp-77", run_id="demo-run-003")
+
     unknown_actor = ActorContext(
         subject="hacker-99", tenant="acme",
         scopes=frozenset({"expense:read", "expense:submit"}),
         run_id="demo-run-002",
     )
-    no_submit_scope = ActorContext(
-        subject="emp-77", tenant="acme",
-        scopes=frozenset({"expense:read"}),
-        run_id="demo-run-003",
+    forged_tenant_actor = ActorContext(
+        subject="emp-42", tenant="globex",
+        scopes=frozenset({"expense:read", "expense:submit"}),
+        run_id="demo-run-004",
     )
 
-    # --- Approval receipts ---
-    valid_receipt = _make_receipt(
+    # --- Issue legitimate approval receipts via the store ---
+    valid_receipt = store.issue(
         "emp-42", "acme", "submit_claim", "claim-501",
         now=NOW, minutes_valid=30,
     )
-    forged_receipt = _make_receipt(
-        "emp-77", "acme", "submit_claim", "claim-501",  # wrong subject
+    forged_receipt = store.issue(
+        "emp-77", "acme", "submit_claim", "claim-501",
         now=NOW, minutes_valid=30,
     )
-    expired_receipt = _make_receipt(
+    expired_receipt = store.issue(
         "emp-42", "acme", "submit_claim", "claim-501",
-        now=NOW, minutes_valid=-10,  # already expired
+        now=NOW, minutes_valid=-10,
     )
-    wrong_resource_receipt = _make_receipt(
-        "emp-42", "acme", "submit_claim", "claim-999",  # different resource
+    wrong_resource_receipt = store.issue(
+        "emp-42", "acme", "submit_claim", "claim-999",
+        now=NOW, minutes_valid=30,
+    )
+
+    # --- Fabricated receipt (never issued by the store) ---
+    fabricated_receipt = ApprovalReceipt(
+        receipt_id="made-up-id",
+        subject="emp-42", tenant="acme",
+        operation="submit_claim", resource_id="claim-501",
+        approver="mgr-10",
+        expires_at=NOW + timedelta(minutes=30),
+    )
+
+    # --- Receipt for replay test ---
+    replay_receipt = store.issue(
+        "emp-42", "acme", "submit_claim", "claim-501",
         now=NOW, minutes_valid=30,
     )
 
     # --- Scenarios ---
     scenarios: list[tuple[str, ActorContext, ActionProposal, Optional[ApprovalReceipt], str, str]] = [
-        # (label, actor, proposal, approval, expected_state, expected_reason)
         (
             "Permitted same-tenant read",
             acme_employee,
@@ -444,10 +768,17 @@ def run_demo() -> None:
             "deny", "unknown_subject",
         ),
         (
+            "Known subject + forged tenant denied",
+            forged_tenant_actor,
+            ActionProposal("read_receipt", "receipt-101"),
+            None,
+            "deny", "subject_tenant_mismatch",
+        ),
+        (
             "Missing scope for submit",
-            no_submit_scope,
+            read_only_emp,
             ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
-            _make_receipt("emp-77", "acme", "submit_claim", "claim-501", now=NOW),
+            forged_receipt,
             "deny", "missing_scope",
         ),
         (
@@ -472,6 +803,13 @@ def run_demo() -> None:
             "deny", "invalid_argument",
         ),
         (
+            "Boolean amount rejected",
+            acme_employee,
+            ActionProposal("submit_claim", "claim-501", {"amount": True}),
+            valid_receipt,
+            "deny", "invalid_argument",
+        ),
+        (
             "Amount exceeds limit",
             acme_employee,
             ActionProposal("submit_claim", "claim-501", {"amount": 9999.0}),
@@ -479,11 +817,25 @@ def run_demo() -> None:
             "deny", "amount_exceeded",
         ),
         (
+            "Unexpected argument rejected",
+            acme_employee,
+            ActionProposal("read_receipt", "receipt-101", {"extra": "data"}),
+            None,
+            "deny", "unexpected_argument",
+        ),
+        (
             "High-risk write without approval paused",
             acme_employee,
             ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
             None,
             "pause", "approval_required",
+        ),
+        (
+            "Fabricated receipt denied",
+            acme_employee,
+            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            fabricated_receipt,
+            "deny", "approval_unknown",
         ),
         (
             "Forged approval (wrong subject) denied",
@@ -515,7 +867,7 @@ def run_demo() -> None:
         ),
     ]
 
-    engine = PolicyEngine(budget=RUN_BUDGET)
+    engine = PolicyEngine(budget=RUN_BUDGET, approval_store=store)
     print("=" * 72)
     print("Security Foundations and Tool Policy — Scenario Evaluation")
     print("=" * 72)
@@ -535,16 +887,44 @@ def run_demo() -> None:
         if decision.details:
             print(f"  details  : {decision.details}")
 
+    # --- Replay test ---
+    replay_decision = engine.evaluate(
+        acme_employee,
+        ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+        replay_receipt,
+        now=NOW,
+    )
+    status = "PASS" if replay_decision.state is Decision.ALLOW else "FAIL"
+    if status == "FAIL":
+        failures.append("Replay first use")
+    print(f"\n[{status}] Replay: first use allowed")
+    print(f"  decision : {replay_decision.state.value}")
+    print(f"  reason   : {replay_decision.reason}")
+
+    replay_decision_2 = engine.evaluate(
+        acme_employee,
+        ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+        replay_receipt,
+        now=NOW,
+    )
+    status = "PASS" if (
+        replay_decision_2.state is Decision.DENY
+        and replay_decision_2.reason == "approval_replayed"
+    ) else "FAIL"
+    if status == "FAIL":
+        failures.append("Replay second use")
+    print(f"\n[{status}] Replay: second use denied")
+    print(f"  decision : {replay_decision_2.state.value}")
+    print(f"  reason   : {replay_decision_2.reason}")
+
     # --- Budget exhaustion ---
-    print(f"\n--- Budget remaining: {engine._budget_remaining} ---")
-    budget_engine = PolicyEngine(budget=1)
-    # Use 1 cost on a read
+    print(f"\n--- Budget remaining: {engine.budget_remaining} ---")
+    budget_engine = PolicyEngine(budget=1, approval_store=store)
     budget_engine.evaluate(
         acme_employee,
         ActionProposal("read_receipt", "receipt-101"),
         now=NOW,
     )
-    # Now budget is 0 — next should be denied
     budget_decision = budget_engine.evaluate(
         acme_employee,
         ActionProposal("read_receipt", "receipt-102"),
@@ -573,9 +953,10 @@ def run_demo() -> None:
     print(f"  violations: {len(denied_or_paused_executed)}")
 
     # --- Audit log summary ---
-    allowed_count = sum(1 for e in engine.audit_log if e.policy_state == "allow")
-    executed_count = sum(1 for e in engine.audit_log if e.terminal_state == "executed")
-    print(f"\n--- Audit log: {len(engine.audit_log)} events, "
+    log = engine.audit_log
+    allowed_count = sum(1 for e in log if e.policy_state == "allow")
+    executed_count = sum(1 for e in log if e.terminal_state == "executed")
+    print(f"\n--- Audit log: {len(log)} events, "
           f"{allowed_count} allowed, {executed_count} executed ---")
 
     print("\n" + "=" * 72)

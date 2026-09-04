@@ -29,18 +29,25 @@ evidence.  The model may propose an action, but it must not grant itself access.
 
 ## Architecture
 
+## Architecture
+
 ```mermaid
-flowchart LR
- U[User] --> P[Policy + identity]
- P --> M[Model]
- M --> V[Tool gateway]
- V --> T[Tools and APIs]
- T --> M
- M --> O[Output validation]
- O --> U
- D[Untrusted documents] --> M
- R[Memory] <--> M
- H[Human approval] -. high-risk action .-> V
+flowchart TD
+    Auth[Authenticated Session] -->|creates| AC[ActorContext]
+    Model[Model] -->|generates| AP[ActionProposal]
+    
+    AC --> PE[Policy Engine]
+    AP --> PE
+    
+    subgraph Trusted State
+        PE -.- IR[Identity Registry]
+        PE -.- RR[Resource Registry]
+        PE -.- AS[Approval Store]
+        PE -.- B[Budget State]
+    end
+    
+    PE -->|ALLOW only| Exec[Execution Stub]
+    PE -->|always| Audit[Audit Event]
 ```
 
 ## A Threat-Model Vocabulary
@@ -79,14 +86,18 @@ Only after all seven checks pass does the action reach the execution stub.
 
 ### Data Boundaries
 
-| Structure | Trust Level | Source | Description |
-|---|---|---|---|
-| `ActorContext` | **Trusted** | Authentication layer | Subject, tenant, scopes, correlation ID |
-| `ActionProposal` | **Untrusted** | Model output | Operation, resource ID, arguments |
-| `ResourceMeta` | **Trusted** | Registry lookup | Owning tenant, classification |
-| `ApprovalReceipt` | **Trusted** | Approval service (simulated) | Bound subject/tenant/operation/resource, expiry |
-| `PolicyDecision` | **Trusted** | Policy engine | Allow/deny/pause + stable reason code |
-| `AuditEvent` | **Trusted** | Policy engine | Redacted record of every decision |
+### Data Boundaries
+
+| Structure         | Boundary                      | Authority                                          |
+| ----------------- | ----------------------------- | -------------------------------------------------- |
+| `ActorContext`    | Trusted application context   | Created from authenticated session / simulated IAM |
+| `ActionProposal`  | Untrusted                     | Model-generated proposal                           |
+| `ResourceMeta`    | Trusted lookup result         | Application resource registry                      |
+| `ApprovalReceipt` | Untrusted until verified      | Issued/verified through trusted approval service   |
+| `PolicyDecision`  | Trusted decision output       | Deterministic policy engine                        |
+| `AuditEvent`      | Application-produced evidence | Audit pipeline                                     |
+
+**Key Concept:** Data type ≠ trust.  A Python dataclass is not inherently trusted just because it is structured.  **Provenance and verification establish trust.**
 
 ## Watch For
 
