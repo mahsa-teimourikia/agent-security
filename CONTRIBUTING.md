@@ -1,0 +1,1 @@
+# Contributing\n\nHow to add a lesson (module README first, then hub registry, then quiz).\n

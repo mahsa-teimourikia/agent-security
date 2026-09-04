@@ -1,0 +1,17 @@
+{
+  "name": "agent-security",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build:pages": "vite build --config vite.pages.config.ts && node scripts/copy-quiz-to-pages.mjs",
+    "test:pages": "npm run build:pages && node tests/pages-smoke.mjs",
+    "check:pages-links": "node scripts/validate-learning-links.mjs"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}

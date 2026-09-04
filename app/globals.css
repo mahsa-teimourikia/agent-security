@@ -1,0 +1,8 @@
+:root {
+  --bg:    #f5f2eb;
+  --ink:   #1a1a18;
+  --muted: #6b6b60;
+  --line:  #d4cfc4;
+  --card:  #eef1ea;
+}
+body { background: var(--bg); color: var(--ink); font-family: sans-serif; }

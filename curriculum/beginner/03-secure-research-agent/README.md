@@ -1,0 +1,1 @@
+# 03-secure-research-agent\n\nTheory and concepts for this module.\n\n## Watch For\n- Failure mode 1\n- Failure mode 2\n- Failure mode 3\n- Failure mode 4\n
