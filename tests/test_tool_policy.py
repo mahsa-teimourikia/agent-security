@@ -156,6 +156,68 @@ class TestToolPolicy(unittest.TestCase):
         self.assertEqual(d.reason, "unknown_resource")
         self.assertEqual(eng.execution_count, 0)
 
+    def test_nested_resource_cross_tenant(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("calculate_total", "receipt-101", {"receipt_ids": ["receipt-200"]}),
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "cross_tenant")
+        self.assertEqual(eng.execution_count, 0)
+        self.assertEqual(eng.budget_remaining, RUN_BUDGET)
+
+    def test_nested_resource_mixed_tenant(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("calculate_total", "receipt-101", {"receipt_ids": ["receipt-101", "receipt-200"]}),
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "cross_tenant")
+        self.assertEqual(eng.execution_count, 0)
+
+    def test_nested_resource_unknown(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("calculate_total", "receipt-101", {"receipt_ids": ["receipt-101", "receipt-999"]}),
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "unknown_resource")
+        self.assertEqual(eng.execution_count, 0)
+
+    def test_preview_claim_nested_cross_tenant(self):
+        d, eng = self._eval(
+            ACME_EMPLOYEE,
+            ActionProposal("preview_claim", "claim-501", {"receipt_ids": ["receipt-101", "receipt-200"]}),
+        )
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "cross_tenant")
+        self.assertEqual(eng.execution_count, 0)
+
+    def test_confused_deputy_nested_resource(self):
+        # A permitted primary resource cannot authorize a cross-tenant ID hidden in receipt_ids
+        proposal = ActionProposal(
+            "calculate_total",
+            "receipt-101",
+            {
+                "receipt_ids": [
+                    "receipt-101",
+                    "receipt-200",
+                ],
+            },
+        )
+        d, eng = self._eval(ACME_EMPLOYEE, proposal)
+        self.assertEqual(d.state, Decision.DENY)
+        self.assertEqual(d.reason, "cross_tenant")
+        self.assertEqual(eng.execution_count, 0)
+        self.assertEqual(eng.budget_remaining, RUN_BUDGET)
+        
+        event = eng.audit_log[0]
+        self.assertEqual(event.policy_state, "deny")
+        self.assertEqual(event.terminal_state, "blocked")
+        self.assertEqual(event.operation, "calculate_total")
+        self.assertEqual(event.resource_id, "receipt-101")
+        self.assertEqual(event.reason, "cross_tenant")
+
     def test_unallowlisted_operation(self):
         d, eng = self._eval(
             ACME_EMPLOYEE,

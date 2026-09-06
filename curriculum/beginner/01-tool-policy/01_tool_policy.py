@@ -361,6 +361,26 @@ class ApprovalStore:
 # 4. Argument validation
 # ---------------------------------------------------------------------------
 
+def authorize_resource(
+    actor: ActorContext,
+    resource_id: str,
+) -> Optional[PolicyDecision]:
+    """Authorize access to a single resource."""
+    resource = RESOURCE_REGISTRY.get(resource_id)
+    if resource is None:
+        return PolicyDecision(
+            Decision.DENY, "unknown_resource",
+            f"Resource '{resource_id}' is not in the registry.",
+        )
+    if resource.owning_tenant != actor.tenant:
+        return PolicyDecision(
+            Decision.DENY, "cross_tenant",
+            f"Resource belongs to '{resource.owning_tenant}', "
+            f"not '{actor.tenant}'.",
+        )
+    return None
+
+
 def _is_finite_positive_number(value: Any) -> bool:
     """True if value is a finite positive number, excluding booleans."""
     # isinstance(True, int) is True, so reject booleans explicitly
@@ -584,18 +604,18 @@ class PolicyEngine:
             ), False
 
         # Step 3 — Resolve resource metadata and enforce tenant ownership
-        resource = RESOURCE_REGISTRY.get(proposal.resource_id)
-        if resource is None:
-            return PolicyDecision(
-                Decision.DENY, "unknown_resource",
-                f"Resource '{proposal.resource_id}' is not in the registry.",
-            ), False
-        if resource.owning_tenant != actor.tenant:
-            return PolicyDecision(
-                Decision.DENY, "cross_tenant",
-                f"Resource belongs to '{resource.owning_tenant}', "
-                f"not '{actor.tenant}'.",
-            ), False
+        auth_error = authorize_resource(actor, proposal.resource_id)
+        if auth_error is not None:
+            return auth_error, False
+
+        # Authorize indirectly referenced resources in arguments
+        receipt_ids = proposal.arguments.get("receipt_ids")
+        if isinstance(receipt_ids, list):
+            for rid in receipt_ids:
+                if isinstance(rid, str) and rid:
+                    auth_error = authorize_resource(actor, rid)
+                    if auth_error is not None:
+                        return auth_error, False
 
         # Step 4 — Validate argument schema and business rules
         arg_error = validate_arguments(

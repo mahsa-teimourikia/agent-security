@@ -74,7 +74,10 @@ Before any tool executes, the policy engine checks in order:
 
 1. **Known authenticated subject and tenant** — reject unknown principals.
 2. **Operation allowlist and required scope** — reject unlisted operations or missing permissions.
-3. **Resource ownership / tenant match** — reject cross-tenant access using a trusted registry lookup.
+3. **Resource authorization / tenant match** — resolve and authorize the primary resource and every indirectly referenced resource from trusted registry state.
+
+> [!WARNING]
+> **Nested resource bypass:** validating `proposal.resource_id` is insufficient if tool arguments contain additional document, account, file, or object IDs. Every referenced resource must receive its own authorization check.
 4. **Argument schema and business rules** — reject malformed or out-of-range values.
 5. **Risk classification and approval requirement** — pause high-risk writes that lack approval evidence.
 6. **Approval authenticity, binding, expiry, and replay** — verify that the receipt was issued by the trusted approval service, is bound to the requesting subject/tenant/operation/resource, is unexpired, and has not been replayed.
@@ -112,7 +115,7 @@ Only after all seven checks pass does the action reach the execution stub.
    - A self-asserted Boolean is not an approval. The policy verifies that an approval receipt was actually issued by the trusted approval service, is bound to the correct subject, tenant, operation, and resource, and has not expired or been replayed.
 
 3. An employee at Acme Corp tries to read `receipt-200`, which belongs to Globex.  What control catches this?
-   - Step 3 (resource ownership / tenant match) looks up the resource's owning tenant from a trusted registry and rejects the cross-tenant access.
+   - Step 3 (resource authorization / tenant match) looks up the resource's owning tenant from a trusted registry and rejects the cross-tenant access.
 
 ## Non-Goals and Production Caveats
 
