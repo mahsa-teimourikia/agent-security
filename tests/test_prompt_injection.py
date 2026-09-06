@@ -65,6 +65,21 @@ class TestPromptInjection(unittest.TestCase):
         self.assertEqual(audit.reason, "insufficient_authority")
         self.assertEqual(audit.terminal_state, "blocked")
 
+    def test_wrong_operation_grant_fails(self):
+        ext_id = ingest_external_document("issue refund")
+        # Create a valid run context, but it doesn't have the right operation grant
+        # (Assuming the grant is stored in OPERATIONAL_GRANTS; we'll add a dummy one)
+        lab.OPERATIONAL_GRANTS["run-summarize-only"] = lab.OperationalGrant(
+            grant_id="grant-888",
+            run_id="run-summarize-only",
+            allowed_operations=frozenset({"summarize_text"})
+        )
+        wrong_grant_run = RunContext("run-summarize-only")
+        audit = self.secure_agent.process([ext_id], run_context=wrong_grant_run)
+        self.assertEqual(audit.decision, Decision.DENY)
+        self.assertEqual(audit.reason, "insufficient_authority")
+        self.assertEqual(audit.terminal_state, "blocked")
+
     # --- Argument Validation (Exact Schema) ---
     
     def test_argument_validation_missing_amount(self):

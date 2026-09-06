@@ -41,7 +41,11 @@ Even if a document's provenance is `TRUSTED_INTERNAL` (authentic and internal), 
 
 ## The Threat Model: Content vs Context Forgery
 
-Even when we establish a provenance system, attackers will attempt to bypass it by forging identifiers. This lesson introduces two critical bindings to prevent this:
+Even when we establish a provenance system, attackers will attempt to bypass it by forging identifiers. In this lab, we use a `SimulatedModel` that is intentionally naive. We assume the prompt injection *succeeds* in tricking the LLM into proposing the dangerous action. Our job is to ensure the **surrounding application remains safe**.
+
+> **Note:** The goal is not to perfectly classify malicious text. The goal is to prevent text from acquiring authority it does not possess.
+
+This lesson introduces two critical bindings to prevent attackers from acquiring this authority:
 
 ### 1. Content Binding (Preventing Source Spoofing)
 **The Attack:** An attacker supplies malicious content alongside a claim that it came from a trusted source (e.g., `id="kb-article-42"`).
