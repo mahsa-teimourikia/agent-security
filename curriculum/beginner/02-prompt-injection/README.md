@@ -72,10 +72,19 @@ This lesson introduces two critical bindings to prevent attackers from acquiring
 **The Fix:** Provenance applies to an authenticated content object, not to a string identifier supplied alongside arbitrary text. In our lab, external content must enter through an ingestion function that generates a new ID and explicitly assigns `UNTRUSTED_EXTERNAL` provenance. We never let callers pair a trusted ID with different content.
 
 ### 2. Context Binding (Preventing Workflow Forgery)
-**The Attack:** An attacker knows that the system requires an operational workflow ID to issue a refund. They manually supply `"workflow-999"` to trick the system.
-**The Fix:** Knowing an authorization object's identifier must not be equivalent to possessing that authorization. Operational authority must be resolved from trusted application state based on the current execution run (the `RunContext`), preventing attackers from guessing static identifiers.
+**The Attack:** An attacker knows that the system requires an operational workflow ID to issue a refund. They manually supply `"run-approved-001"` to trick the system.
+**The Fix:** Knowing an authorization object's identifier must not be equivalent to possessing that authorization. Operational authority must be resolved from trusted application state (e.g., via our `ApplicationAuthorityService`), preventing attackers from guessing static identifiers to unlock execution paths. The public-facing security API simply has no input parameter that accepts authorization objects.
 
-### 3. Trusted-Source Content Compromise
+### 3. Identifier vs Credential
+This leads to a highly transferable security concept:
+*   **Identifier:** Tells the application *which* object or state is being referenced (e.g., source ID, run ID, job ID).
+*   **Credential / Trusted Context:** Proves the current execution is *entitled* to use that state.
+
+A `source_id` is not source authenticity. A `run_id` is not workflow authorization.
+
+> **Simulation Limitation:** In this Python simulation, `ApplicationAuthorityService` represents a trusted server-side boundary. Production systems establish that boundary through authenticated sessions, IAM, workflow services, capability tokens, or equivalent server-side state. Do not mistake Python class visibility for a true security boundary.
+
+### 4. Trusted-Source Content Compromise
 This is distinct from source spoofing. What happens if an attacker successfully injects malicious instructions *into* the actual trusted KB article? 
 **The Result:** The source is genuinely `TRUSTED_INTERNAL`, but its authority remains `INFORMATIONAL`. Because the document lacks `OPERATIONAL` authority, a refund is still securely denied. 
 

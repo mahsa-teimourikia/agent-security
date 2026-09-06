@@ -288,18 +288,24 @@ class SecureAgent:
         )
 
 
-class TrustedApplicationRun:
+class ApplicationAuthorityService:
     """
     The trusted application layer resolves grants and instantiates the agent.
+    In this simulation, this class represents a trusted server-side boundary.
+    Production systems establish that boundary through authenticated sessions,
+    IAM, workflow services, capability tokens, or equivalent server-side state.
     """
-    def __init__(self, run_id: str, policy_engine: PolicyEngine, execution_stub: ExecutionStub):
-        # Resolve operational authority securely from application state, not from caller assertions.
-        trusted_grant = OPERATIONAL_GRANTS.get(run_id)
-        self.agent = SecureAgent(policy_engine, execution_stub, trusted_grant)
+    def __init__(self, policy_engine: PolicyEngine, execution_stub: ExecutionStub):
+        self.policy = policy_engine
+        self.executor = execution_stub
 
-    def handle_request(self, source_ids: List[str]) -> AuditEvent:
-        # The untrusted request boundary
-        return self.agent.process(source_ids)
+    def create_authorized_agent(self, run_id: str) -> SecureAgent:
+        """
+        Resolves operational authority securely from application state,
+        not from caller assertions.
+        """
+        trusted_grant = OPERATIONAL_GRANTS.get(run_id)
+        return SecureAgent(self.policy, self.executor, trusted_grant)
 
 
 class NaiveAgent:
@@ -389,8 +395,10 @@ def run_demo():
     print("--- SCENARIO 7: Authorized Workflow Execution ---")
     # The trusted application resolves the active grant for the run
     # and binds it to the execution context.
-    trusted_app = TrustedApplicationRun("run-approved-001", policy, executor2)
-    audit7 = trusted_app.handle_request([ext_id])
+    authority_service = ApplicationAuthorityService(policy, executor2)
+    authorized_agent = authority_service.create_authorized_agent("run-approved-001")
+    
+    audit7 = authorized_agent.process([ext_id])
     print(f"Result: {audit7.decision.name} ({audit7.reason}) -> {audit7.terminal_state}")
     print(f"Executions: {executor2.execution_count}\n")
 

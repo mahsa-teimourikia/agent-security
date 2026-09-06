@@ -16,7 +16,7 @@ NaiveAgent = lab.NaiveAgent
 SecureAgent = lab.SecureAgent
 ExecutionStub = lab.ExecutionStub
 OperationalGrant = lab.OperationalGrant
-TrustedApplicationRun = lab.TrustedApplicationRun
+ApplicationAuthorityService = lab.ApplicationAuthorityService
 ingest_external_document = lab.ingest_external_document
 
 
@@ -180,12 +180,14 @@ class TestPromptInjection(unittest.TestCase):
         proposal = ActionProposal("issue_refund", {"amount": 100.0}, ("kb-article-99",))
         decision = self.policy.evaluate(proposal, self.valid_grant)
         # Because we supplied the valid_grant, the operation is permitted!
+        # The compromised document did not create the authority; the independent grant did.
         self.assertEqual(decision.state, Decision.ALLOW)
 
     def test_operational_workflow_allows_refund(self):
         ext_id = ingest_external_document("refund")
-        trusted_app = TrustedApplicationRun("run-approved-001", self.policy, self.executor)
-        audit = trusted_app.handle_request([ext_id])
+        authority_service = ApplicationAuthorityService(self.policy, self.executor)
+        authorized_agent = authority_service.create_authorized_agent("run-approved-001")
+        audit = authorized_agent.process([ext_id])
         self.assertEqual(audit.decision, Decision.ALLOW)
 
     def test_provenance_laundering(self):
@@ -206,8 +208,9 @@ class TestPromptInjection(unittest.TestCase):
 
     def test_execution_proceeds_on_allow(self):
         ext_id = ingest_external_document("process refund")
-        trusted_app = TrustedApplicationRun("run-approved-001", self.policy, self.executor)
-        audit = trusted_app.handle_request([ext_id])
+        authority_service = ApplicationAuthorityService(self.policy, self.executor)
+        authorized_agent = authority_service.create_authorized_agent("run-approved-001")
+        audit = authorized_agent.process([ext_id])
         self.assertEqual(audit.decision, Decision.ALLOW)
         self.assertEqual(self.executor.execution_count, 1)
         self.assertEqual(audit.terminal_state, "executed")
