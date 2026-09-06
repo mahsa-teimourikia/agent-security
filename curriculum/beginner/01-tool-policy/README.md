@@ -29,24 +29,7 @@ evidence.  The model may propose an action, but it must not grant itself access.
 
 ## Architecture
 
-```mermaid
-flowchart TD
-    Auth[Authenticated Session] -->|creates| AC[ActorContext]
-    Model[Model] -->|generates| AP[ActionProposal]
-    
-    AC --> PE[Policy Engine]
-    AP --> PE
-    
-    subgraph Trusted State
-        PE -.- IR[Identity Registry]
-        PE -.- RR[Resource Registry]
-        PE -.- AS[Approval Store]
-        PE -.- B[Budget State]
-    end
-    
-    PE -->|ALLOW only| Exec[Execution Stub]
-    PE -->|always| Audit[Audit Event]
-```
+![Architecture diagram](architecture.svg)
 
 ## A Threat-Model Vocabulary
 

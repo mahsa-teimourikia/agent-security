@@ -18,9 +18,12 @@ After this module you will be able to:
 4. Implement data provenance tracking to decouple external content from the authority to execute tools.
 5. Apply strict tool policies to restrict the blast radius of prompt injection attacks.
 
-## The Core Problem: Treating All Text as Authority
+## The Core Thesis
 
-Prompt Injection is what happens when an application treats all text in the context window as authoritative instructions, failing to distinguish between the developer's trusted logic and a user's untrusted input.
+When untrusted content is included in model context, applications should assume it may influence model behavior. Security must therefore remain correct even when prompt injection succeeds.
+
+A secure application relies on **application-resolved provenance in this simulation** + strict boundaries + out-of-band policies.
+External content can *inform* an answer, but it must never grant authority.
 
 ```mermaid
 flowchart TD
@@ -63,6 +66,29 @@ Instead of relying solely on the LLM to filter malice, the application must:
 1. **Track Provenance:** Know where data came from. Was this action proposed based on a trusted internal rule, or an untrusted external email?
 2. **Establish Boundaries:** Ensure the model operates in a sandboxed environment where its raw output is not immediately executed.
 3. **Enforce Policy:** Apply the lessons from Module 01 (`01-tool-policy`). The application validates the provenance of the request against the required authority for the tool.
+
+## A Secure Architecture
+
+This module introduces the crucial distinction between **Provenance** and **Authority**. 
+- **Provenance:** Where did this data come from? (e.g. `TRUSTED_INTERNAL`, `UNTRUSTED_EXTERNAL`).
+- **Authority:** Is this source permitted to issue instructions for this operation? (e.g. `INFORMATIONAL`, `OPERATIONAL`).
+
+Even if a document's provenance is `TRUSTED_INTERNAL` (authentic and internal), it does not automatically possess `OPERATIONAL` authority to execute a high-risk action like `issue_refund`. Documents only provide `INFORMATIONAL` authority.
+
+![Architecture diagram](architecture2.svg)
+
+> **Note:** Provenance is another policy input. It does not replace authentication, authorization, approval, validation, or execution gating established in Lesson 01.
+
+## Teaching Simulation vs. Production
+
+| Teaching simulation | Production |
+|---|---|
+| In-memory source registry | Authenticated ingestion/catalog metadata |
+| Simple provenance enum | Signed metadata / authenticated connectors / trusted pipeline |
+| Informational vs operational authority | Fine-grained policy/ABAC/capability model |
+| Deterministic model simulator | Real LLM behind same policy boundary |
+| Local execution stub | Idempotent API/tool execution |
+| Local evidence | Centralized tamper-resistant audit |
 
 ## Scenario: The Customer Service Agent
 
