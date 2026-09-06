@@ -85,22 +85,25 @@ def ingest_external_document(content: str) -> str:
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
-class RunContext:
-    run_id: str
-
-
-@dataclass(frozen=True)
 class OperationalGrant:
     grant_id: str
     run_id: str
     allowed_operations: FrozenSet[str]
+    max_amount: float
 
 
 OPERATIONAL_GRANTS: Dict[str, OperationalGrant] = {
     "run-approved-001": OperationalGrant(
         grant_id="grant-777",
         run_id="run-approved-001",
-        allowed_operations=frozenset({"issue_refund"})
+        allowed_operations=frozenset({"issue_refund"}),
+        max_amount=1000.0
+    ),
+    "run-summarize-only": OperationalGrant(
+        grant_id="grant-888",
+        run_id="run-summarize-only",
+        allowed_operations=frozenset({"summarize_text"}),
+        max_amount=0.0
     )
 }
 
@@ -152,7 +155,11 @@ class PolicyEngine:
     High-risk actions require independent OPERATIONAL authority.
     """
     
-    def evaluate(self, proposal: ActionProposal, run_context: Optional[RunContext] = None) -> PolicyDecision:
+    def evaluate(self, proposal: ActionProposal, trusted_grant: Optional[OperationalGrant] = None) -> PolicyDecision:
+        # 0. Source Cardinality Constraint
+        if not proposal.source_ids:
+            return PolicyDecision(Decision.DENY, "missing_source", (), ())
+
         # 1. Operation Allowlist
         if proposal.operation not in {"summarize_text", "issue_refund"}:
             return PolicyDecision(Decision.DENY, "operation_not_allowed", (), ())
@@ -185,17 +192,16 @@ class PolicyEngine:
         # 4. Authority Enforcement
         if proposal.operation == "issue_refund":
             # Rule: Documents NEVER authorize financial execution.
-            # We require an explicit operational grant bound to the current run.
-            if not run_context:
+            # We require an explicit operational grant from the trusted application layer.
+            if not trusted_grant:
                 return PolicyDecision(Decision.DENY, "insufficient_authority", prov_tuple, auth_tuple)
                 
-            grant = OPERATIONAL_GRANTS.get(run_context.run_id)
-            if not grant or "issue_refund" not in grant.allowed_operations:
+            if "issue_refund" not in trusted_grant.allowed_operations:
                 return PolicyDecision(Decision.DENY, "insufficient_authority", prov_tuple, auth_tuple)
                 
-            # Anti-Laundering Check: If any informational source is untrusted or we don't have
-            # clean operational authority, we could add stricter rules here. For this lesson,
-            # the separate operational grant is sufficient to gate the action.
+            amt = proposal.arguments.get("amount", 0)
+            if amt > trusted_grant.max_amount:
+                return PolicyDecision(Decision.DENY, "invalid_argument", prov_tuple, auth_tuple)
 
         # Low risk or properly authorized
         return PolicyDecision(Decision.ALLOW, "all_checks_passed", prov_tuple, auth_tuple)
@@ -227,17 +233,25 @@ class SimulatedModel:
             return ActionProposal("issue_refund", {"amount": 500.0}, tuple(source_ids))
         elif "delete" in text_lower:
             return ActionProposal("delete_database", {}, tuple(source_ids))
+        elif "no_source" in text_lower:
+            return ActionProposal("summarize_text", {"length": 10}, ())
         else:
             return ActionProposal("summarize_text", {"length": len(text)}, tuple(source_ids))
 
 
 class SecureAgent:
-    def __init__(self, policy_engine: PolicyEngine, execution_stub: ExecutionStub):
+    """
+    The agent represents the policy enforcement and execution boundary.
+    It is initialized by the trusted application with its operational grant.
+    The public `process()` API does NOT accept authorization metadata.
+    """
+    def __init__(self, policy_engine: PolicyEngine, execution_stub: ExecutionStub, trusted_grant: Optional[OperationalGrant] = None):
         self.policy = policy_engine
         self.executor = execution_stub
         self.model = SimulatedModel()
+        self.trusted_grant = trusted_grant
 
-    def process(self, source_ids: List[str], run_context: Optional[RunContext] = None) -> AuditEvent:
+    def process(self, source_ids: List[str]) -> AuditEvent:
         # 1. Fetch Bound Content
         # Spoofing is impossible because we only load canonical content from the store.
         documents = []
@@ -245,9 +259,6 @@ class SecureAgent:
             doc = DOCUMENT_STORE.get(sid)
             if doc:
                 documents.append(doc)
-            else:
-                # If an ID is forged or unknown, the engine will block it later.
-                pass
                 
         combined_text = " ".join(doc.content for doc in documents)
         
@@ -255,7 +266,7 @@ class SecureAgent:
         proposal = self.model.generate_proposal(combined_text, source_ids)
         
         # 3. Policy Evaluates
-        decision = self.policy.evaluate(proposal, run_context)
+        decision = self.policy.evaluate(proposal, self.trusted_grant)
         
         # 4. Conditional Execution
         terminal_state = "blocked"
@@ -275,6 +286,20 @@ class SecureAgent:
             terminal_state=terminal_state,
             execution_result=execution_result
         )
+
+
+class TrustedApplicationRun:
+    """
+    The trusted application layer resolves grants and instantiates the agent.
+    """
+    def __init__(self, run_id: str, policy_engine: PolicyEngine, execution_stub: ExecutionStub):
+        # Resolve operational authority securely from application state, not from caller assertions.
+        trusted_grant = OPERATIONAL_GRANTS.get(run_id)
+        self.agent = SecureAgent(policy_engine, execution_stub, trusted_grant)
+
+    def handle_request(self, source_ids: List[str]) -> AuditEvent:
+        # The untrusted request boundary
+        return self.agent.process(source_ids)
 
 
 class NaiveAgent:
@@ -319,10 +344,10 @@ def run_demo():
     print("--- SCENARIO 2: Untrusted External Injection (Secure Agent) ---")
     policy = PolicyEngine()
     executor2 = ExecutionStub()
-    secure = SecureAgent(policy, executor2)
+    secure_no_auth = SecureAgent(policy, executor2)
     
     ext_id = ingest_external_document(clever_payload)
-    audit2 = secure.process([ext_id])
+    audit2 = secure_no_auth.process([ext_id])
     print(f"Result: {audit2.decision.name} ({audit2.reason}) -> {audit2.terminal_state}")
     print(f"Executions: {executor2.execution_count}\n")
     
@@ -330,7 +355,7 @@ def run_demo():
     print("--- SCENARIO 3: Trusted-Source Compromise ---")
     # An attacker injected text into kb-article-99 directly in the DB.
     # The provenance is genuinely TRUSTED_INTERNAL, but its authority is INFORMATIONAL.
-    audit3 = secure.process(["kb-article-99"])
+    audit3 = secure_no_auth.process(["kb-article-99"])
     print(f"Result: {audit3.decision.name} ({audit3.reason}) -> {audit3.terminal_state}")
     print(f"Executions: {executor2.execution_count}\n")
     
@@ -338,25 +363,35 @@ def run_demo():
     print("--- SCENARIO 4: Source Spoofing Failed ---")
     # An attacker attempts to pass a trusted ID that doesn't actually exist in their payload, 
     # but the API requires explicit source tracking.
-    # If they invent a fake ID, it's unknown.
-    audit4 = secure.process(["fake-kb-article"])
+    audit4 = secure_no_auth.process(["fake-kb-article"])
     print(f"Result: {audit4.decision.name} ({audit4.reason}) -> {audit4.terminal_state}")
     print(f"Executions: {executor2.execution_count}\n")
     
     
     print("--- SCENARIO 5: Context Forgery Failed ---")
-    # An attacker tries to guess an operational context, but it must be bound to a run.
-    fake_run = RunContext("workflow-999") # Attacker guesses an old identifier
-    audit5 = secure.process([ext_id], fake_run)
+    # An attacker knows a legitimate run identifier, but the public process() API
+    # simply doesn't accept operational authority. 
+    # Attempting to supply it as a source ID fails because it's not a source.
+    audit5 = secure_no_auth.process([ext_id, "run-approved-001"])
     print(f"Result: {audit5.decision.name} ({audit5.reason}) -> {audit5.terminal_state}")
+    print(f"Executions: {executor2.execution_count}\n")
+
+
+    print("--- SCENARIO 6: Missing Source Failed ---")
+    # A proposal without any source evidence is denied immediately.
+    # We trigger it via a specific keyword to our simulated model.
+    missing_source_id = ingest_external_document("trigger no_source")
+    audit6 = secure_no_auth.process([missing_source_id])
+    print(f"Result: {audit6.decision.name} ({audit6.reason}) -> {audit6.terminal_state}")
     print(f"Executions: {executor2.execution_count}\n")
     
     
-    print("--- SCENARIO 6: Authorized Workflow Execution ---")
-    # The application resolves a legitimate active grant for the run.
-    valid_run = RunContext("run-approved-001")
-    audit6 = secure.process([ext_id], valid_run)
-    print(f"Result: {audit6.decision.name} ({audit6.reason}) -> {audit6.terminal_state}")
+    print("--- SCENARIO 7: Authorized Workflow Execution ---")
+    # The trusted application resolves the active grant for the run
+    # and binds it to the execution context.
+    trusted_app = TrustedApplicationRun("run-approved-001", policy, executor2)
+    audit7 = trusted_app.handle_request([ext_id])
+    print(f"Result: {audit7.decision.name} ({audit7.reason}) -> {audit7.terminal_state}")
     print(f"Executions: {executor2.execution_count}\n")
 
 

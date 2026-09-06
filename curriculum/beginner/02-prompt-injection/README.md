@@ -24,11 +24,31 @@ This module introduces the crucial distinction between **Provenance** and **Auth
 
 Even if a document's provenance is `TRUSTED_INTERNAL` (authentic and internal), it does not automatically possess `OPERATIONAL` authority to execute a high-risk action like `issue_refund`. Documents only provide `INFORMATIONAL` authority.
 
-![Architecture diagram](architecture2.svg)
+```text
+Untrusted Content
+      ↓
+Application Ingestion
+      ↓
+Canonical Source Store
+      ↓
+Simulated Model
+      ↓
+ActionProposal
+      ↓
+Policy Engine ◄──── Trusted Operational Grant
+      ↓                  ▲
+ALLOW only               │
+      ↓              Application/
+Execution Stub       Workflow Layer
+```
+
+Notice that the model generates an `ActionProposal` containing an untrusted list of `source_ids`. The application translates these IDs into authenticated canonical context, and the Policy Engine enforces rules against this bound metadata.
+
+Operational authority is supplied by trusted application/workflow state; request content, model output, and caller-supplied IDs cannot create it.
 
 > **Note:** Provenance is another policy input. It does not replace authentication, authorization, approval, validation, or execution gating established in Lesson 01.
 
-## Teaching Simulation vs. Production
+## Teaching Simulation vs Production
 
 | Teaching simulation | Production |
 |---|---|
