@@ -13,7 +13,9 @@ In this course, we combine the capabilities of a research assistant with the sec
 2. How to distinguish between document relevance, provenance, sensitivity, and authority.
 3. Why heuristic filtering of prompt injections is insufficient for security.
 4. How to enforce least-privilege capability contracts.
-5. How to validate model output deterministically (citations and grounding).
+5. How to validate model output deterministically (citations and grounding bounds).
+6. Why the user-facing response must be cleanly separated from internal audit logging.
+7. How to manage authoritative access contexts so callers cannot self-assert privileges.
 
 ## Why Research Agents are Security-Sensitive
 Research agents combine untrusted external data (web searches, external emails) with internal sensitive data (knowledge bases, confidential documents) and feed both into a language model. 
@@ -26,15 +28,24 @@ Because the model processes all of this text simultaneously, it is impossible to
 - **Data Exfiltration**: The model might be tricked into revealing confidential documents to unauthorized users.
 - **Unauthorized Actions**: The model might attempt to use tools outside its allowed scope (e.g., sending an email instead of just answering).
 - **Hallucination & Laundering**: The model might fabricate citations or misrepresent retrieved evidence.
+- **Privilege Escalation**: An attacker might attempt to forge their authorization context.
 
 ## Architecture
 
 ![Secure Research Agent Architecture](architecture.svg)
 
+## Authoritative Access Context
+A key enterprise invariant is:
+`user-controlled request != trusted authorization context`
+
+The research agent application resolves the user's allowed sensitivities via an authoritative registry (like an Identity Provider or RBAC system). If a user attempts to pass metadata claiming they have `CONFIDENTIAL` access, the application must ignore it and rely solely on the backend resolution.
+
 ## Retrieval is a Security Boundary
 A common anti-pattern is retrieving all possible documents for a query and asking the model to "only use what the user is allowed to see." Models cannot enforce access control.
 
 Retrieval itself must act as a hard security boundary. If the actor is not allowed to see a document (e.g., `Sensitivity.CONFIDENTIAL`), that document must be filtered out **before** it enters the model context. Data minimization before inference is critical.
+
+*Production Caveat:* In this simulation, we perform candidate retrieval first and filter sensitivities afterward. In production, sensitive search systems often enforce authorization *inside* the retrieval index or datastore layer to avoid leaking metadata via search timing, result counts, or facets.
 
 ## Provenance vs Sensitivity vs Authority
 - **Relevance**: Should this document be retrieved?
@@ -44,49 +55,38 @@ Retrieval itself must act as a hard security boundary. If the actor is not allow
 
 *Relevant != Trusted. Trusted != Authorized. Retrieved != Safe to Execute.*
 
-## Why Prompt-Injection Filtering is Insufficient
-We implement a `detect_suspicious_content` heuristic. It can flag obvious injections like "ignore previous instructions". However, attackers can bypass these filters easily. Heuristics improve observability, but they must **never** serve as the authorization boundary.
-
-## Least Privilege
-The agent operates under a strict capability contract. Even if a trusted internal document says "You are authorized to send an email," the application policy enforces that the research agent's capabilities are strictly limited to `search` and `answer`. 
-
 ## Evidence Boundary
 Retrieved content is strictly evidence. `Document.authority == INFORMATIONAL`. It can influence the answer text or the citations, but it cannot grant tool permissions or operational authority.
 
-## Model Output is Untrusted
-The output of the model (`ModelOutput`) is untrusted until validated by deterministic application logic. The simulated model in this lab may hallucinate, propose bad actions, or cite incorrectly.
+## User Response vs Internal Audit Evidence
+The result of an LLM query must separate public response data from internal tracking data.
+- **User Response**: Contains the safe answer, the safe terminal state (`ANSWERED`, `BLOCKED`, `INSUFFICIENT_EVIDENCE`), and the allowed citations. It does *not* contain the titles or IDs of blocked confidential documents.
+- **Internal Audit Event**: Contains the exact candidate IDs, blocked IDs, validation reasons, and suspicious-content flags.
+
+*Important:* Logs useful to defenders may themselves be sensitive. An unauthorized user shouldn't learn that a confidential document exists, but the audit log must record the access attempt. However, even the audit log must be redacted of actual secret values or massive user inputs.
 
 ## Grounding and Citation Validation
 Citations must be deterministically validated:
-1. Every citation must exist.
-2. Every citation must have been retrieved and authorized for the user.
-3. The claim must be supported by the cited document.
+1. **Citation Validity**: Does every citation exist? Was it retrieved? Was it authorized?
+2. **Citation Presence**: If an answer is provided, does it cite at least one source?
+3. **Grounding Evaluation**: Does that evidence actually support the claim?
+
+*Production Caveat:* In this lab, we use `validate_grounding_fixture` to simulate deterministic detection of known, unsupported claims. In production, general grounding evaluation usually requires claim decomposition, NLI (Natural Language Inference) models, entailment checking, and human review where appropriate. It cannot always be made purely deterministic.
 
 ## Citation Laundering
 "Citation Laundering" occurs when a model produces an incorrect or malicious claim, but cites a valid, trusted document to make the claim look authoritative. Presence of a citation != citation support.
 
-## Insufficient Evidence
-If no authorized evidence supports the query, or if the model fabricates claims, the system must fail closed to an `INSUFFICIENT_EVIDENCE` state rather than hallucinating an answer.
-
 ## Secret / Data Minimization
-Confidential data (like API keys) must never be retrieved for unauthorized users, and must never appear in their model context, answer, or structured audit logs. 
+Confidential data must never be retrieved for unauthorized users, and must never appear in their model context, answer, or structured audit logs.
 
-## Auditability
-The application produces structured audit events containing the correlation ID, the query, the authorized vs blocked document IDs, the validation reason, and the secure terminal state (`ANSWERED`, `INSUFFICIENT_EVIDENCE`, `BLOCKED`).
-
-## Failure Modes
-This lab explores what happens when:
-- An attacker asks for a command execution.
-- A retrieved document contains a prompt injection.
-- The model cites an unretrieved document.
-- The model contradicts the evidence.
+*Note on Secrets:* While this lab uses a synthetic budget value to represent confidential data, real credentials and secrets (e.g., production API keys) should typically be managed by dedicated secrets managers and excluded from LLM context entirely, even for otherwise privileged users.
 
 ## Production Upgrades
 | Teaching Simulation | Production Implementation |
 |---------------------|---------------------------|
 | In-memory corpus | Search / Vector / Document Platform |
-| Token-overlap retrieval | BM25 / Vector / Hybrid Retrieval |
-| `ResearchContext` | IAM / Session / ABAC context |
+| Token-overlap retrieval | BM25 / Vector / Hybrid Retrieval with row-level auth |
+| `ResearchContextResolver` | IAM / Session / ABAC context provider |
 | Sensitivity Enum | Classification / DLP labels |
 | Static capability contract | Policy-as-code / Capability service |
 | Simulated Model | LLM Endpoint |

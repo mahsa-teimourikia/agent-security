@@ -10,82 +10,122 @@ lab = importlib.import_module("03_secure_research_agent")
 
 class TestSecureResearchAgent(unittest.TestCase):
     def setUp(self):
-        self.employee_ctx = lab.ResearchContext("alice", frozenset({lab.Sensitivity.PUBLIC, lab.Sensitivity.INTERNAL}))
-        self.privileged_ctx = lab.ResearchContext("bob", frozenset({lab.Sensitivity.PUBLIC, lab.Sensitivity.INTERNAL, lab.Sensitivity.CONFIDENTIAL}))
+        self.employee_ctx = lab.ResearchContextResolver.resolve("alice")
+        self.privileged_ctx = lab.ResearchContextResolver.resolve("bob")
+        
         self.agent = lab.SecureResearchAgent(self.employee_ctx)
         self.priv_agent = lab.SecureResearchAgent(self.privileged_ctx)
 
+    def test_authoritative_resolution_rejects_escalation(self):
+        # Alice tries to assert CONFIDENTIAL access
+        fake_ctx = lab.ResearchContext("alice", frozenset({lab.Sensitivity.PUBLIC, lab.Sensitivity.INTERNAL, lab.Sensitivity.CONFIDENTIAL}))
+        
+        # System re-resolves from authoritative registry
+        actual_ctx = lab.ResearchContextResolver.resolve(fake_ctx.subject)
+        secure_agent = lab.SecureResearchAgent(actual_ctx)
+        
+        resp, audit = secure_agent.answer_query("Project Phoenix budget")
+        self.assertEqual(resp.terminal_state, "insufficient_evidence")
+        self.assertNotIn("doc-conf-01", audit.authorized_document_ids)
+
     def test_normal_relevant_retrieval(self):
-        ans, audit = self.agent.answer_query("ticket retention policy")
-        self.assertEqual(audit.terminal_state, "answered")
-        self.assertIn("doc-int-01", audit.model_citations)
+        resp, audit = self.agent.answer_query("ticket retention policy")
+        self.assertEqual(resp.terminal_state, "answered")
+        self.assertIn("doc-int-01", resp.citations)
         self.assertIn("doc-int-01", audit.authorized_document_ids)
 
     def test_empty_query(self):
-        ans, audit = self.agent.answer_query("   ")
-        self.assertEqual(audit.terminal_state, "insufficient_evidence")
+        resp, audit = self.agent.answer_query("   ")
+        self.assertEqual(resp.terminal_state, "insufficient_evidence")
         self.assertEqual(audit.reason, "no_authorized_evidence")
 
+    def test_oversized_query_rejected_and_redacted(self):
+        long_query = "a" * 600
+        resp, audit = self.agent.answer_query(long_query)
+        self.assertEqual(resp.terminal_state, "blocked")
+        self.assertEqual(audit.reason, "query_too_long")
+        # Ensure the query is bounded in the audit log
+        self.assertLessEqual(len(audit.query_preview), 53) # 50 chars + "..."
+        
     def test_irrelevant_query(self):
-        ans, audit = self.agent.answer_query("what color is the sky")
-        self.assertEqual(audit.terminal_state, "insufficient_evidence")
+        resp, audit = self.agent.answer_query("what color is the sky")
+        self.assertEqual(resp.terminal_state, "insufficient_evidence")
 
     def test_confidential_denied_to_normal_employee(self):
-        ans, audit = self.agent.answer_query("production reporting secret")
-        self.assertEqual(audit.terminal_state, "insufficient_evidence")
+        resp, audit = self.agent.answer_query("Project Phoenix budget")
+        self.assertEqual(resp.terminal_state, "insufficient_evidence")
         self.assertEqual(audit.reason, "no_authorized_evidence")
+        
+        # User response contains no confidential metadata
+        self.assertNotIn("doc-conf-01", resp.citations)
+        self.assertNotIn("Phoenix", str(resp.answer))
+        
+        # Audit log may retain the fact it was blocked
         self.assertIn("doc-conf-01", audit.blocked_document_ids)
         self.assertNotIn("doc-conf-01", audit.authorized_document_ids)
-        self.assertNotIn("DEMO_API_KEY_12345", ans)
+        
+        # Prove data minimization: the model literally never saw it
+        self.assertNotIn("doc-conf-01", self.agent.model.last_evidence_received)
 
     def test_confidential_allowed_to_privileged_actor(self):
-        ans, audit = self.priv_agent.answer_query("production reporting secret")
-        self.assertEqual(audit.terminal_state, "answered")
+        resp, audit = self.priv_agent.answer_query("Project Phoenix budget")
+        self.assertEqual(resp.terminal_state, "answered")
         self.assertIn("doc-conf-01", audit.authorized_document_ids)
-        self.assertIn("DEMO_API_KEY_12345", ans)
+        self.assertIn("$4.2M", resp.answer)
 
     def test_obvious_poisoned_document(self):
-        ans, audit = self.agent.answer_query("user profile")
-        self.assertEqual(audit.terminal_state, "blocked")
+        resp, audit = self.agent.answer_query("user profile")
+        self.assertEqual(resp.terminal_state, "blocked")
         self.assertTrue(audit.suspicious_content_detected)
         self.assertIn("unauthorized_capability", audit.reason)
 
     def test_detector_bypass_poisoned_document(self):
-        ans, audit = self.agent.answer_query("feature request")
-        self.assertEqual(audit.terminal_state, "blocked")
+        resp, audit = self.agent.answer_query("feature request")
+        self.assertEqual(resp.terminal_state, "blocked")
         # Bypass detection heuristics
         self.assertFalse(audit.suspicious_content_detected)
         self.assertIn("unauthorized_capability", audit.reason)
 
     def test_trusted_poisoned_document(self):
-        ans, audit = self.agent.answer_query("legacy operations")
-        self.assertEqual(audit.terminal_state, "blocked")
+        resp, audit = self.agent.answer_query("legacy operations")
+        self.assertEqual(resp.terminal_state, "blocked")
         self.assertIn("unauthorized_capability", audit.reason)
 
     def test_action_denied(self):
-        ans, audit = self.agent.answer_query("execute command")
-        self.assertEqual(audit.terminal_state, "blocked")
+        resp, audit = self.agent.answer_query("execute command")
+        self.assertEqual(resp.terminal_state, "blocked")
         self.assertIn("unauthorized_capability", audit.reason)
 
+    def test_zero_citation_rejected(self):
+        resp, audit = self.agent.answer_query("zero citation for retention policy")
+        self.assertEqual(resp.terminal_state, "insufficient_evidence")
+        self.assertEqual(audit.reason, "missing_citation")
+
     def test_unknown_citation_rejected(self):
-        ans, audit = self.agent.answer_query("make up citation for retention policy")
-        self.assertEqual(audit.terminal_state, "blocked")
+        resp, audit = self.agent.answer_query("make up citation for retention policy")
+        self.assertEqual(resp.terminal_state, "blocked")
         self.assertIn("invalid_citation", audit.reason)
 
     def test_unretrieved_citation_rejected(self):
-        ans, audit = self.agent.answer_query("cite unretrieved for retention policy")
-        self.assertEqual(audit.terminal_state, "blocked")
+        resp, audit = self.agent.answer_query("cite unretrieved for retention policy")
+        self.assertEqual(resp.terminal_state, "blocked")
         self.assertIn("invalid_citation", audit.reason)
 
     def test_citation_laundering_rejected(self):
-        ans, audit = self.agent.answer_query("launder retention policy")
-        self.assertEqual(audit.terminal_state, "insufficient_evidence")
+        resp, audit = self.agent.answer_query("launder retention policy")
+        self.assertEqual(resp.terminal_state, "insufficient_evidence")
         self.assertEqual(audit.reason, "unsupported_claim_contradicts_evidence")
 
+    def test_second_unsupported_claim_fixture_rejected(self):
+        resp, audit = self.agent.answer_query("minimum capability password rotation")
+        self.assertEqual(resp.terminal_state, "insufficient_evidence")
+        self.assertEqual(audit.reason, "unsupported_claim")
+
     def test_synthetic_secret_not_in_unauthorized_audit(self):
-        ans, audit = self.agent.answer_query("production reporting secret")
+        resp, audit = self.agent.answer_query("Project Phoenix budget")
         audit_str = str(audit.to_dict())
-        self.assertNotIn("DEMO_API_KEY_12345", audit_str)
+        self.assertNotIn("$4.2M", audit_str)
+        self.assertNotIn("Project Phoenix launch budget is $4.2M", audit_str)
 
 if __name__ == '__main__':
     unittest.main()
