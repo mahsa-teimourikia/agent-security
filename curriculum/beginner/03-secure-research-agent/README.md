@@ -32,13 +32,31 @@ Because the model processes all of this text simultaneously, it is impossible to
 
 ## Architecture
 
-![Secure Research Agent Architecture](architecture.svg)
+```text
+User / Request
+      ↓
+ResearchApplication
+      ↓
+Identity / Entitlement Registry
+      ↓
+ResearchContextResolver
+      ↓
+SecureResearchAgent
+      ↓
+Retrieval
+      ↓
+Sensitivity Filter
+      ↓
+Authorized Evidence
+```
 
 ## Authoritative Access Context
 A key enterprise invariant is:
-`user-controlled request != trusted authorization context`
+`typed context object != trusted actor context`
 
-The research agent application resolves the user's allowed sensitivities via an authoritative registry (like an Identity Provider or RBAC system). If a user attempts to pass metadata claiming they have `CONFIDENTIAL` access, the application must ignore it and rely solely on the backend resolution.
+The research application resolves the user's allowed sensitivities via an authoritative registry (`IDENTITY_REGISTRY`). The normal request-facing API (`ResearchApplication.answer`) only accepts primitive strings (`subject`, `query`) and never a `ResearchContext` object.
+
+If a public API accepted a `ResearchContext` dataclass, a malicious caller could simply construct one claiming they have `CONFIDENTIAL` access, bypassing the security model. True trust comes from the application's internal, authoritative resolution (e.g., an Identity Provider or RBAC system). The `SecureResearchAgent` itself is treated as an internal, trusted component that only receives the context *after* the application has securely resolved it.
 
 ## Retrieval is a Security Boundary
 A common anti-pattern is retrieving all possible documents for a query and asking the model to "only use what the user is allowed to see." Models cannot enforce access control.
