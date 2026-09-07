@@ -115,7 +115,8 @@ nb = {
                 "app = lab.ResearchApplication()\n",
                 "\n",
                 "# Let's see what happens if an unknown user tries to query the system:\n",
-                "resp, audit = app.answer(\"unknown_eve\", \"What is the retention policy?\")\n",
+                "resp = app.answer(\"unknown_eve\", \"What is the retention policy?\")\n",
+                "audit = app.audit_sink.events[-1]\n",
                 "print(f\"Unknown User State: {resp.terminal_state} ({audit.reason})\")\n",
                 "\n",
                 "# And let's see how Alice and Bob are resolved:\n",
@@ -156,7 +157,8 @@ nb = {
             "metadata": {},
             "outputs": [],
             "source": [
-                "resp, audit = app.answer(\"alice\", \"a\" * 600)\n",
+                "resp = app.answer(\"alice\", \"a\" * 600)\n",
+                "audit = app.audit_sink.events[-1]\n",
                 "print(f\"State: {resp.terminal_state}, Reason: {audit.reason}\")"
             ]
         },
@@ -193,8 +195,10 @@ nb = {
             "metadata": {},
             "outputs": [],
             "source": [
-                "resp, audit = app.answer(\"alice\", \"ticket retention policy\")\n",
+                "resp = app.answer(\"alice\", \"ticket retention policy\")\n",
                 "print(\"User Response:\\n\", resp, \"\\n\")\n",
+                "audit = app.audit_sink.events[-1]\n",
+                "print(\"> Internal defender-only telemetry — not returned to the end user:\")\n",
                 "print(\"Audit Event:\\n\", audit)"
             ]
         },
@@ -212,7 +216,8 @@ nb = {
             "metadata": {},
             "outputs": [],
             "source": [
-                "resp, audit = app.answer(\"alice\", \"Read user profile\")\n",
+                "resp = app.answer(\"alice\", \"Read user profile\")\n",
+                "audit = app.audit_sink.events[-1]\n",
                 "print(f\"Terminal state: {resp.terminal_state} ({audit.reason})\\nAnswer: {resp.answer}\")"
             ]
         },
@@ -230,7 +235,8 @@ nb = {
             "metadata": {},
             "outputs": [],
             "source": [
-                "resp, audit = app.answer(\"alice\", \"Check legacy operations\")\n",
+                "resp = app.answer(\"alice\", \"Check legacy operations\")\n",
+                "audit = app.audit_sink.events[-1]\n",
                 "print(f\"Terminal state: {resp.terminal_state} ({audit.reason})\\nAnswer: {resp.answer}\")"
             ]
         },
@@ -248,7 +254,8 @@ nb = {
             "metadata": {},
             "outputs": [],
             "source": [
-                "resp, audit = app.answer(\"alice\", \"What color is the sky?\")\n",
+                "resp = app.answer(\"alice\", \"What color is the sky?\")\n",
+                "audit = app.audit_sink.events[-1]\n",
                 "print(f\"Terminal state: {resp.terminal_state} ({audit.reason})\\nAnswer: {resp.answer}\")"
             ]
         },
@@ -267,8 +274,10 @@ nb = {
             "metadata": {},
             "outputs": [],
             "source": [
-                "resp, audit = app.answer(\"alice\", \"What is the Project Phoenix budget?\")\n",
+                "resp = app.answer(\"alice\", \"What is the Project Phoenix budget?\")\n",
+                "audit = app.audit_sink.events[-1]\n",
                 "print(f\"User Answer: {resp.answer}\")\n",
+                "print(\"> Internal defender-only telemetry — not returned to the end user:\")\n",
                 "print(f\"Audit Blocked Docs: {audit.blocked_document_ids}\")\n",
                 "print(f\"Secret leaked in audit? {'$4.2M' in str(audit.to_dict())}\")\n"
             ]
@@ -287,7 +296,8 @@ nb = {
             "metadata": {},
             "outputs": [],
             "source": [
-                "resp, audit = app.answer(\"alice\", \"launder retention policy\")\n",
+                "resp = app.answer(\"alice\", \"launder retention policy\")\n",
+                "audit = app.audit_sink.events[-1]\n",
                 "print(f\"Terminal state: {resp.terminal_state} ({audit.reason})\\nAnswer: {resp.answer}\")"
             ]
         },
@@ -305,7 +315,8 @@ nb = {
             "metadata": {},
             "outputs": [],
             "source": [
-                "resp, audit = app.answer(\"alice\", \"zero citation for retention policy\")\n",
+                "resp = app.answer(\"alice\", \"zero citation for retention policy\")\n",
+                "audit = app.audit_sink.events[-1]\n",
                 "print(f\"Terminal state: {resp.terminal_state} ({audit.reason})\\nAnswer: {resp.answer}\")"
             ]
         },

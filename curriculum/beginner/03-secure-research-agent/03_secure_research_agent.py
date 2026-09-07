@@ -415,6 +415,19 @@ class AuditEvent:
         }
 
 
+class AuditSink:
+    """Deterministic teaching abstraction representing an internal audit/telemetry system."""
+    def __init__(self):
+        self._events: List[AuditEvent] = []
+
+    def record(self, event: AuditEvent) -> None:
+        self._events.append(event)
+
+    @property
+    def events(self) -> Tuple[AuditEvent, ...]:
+        return tuple(self._events)
+
+
 class SecureResearchAgent:
     def __init__(self, context: ResearchContext):
         self.context = context
@@ -556,8 +569,12 @@ class ResearchApplication:
     """
     The normal request-facing API boundary. 
     Callers can supply strings, but never objects or authorization metadata.
+    Returns only the safe ResearchResponse.
     """
-    def answer(self, subject: str, query: str, correlation_id: str = "req-1") -> Tuple[ResearchResponse, AuditEvent]:
+    def __init__(self, audit_sink: Optional[AuditSink] = None):
+        self.audit_sink = audit_sink or AuditSink()
+
+    def answer(self, subject: str, query: str, correlation_id: str = "req-1") -> ResearchResponse:
         # 1. Authoritative resolution
         context = ResearchContextResolver.resolve(subject)
         
@@ -576,12 +593,16 @@ class ResearchApplication:
                 suspicious_content_detected=False,
                 terminal_state=TerminalState.BLOCKED.value
             )
-             resp = ResearchResponse(TerminalState.BLOCKED.value, "Request blocked due to policy violation.", (), correlation_id)
-             return resp, audit
+             self.audit_sink.record(audit)
+             return ResearchResponse(TerminalState.BLOCKED.value, "Request blocked due to policy violation.", (), correlation_id)
              
         # 3. Delegate to trusted internal component
         agent = SecureResearchAgent(context)
-        return agent.answer_query(query, correlation_id)
+        resp, audit = agent.answer_query(query, correlation_id)
+        
+        # 4. Sink internal telemetry, return safe response
+        self.audit_sink.record(audit)
+        return resp
 
 
 # ------------------------------------------------------------------------
@@ -627,9 +648,13 @@ def run_demo():
         print(f"\n--- {name} ---")
         
         print(f"Actor: {actor} | Query: '{query}'")
-        resp, audit = app.answer(actor, query)
-        print(f"State:  {resp.terminal_state} ({audit.reason})")
-        print(f"Answer: {resp.answer}")
+        resp = app.answer(actor, query)
+        
+        # For demonstration purposes, we inspect the internal audit sink
+        audit = app.audit_sink.events[-1]
+        
+        print(f"User State:  {resp.terminal_state}")
+        print(f"User Answer: {resp.answer}")
         
         # Scenario validations
         if name.startswith("6.") or name.startswith("16.") or name.startswith("12."):
