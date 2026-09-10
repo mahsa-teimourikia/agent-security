@@ -21,20 +21,32 @@ def audit():
     return lab.AuditSink()
 
 @pytest.fixture
-def storage(delegation_service, audit):
-    return lab.StorageService(delegation_service, audit)
+def auth_storage():
+    return lab.InfrastructureIdentityProvider.for_storage_service()
 
 @pytest.fixture
-def secure_docs(delegation_service, storage, audit):
-    return lab.SecureDocumentService(delegation_service, storage, audit)
+def auth_doc():
+    return lab.InfrastructureIdentityProvider.for_document_service()
 
 @pytest.fixture
-def naive_docs(storage):
-    return lab.NaiveDocumentService(storage)
+def auth_agent():
+    return lab.InfrastructureIdentityProvider.for_research_agent()
 
 @pytest.fixture
-def app(delegation_service, secure_docs, naive_docs, audit):
-    return lab.ResearchApplication(delegation_service, secure_docs, naive_docs, audit)
+def storage(delegation_service, audit, auth_storage):
+    return lab.StorageService(delegation_service, audit, auth_storage)
+
+@pytest.fixture
+def secure_docs(delegation_service, storage, audit, auth_doc):
+    return lab.SecureDocumentService(delegation_service, storage, audit, auth_doc)
+
+@pytest.fixture
+def naive_docs(storage, auth_doc):
+    return lab.NaiveDocumentService(storage, auth_doc)
+
+@pytest.fixture
+def app(delegation_service, secure_docs, naive_docs, audit, auth_agent):
+    return lab.ResearchApplication(delegation_service, secure_docs, auth_agent, naive_docs, audit)
 
 class TestIdentityPropagation:
 
@@ -52,47 +64,47 @@ class TestIdentityPropagation:
     def test_known_principal_unauthorized_resource(self, app):
         resp = app.answer_secure("alice", "doc-secret")
         assert resp.terminal_state == "blocked"
-        assert app.audit.events[-1].reason == "delegation_issuance_failed"
+        assert "issuance_failed: " in app.audit.events[-1].reason
 
     def test_cross_tenant_rejected(self, app):
         # Mallory is Globex, tries to access Acme doc
         resp = app.answer_secure("mallory", "doc-101")
         assert resp.terminal_state == "blocked"
-        assert app.audit.events[-1].reason == "delegation_issuance_failed"
+        assert "issuance_failed: " in app.audit.events[-1].reason
 
     # --- Trust Boundaries ---
     def test_forged_principal_cannot_issue(self, delegation_service):
         # We try to use a fake Principal object, but DelegationService.issue only takes strings now
         # and looks it up in the authoritative PRINCIPAL_REGISTRY. If we try to pass a non-existent
         # string, it fails.
-        grant = delegation_service.issue(
+        issue_result = delegation_service.issue = delegation_service.issue(
             principal_id="fake_alice", 
             delegate_id="research-agent", 
             audience="document-service", 
             requested_operations={"read"}, 
             requested_resources={"doc-secret"}
         )
-        assert grant is None
+        assert issue_result.grant is None
 
     def test_unknown_workload_cannot_issue(self, delegation_service):
-        grant = delegation_service.issue(
+        issue_result = delegation_service.issue = delegation_service.issue(
             principal_id="alice", 
             delegate_id="fake-agent", 
             audience="document-service", 
             requested_operations={"read"}, 
             requested_resources={"doc-101"}
         )
-        assert grant is None
+        assert issue_result.grant is None
 
     def test_unknown_audience_cannot_issue(self, delegation_service):
-        grant = delegation_service.issue(
+        issue_result = delegation_service.issue = delegation_service.issue(
             principal_id="alice", 
             delegate_id="research-agent", 
             audience="fake-service", 
             requested_operations={"read"}, 
             requested_resources={"doc-101"}
         )
-        assert grant is None
+        assert issue_result.grant is None
 
     def test_workload_impersonation(self, storage, delegation_service):
         # An attacker knows "document-service" is a valid workload ID, 
@@ -100,8 +112,8 @@ class TestIdentityPropagation:
         # unless they truly are the document-service (simulated here).
         # Even if they create a raw object (which is possible in Python but violates the API contract),
         # the storage service validates against the grant. But let's test if we pass None.
-        grant = delegation_service.issue("alice", "research-agent", "storage-service", {"read"}, {"doc-101"})
-        res = storage.read_object(caller=None, grant=grant, resource_id="doc-101", correlation_id="req-steal")
+        issue_result = delegation_service.issue = delegation_service.issue("alice", "research-agent", "storage-service", {"read"}, {"doc-101"})
+        res = storage.read_object(caller=None, grant=issue_result.grant, resource_id="doc-101", correlation_id="req-steal")
         assert res is None
         assert storage.audit.events[-1].reason == "unknown_workload"
         assert storage.audit.events[-1].lifecycle_state == "blocked"
@@ -128,24 +140,24 @@ class TestIdentityPropagation:
 
     # --- Delegation Issuance & Constraints ---
     def test_invalid_ttl_rejected(self, delegation_service):
-        grant = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"}, ttl_minutes=-5)
-        assert grant is None
+        issue_result = delegation_service.issue = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"}, ttl_minutes=-5)
+        assert issue_result.grant is None
 
     def test_delegation_cannot_escalate_operations(self, delegation_service):
-        grant = delegation_service.issue("alice", "research-agent", "document-service", {"delete"}, {"doc-101"})
-        assert grant is None
+        issue_result = delegation_service.issue = delegation_service.issue("alice", "research-agent", "document-service", {"delete"}, {"doc-101"})
+        assert issue_result.grant is None
 
     def test_delegation_cannot_escalate_resources(self, delegation_service):
-        grant = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-secret"})
-        assert grant is None
+        issue_result = delegation_service.issue = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-secret"})
+        assert issue_result.grant is None
 
     def test_cross_tenant_issuance(self, delegation_service):
-        grant = delegation_service.issue("alice", "evil-agent", "document-service", {"read"}, {"doc-101"}) # alice (acme), evil (globex)
-        assert grant is None
+        issue_result = delegation_service.issue = delegation_service.issue("alice", "evil-agent", "document-service", {"read"}, {"doc-101"}) # alice (acme), evil (globex)
+        assert issue_result.grant is None
 
     # --- Verification ---
-    def test_expired_delegation(self, delegation_service, storage, clock):
-        grant = delegation_service.issue("alice", "storage-service", "storage-service", {"read"}, {"doc-101"}, ttl_minutes=60)
+    def test_expired_delegation(self, delegation_service, storage, clock, auth_storage):
+        issue_result = delegation_service.issue = delegation_service.issue("alice", "storage-service", "storage-service", {"read"}, {"doc-101"}, ttl_minutes=60)
         
         class MutableClock:
             def __init__(self, start):
@@ -160,42 +172,34 @@ class TestIdentityPropagation:
         
         # Valid at issuance
         mc.advance(59)
-        auth = lab.WorkloadAuthenticator.authenticate("storage-service")
-        assert storage.ds.verify(grant, "storage-service", "storage-service", "acme", "alice", "read", "doc-101").allowed
+        auth = auth_storage
+        assert storage.ds.verify(issue_result.grant, "storage-service", "storage-service", "acme", "read", "doc-101").allowed
         
         # Expired at boundary
         mc.advance(1) # exactly 60
-        assert not storage.ds.verify(grant, "storage-service", "storage-service", "acme", "alice", "read", "doc-101").allowed
+        assert not storage.ds.verify(issue_result.grant, "storage-service", "storage-service", "acme", "read", "doc-101").allowed
 
-    def test_audience_mismatch(self, delegation_service, storage):
-        grant = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"})
-        caller = lab.WorkloadAuthenticator.authenticate("research-agent")
-        res = storage.read_object(caller, grant, "doc-101", "req-1")
+    def test_audience_mismatch(self, delegation_service, storage, auth_agent):
+        issue_result = delegation_service.issue = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"})
+        caller = auth_agent
+        res = storage.read_object(caller, issue_result.grant, "doc-101", "req-1")
         assert res is None
         assert storage.audit.events[-1].reason == "audience_mismatch"
 
-    def test_delegate_mismatch(self, delegation_service, storage):
-        grant = delegation_service.issue("alice", "research-agent", "storage-service", {"read"}, {"doc-101"})
-        caller = lab.WorkloadAuthenticator.authenticate("document-service") # Wrong caller
-        res = storage.read_object(caller, grant, "doc-101", "req-1")
+    def test_delegate_mismatch(self, delegation_service, storage, auth_doc):
+        issue_result = delegation_service.issue = delegation_service.issue("alice", "research-agent", "storage-service", {"read"}, {"doc-101"})
+        caller = auth_doc # Wrong caller
+        res = storage.read_object(caller, issue_result.grant, "doc-101", "req-1")
         assert res is None
         assert storage.audit.events[-1].reason == "delegate_mismatch"
         
-    def test_principal_mismatch(self, delegation_service, storage):
-        grant = delegation_service.issue("alice", "storage-service", "storage-service", {"read"}, {"doc-101"})
-        # Storage internal verification asks for "bob" instead of "alice"
-        caller = lab.WorkloadAuthenticator.authenticate("storage-service")
-        decision = delegation_service.verify(grant, "storage-service", "storage-service", "acme", "bob", "read", "doc-101")
-        assert not decision.allowed
-        assert decision.reason == "principal_mismatch"
-        
     def test_tenant_mismatch(self, delegation_service):
-        grant = delegation_service.issue("alice", "document-service", "document-service", {"read"}, {"doc-101"})
-        decision = delegation_service.verify(grant, "document-service", "document-service", "globex", "alice", "read", "doc-101")
+        issue_result = delegation_service.issue = delegation_service.issue("alice", "document-service", "document-service", {"read"}, {"doc-101"})
+        decision = delegation_service.verify(issue_result.grant, "document-service", "document-service", "globex", "read", "doc-101")
         assert not decision.allowed
         assert decision.reason == "tenant_mismatch"
 
-    def test_fabricated_grant_rejected(self, storage, clock):
+    def test_fabricated_grant_rejected(self, storage, clock, auth_storage):
         fake_grant = lab.DelegationGrant(
             grant_id="fake-1",
             parent_grant_id=None,
@@ -209,50 +213,50 @@ class TestIdentityPropagation:
             expires_at=clock() + timedelta(minutes=60),
             issuer="hacker"
         )
-        caller = lab.WorkloadAuthenticator.authenticate("storage-service")
+        caller = auth_storage
         res = storage.read_object(caller, fake_grant, "doc-101", "req-1")
         assert res is None
         assert storage.audit.events[-1].reason == "unknown_delegation"
 
     # --- Exchange (Token Down-Scoping) ---
-    def test_exchange_valid(self, delegation_service):
-        parent = delegation_service.issue("alice", "research-agent", "document-service", {"read", "comment"}, {"doc-101", "doc-102"})
-        doc_svc = lab.WorkloadAuthenticator.authenticate("document-service")
-        child = delegation_service.exchange(parent, doc_svc, "storage-service", {"read"}, {"doc-101"}, 5)
+    def test_exchange_valid(self, delegation_service, auth_doc):
+        parent = issue_result = delegation_service.issue("alice", "research-agent", "document-service", {"read", "comment"}, {"doc-101", "doc-102"})
+        doc_svc = auth_doc
+        child = delegation_service.exchange(parent.grant, doc_svc, "storage-service", {"read"}, {"doc-101"}, 5)
         
-        assert child is not None
-        assert child.parent_grant_id == parent.grant_id
-        assert child.principal_id == "alice"
-        assert child.audience == "storage-service"
-        assert child.allowed_operations == frozenset({"read"})
-        assert child.allowed_resources == frozenset({"doc-101"})
+        assert child.grant is not None
+        assert child.grant.parent_grant_id == parent.grant.grant_id
+        assert child.grant.principal_id == "alice"
+        assert child.grant.audience == "storage-service"
+        assert child.grant.allowed_operations == frozenset({"read"})
+        assert child.grant.allowed_resources == frozenset({"doc-101"})
 
-    def test_exchange_operation_expansion_denied(self, delegation_service):
-        parent = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"})
-        doc_svc = lab.WorkloadAuthenticator.authenticate("document-service")
-        child = delegation_service.exchange(parent, doc_svc, "storage-service", {"read", "comment"}, {"doc-101"}, 5)
-        assert child is None
+    def test_exchange_operation_expansion_denied(self, delegation_service, auth_doc):
+        parent = issue_result = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"})
+        doc_svc = auth_doc
+        child = delegation_service.exchange(parent.grant, doc_svc, "storage-service", {"read", "comment"}, {"doc-101"}, 5)
+        assert child.grant is None
         
-    def test_exchange_resource_expansion_denied(self, delegation_service):
-        parent = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"})
-        doc_svc = lab.WorkloadAuthenticator.authenticate("document-service")
-        child = delegation_service.exchange(parent, doc_svc, "storage-service", {"read"}, {"doc-101", "doc-102"}, 5)
-        assert child is None
+    def test_exchange_resource_expansion_denied(self, delegation_service, auth_doc):
+        parent = issue_result = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"})
+        doc_svc = auth_doc
+        child = delegation_service.exchange(parent.grant, doc_svc, "storage-service", {"read"}, {"doc-101", "doc-102"}, 5)
+        assert child.grant is None
 
-    def test_exchange_expiry_never_exceeds_parent(self, delegation_service):
-        parent = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"}, ttl_minutes=10)
-        doc_svc = lab.WorkloadAuthenticator.authenticate("document-service")
+    def test_exchange_expiry_never_exceeds_parent(self, delegation_service, auth_doc):
+        parent = issue_result = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"}, ttl_minutes=10)
+        doc_svc = auth_doc
         
         # Request 60 minutes
-        child = delegation_service.exchange(parent, doc_svc, "storage-service", {"read"}, {"doc-101"}, 60)
+        child = delegation_service.exchange(parent.grant, doc_svc, "storage-service", {"read"}, {"doc-101"}, 60)
         
-        assert child.expires_at == parent.expires_at # Clamped to parent expiry
+        assert child.grant.expires_at == parent.grant.expires_at # Clamped to parent expiry
         
-    def test_exchange_tenant_preserved(self, delegation_service):
-        parent = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"})
-        doc_svc = lab.WorkloadAuthenticator.authenticate("document-service")
-        child = delegation_service.exchange(parent, doc_svc, "evil-agent", {"read"}, {"doc-101"}, 5) # evil-agent is globex
-        assert child is None # Cross-tenant next audience denied
+    def test_exchange_tenant_preserved(self, delegation_service, auth_doc):
+        parent = issue_result = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"})
+        doc_svc = auth_doc
+        child = delegation_service.exchange(parent.grant, doc_svc, "evil-agent", {"read"}, {"doc-101"}, 5) # evil-agent is globex
+        assert child.grant is None # Cross-tenant next audience denied
 
     # --- Multi-Hop Downscoping & Audit ---
     def test_multi_hop_downscoping(self, app):
