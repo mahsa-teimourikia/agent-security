@@ -3,15 +3,16 @@
 ## Course metadata
 - **Level**: Intermediate
 - **Prerequisites**: Beginner 01 (Authorization), Beginner 03 (Request Boundaries)
-- **Time**: 45 minutes
+- **Time**: 60 minutes
 
 ## Learning objectives
 - Distinguish between **Principal** (User) identity and **Workload** (Agent/Service) identity.
-- Understand the difference between **Authentication**, **Delegation**, and **Authorization**.
+- Understand the difference between **Identifier** and **Authentication**.
+- Establish strict **Grant Issuance Trust Boundaries** using authoritative registries.
 - Identify and mitigate **Confused Deputy** vulnerabilities arising from ambient authority.
-- Enforce secure multi-hop Identity Propagation through **Delegation Grants**.
-- Implement **down-scoping**, **audience restriction**, and **tenant binding** for downstream requests.
-- Track accurate end-to-end audit trails across service boundaries.
+- Enforce secure multi-hop Identity Propagation through **Token Exchange** and **Parent-Child Delegation**.
+- Implement **monotonic down-scoping**, **audience restriction**, and **tenant binding** for downstream requests.
+- Track accurate end-to-end audit trails across service boundaries without logging secrets.
 
 ## Why identity propagation matters
 
@@ -27,6 +28,17 @@ If downstream services only authenticate the *caller* (e.g., the Document Servic
 The central thesis of this course:
 > **Propagate identity context, not ambient authority.**
 
+## Identifier vs Authentication
+
+A critical mistake in distributed systems is treating a known string (an identifier) as proof of identity (authentication).
+
+- **Identifier**: `caller_id = "document-service"`
+- **Authentication**: `AuthenticatedWorkload(workload_id="document-service", tenant="acme")`
+
+An attacker who knows your internal architecture can easily construct a payload claiming to be `"document-service"`. Secure systems rely on infrastructure (like mTLS, SPIFFE/SPIRE, or Cloud Workload Identity) to authenticate the caller *before* the application logic runs.
+
+In this simulation, `WorkloadAuthenticator` represents this trusted infrastructure context. Caller strings must not be trusted.
+
 ## Principal vs Workload vs Delegate
 
 Every request has at least two identities you must untangle:
@@ -40,16 +52,18 @@ Every request has at least two identities you must untangle:
 - **Delegate** (Agent/Workload acting for the user)
 - **DelegationGrant** (The bounded authority connecting them)
 
-## Authentication vs Delegation vs Authorization
+## Grant Issuance Trust Boundary
 
-These are independent controls.
-- **Authentication**: "This request really came from `research-agent`."
-- **Delegation**: "`research-agent` has permission to perform THIS specific action on behalf of Alice."
-- **Authorization**: "Given both identities, the grant, and the resource policies, may this operation execute?"
+Delegation grants (like OAuth tokens) cannot be minted by arbitrary clients. If a caller could pass a customized `Principal` object into an issuer and receive a valid token, they could forge any authority they desire.
 
-The agent's workload identity cannot replace the user's identity. 
-The user's identity cannot authenticate the agent workload. 
-The delegation grant connects them safely.
+A secure issuer:
+1. Accepts only authenticated identifiers.
+2. Resolves those identifiers against an **Authoritative Registry** (like Entra ID or Okta).
+3. Ensures requested authority is a valid subset of the Principal's true authority.
+
+> **Principal object != authenticated principal**
+> **workload ID != authenticated workload**
+> **grant object != verified delegation**
 
 ## Ambient Authority and the Confused Deputy
 
@@ -59,56 +73,46 @@ If Alice asks the Research Agent to read `doc-secret`, and the Research Agent as
 
 This is the **Confused Deputy** vulnerability. The agent was tricked into using its higher privileges to bypass Alice's restrictions.
 
-## On-Behalf-Of Execution
+## On-Behalf-Of Execution & No Fallback
 
 To fix this, services must distinguish between two execution modes:
-1. **Service Mode**: The service is doing its own background work (e.g., a scheduled cleanup job). It uses its own service credentials.
+1. **Service Mode**: The service is doing its own background work (e.g., a scheduled cleanup job). It uses its own ambient service credentials.
 2. **Delegated Mode**: The service is acting on behalf of a user. It must use a **Delegation Grant**.
 
-If a delegated request fails, it must **never** fall back to using service-level privileges.
+**CRITICAL INVARIANT:** If a delegated request fails (e.g., token is expired or unauthorized), the service must **never** fall back to using its ambient service-level privileges.
 
-## Delegation Grants
+## Token Exchange and Parent-Child Delegation
 
-A Delegation Grant is a data structure (like an OAuth access token or a capability token) that answers:
-- **Who** delegated the authority? (`principal_id`)
-- **To whom**? (`delegate_id`)
-- **For which service**? (`audience`)
-- **For how long**? (`expires_at`)
-- **For what actions/resources**? (`allowed_operations`, `allowed_resources`)
+When the Document Service needs to call the Storage Service, it must not send the original token intended for the Document Service. That would be a replay vulnerability.
 
-A correctly shaped grant is not enough; it must be trusted by an Issuer.
+Instead, the Document Service performs a **Token Exchange**:
+1. It presents the original `parent_grant` and its own `AuthenticatedWorkload`.
+2. The Issuer mints a `child_grant` specifically intended for the `storage-service`.
 
-## Audience Restriction
+This creates a **Parent-Child Delegation** chain, preserving the original Principal while shifting the Delegate and Audience at each hop.
 
-A grant intended for the `document-service` must not be accepted by the `email-service`. 
-Audience restriction (`grant.audience == receiving_service`) ensures that if a credential is leaked or intercepted, it cannot be reused against unintended services.
+## Monotonic Scope Attenuation
 
-## Tenant Binding
+Delegated authority must never expand downstream. During Token Exchange, the issuer enforces monotonic down-scoping:
+- `child.allowed_operations ⊆ parent.allowed_operations`
+- `child.allowed_resources ⊆ parent.allowed_resources`
 
-Every layer must preserve the tenant identity. 
-No amount of valid delegation within Tenant A (Acme) can ever authorize access to a resource owned by Tenant B (Globex).
-`principal.tenant == delegate.tenant == grant.tenant == resource.tenant`
+## Monotonic Expiry
 
-## Scope Attenuation (Down-Scoping)
+Time is also a scope. A child token cannot outlive its parent.
+If a parent token has 5 minutes remaining, and a service requests a 60-minute downstream token, the issuer must either reject the request or **clamp** the expiry.
 
-Delegated authority must never exceed the principal's original authority.
-If Alice can `read` and `comment`, but the current workflow only requires reading, the agent's grant should only permit `read`. 
+In this simulation: `child_expiry = min(requested_expiry, parent_expiry)`
 
-## Multi-hop Identity Propagation
+## Audience Restriction & Tenant Binding
 
-When the Document Service needs to call the Storage Service, it must not invent new, unrestricted authority. It must exchange its current grant for a new one intended for the Storage Service, ensuring that:
-- Authority stays equal or shrinks (monotonic down-scoping).
-- Authority **never** expands downstream.
-
-## Expiry and Replay
-
-Delegated authority must be time-bounded (`now < expires_at`). 
-Bearer credentials (like tokens) mean *whoever possesses it can use it*. Production mitigations include short lifetimes, narrow scopes, and sender-constrained proof-of-possession.
+- **Audience Restriction**: A token minted for `document-service` must be rejected if presented to `storage-service`.
+- **Tenant Binding**: Every layer must preserve the tenant. No amount of valid delegation within Tenant A (Acme) can authorize access to a resource owned by Tenant B (Globex).
 
 ## Audit and Attribution
 
-An audit trail must capture *both* the principal and the delegate. 
-Never log raw access tokens, secrets, or authorization headers in the clear. Audit the *identifiers* (e.g., `grant_id`), the decision, and the exact reasons.
+An audit trail must capture *both* the principal and the delegate at every hop. 
+Never log raw access tokens, secrets, or authorization headers in the clear. Audit the *identifiers* (e.g., `grant_id` and `parent_grant_id`), the decision, and the exact lifecycle state (`forwarded`, `accessed`, `blocked`).
 
 ## Architecture
 
@@ -127,17 +131,22 @@ SECRET DOCUMENT Leaked!
 # SECURE: Identity Propagation
 Alice
  │
- ├── Principal identity
+ ├── Principal registry resolution
  ↓
 Research Agent
  │
- ├── Workload identity
- └── Delegated authority (Grant)
+ ├── Authenticated workload context
+ └── Delegated authority (Grant 1)
  ↓
 Document Service
  │
  ├── verify principal & delegate
- ├── verify audience & scope
+ ├── Token Exchange (Grant 1 → Grant 2)
+ ├── down-scope audience & expiry
+ ↓
+Storage Service
+ │
+ ├── verify Grant 2
  ↓
 Authorized resource only
 ```
@@ -149,14 +158,16 @@ Launch the lab via the interactive notebook:
 jupyter notebook curriculum/intermediate/01-identity-propagation/01_identity_propagation.ipynb
 ```
 
-## Production Upgrade Paths
+## Production Mapping
 
-While this lab uses a deterministic, in-memory `DelegationGrant` simulation, real-world systems use established protocols.
+While this lab uses a deterministic, in-memory `DelegationGrant` simulation, real-world systems use established protocols. 
+
+**Note:** This simulation is a *teaching analogue*. Real token exchange protocols have additional issuer, subject-token, actor-token, trust, cryptographic signing, and policy semantics not fully modeled here.
 
 | Teaching abstraction | Production concept |
 |---|---|
-| `PrincipalRegistry` | IdP / IAM directory (Entra ID, Okta) |
-| `WorkloadRegistry` | Workload identity / Kubernetes Service Accounts |
+| `PRINCIPAL_REGISTRY` | IdP / IAM directory (Entra ID, Okta) |
+| `WorkloadAuthenticator` | mTLS, SPIFFE/SPIRE, Cloud Workload Identity |
 | `DelegationGrant` | OAuth 2.0 Access Token / JWT / Macaroons |
 | Delegation Issuer | Authorization Server / Secure Token Service (STS) |
 | Audience | OAuth `aud` claim / Resource indicators |

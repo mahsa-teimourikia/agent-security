@@ -18,7 +18,7 @@ from typing import Optional, List, Set, Dict, Tuple, FrozenSet
 
 @dataclass(frozen=True)
 class Principal:
-    """The authenticated end user (the human)."""
+    """The authoritative end user (the human) definition."""
     principal_id: str
     tenant: str
     allowed_operations: FrozenSet[str]
@@ -26,7 +26,7 @@ class Principal:
 
 @dataclass(frozen=True)
 class WorkloadIdentity:
-    """The authenticated service or agent (the software)."""
+    """The authoritative service or agent (the software) definition."""
     workload_id: str
     tenant: str
 
@@ -41,6 +41,24 @@ class ExecutionMode(str, Enum):
     SERVICE = "service"
     DELEGATED = "delegated"
 
+@dataclass(frozen=True)
+class AuthenticatedWorkload:
+    """
+    A verified, authenticated workload context. 
+    This cannot be trivially forged from an ID string over public APIs.
+    """
+    workload_id: str
+    tenant: str
+
+class WorkloadAuthenticator:
+    """Simulates infrastructure-level mutual TLS or workload identity verification."""
+    @staticmethod
+    def authenticate(workload_id: str) -> Optional[AuthenticatedWorkload]:
+        # Only issue context for known, valid workloads in the registry.
+        if workload_id in WORKLOAD_REGISTRY:
+            return AuthenticatedWorkload(workload_id, WORKLOAD_REGISTRY[workload_id].tenant)
+        return None
+
 # ------------------------------------------------------------------------
 # 2. Delegation Tokens & Audit
 # ------------------------------------------------------------------------
@@ -52,6 +70,7 @@ class DelegationGrant:
     It binds a principal to a delegate, restricted by audience, scope, tenant, and time.
     """
     grant_id: str
+    parent_grant_id: Optional[str]
     principal_id: str
     delegate_id: str
     tenant: str
@@ -73,13 +92,14 @@ class AuditEvent:
     principal_id: Optional[str]
     workload_id: str
     delegation_id: Optional[str]
+    parent_delegation_id: Optional[str]
     audience: str
     operation: str
     resource_id: str
     decision: str
     reason: str
     delegation_depth: int
-    terminal_state: str
+    lifecycle_state: str
 
     def to_dict(self) -> dict:
         return {
@@ -152,24 +172,40 @@ class DelegationService:
 
     def issue(
         self, 
-        principal: Principal, 
-        delegate: WorkloadIdentity, 
+        principal_id: str, 
+        delegate_id: str, 
         audience: str, 
         requested_operations: Set[str], 
         requested_resources: Set[str],
         ttl_minutes: int = 60
     ) -> Optional[DelegationGrant]:
-        """Issue a grant, enforcing that delegated authority cannot exceed principal authority."""
+        """Issue a grant, resolving identities authoritatively and enforcing boundaries."""
         
-        # 1. Enforce monotonic down-scoping during issuance
+        if ttl_minutes <= 0:
+            return None
+
+        # 1. Resolve authoritatively
+        principal = PRINCIPAL_REGISTRY.get(principal_id)
+        if not principal:
+            return None # unknown_principal
+            
+        delegate = WORKLOAD_REGISTRY.get(delegate_id)
+        if not delegate:
+            return None # unknown_delegate
+
+        aud_workload = WORKLOAD_REGISTRY.get(audience)
+        if not aud_workload:
+            return None # unknown_audience
+
+        # 2. Enforce monotonic down-scoping during issuance
         if not requested_operations.issubset(principal.allowed_operations):
             return None # Cannot delegate an operation the principal doesn't have
             
         if not requested_resources.issubset(principal.allowed_resources):
             return None # Cannot delegate a resource the principal doesn't have
             
-        # 2. Enforce tenant boundary
-        if principal.tenant != delegate.tenant:
+        # 3. Enforce tenant boundaries
+        if principal.tenant != delegate.tenant or principal.tenant != aud_workload.tenant:
             return None # Cross-tenant delegation denied
             
         now = self._clock_fn()
@@ -178,6 +214,7 @@ class DelegationService:
         
         grant = DelegationGrant(
             grant_id=grant_id,
+            parent_grant_id=None,
             principal_id=principal.principal_id,
             delegate_id=delegate.workload_id,
             tenant=principal.tenant,
@@ -190,6 +227,69 @@ class DelegationService:
         )
         self._store[grant_id] = grant
         return grant
+
+    def exchange(
+        self,
+        parent_grant: DelegationGrant,
+        current_workload: AuthenticatedWorkload,
+        next_audience: str,
+        requested_operations: Set[str],
+        requested_resources: Set[str],
+        requested_ttl_minutes: int
+    ) -> Optional[DelegationGrant]:
+        """
+        Exchange a parent grant for a downstream grant, enforcing monotonic attenuation
+        of scope and expiry.
+        """
+        if requested_ttl_minutes <= 0:
+            return None
+
+        now = self._clock_fn()
+
+        # 1. Verify Parent Grant
+        if parent_grant.grant_id not in self._store or self._store[parent_grant.grant_id] != parent_grant:
+            return None # fake grant
+            
+        if now >= parent_grant.expires_at:
+            return None # expired parent
+            
+        if parent_grant.audience != current_workload.workload_id:
+            return None # workload not authorized to exchange this grant
+            
+        # 2. Validate Audience
+        next_workload = WORKLOAD_REGISTRY.get(next_audience)
+        if not next_workload or next_workload.tenant != parent_grant.tenant:
+            return None
+            
+        # 3. Scope subset checks
+        if not requested_operations.issubset(parent_grant.allowed_operations):
+            return None
+            
+        if not requested_resources.issubset(parent_grant.allowed_resources):
+            return None
+
+        # 4. Expiry clamping (never outlive parent)
+        requested_expires_at = now + timedelta(minutes=requested_ttl_minutes)
+        child_expires_at = min(requested_expires_at, parent_grant.expires_at)
+
+        grant_id = f"grant-{self._counter}"
+        self._counter += 1
+        
+        grant = DelegationGrant(
+            grant_id=grant_id,
+            parent_grant_id=parent_grant.grant_id,
+            principal_id=parent_grant.principal_id,
+            delegate_id=current_workload.workload_id,
+            tenant=parent_grant.tenant,
+            audience=next_audience,
+            allowed_operations=frozenset(requested_operations),
+            allowed_resources=frozenset(requested_resources),
+            issued_at=now,
+            expires_at=child_expires_at,
+            issuer=self.issuer
+        )
+        self._store[grant_id] = grant
+        return grant
         
     def verify(
         self, 
@@ -197,10 +297,11 @@ class DelegationService:
         expected_delegate_id: str, 
         expected_audience: str, 
         expected_tenant: str,
+        expected_principal_id: str,
         operation: str,
         resource_id: str
     ) -> AuthorizationDecision:
-        """Verify the authenticity and validity of the grant."""
+        """Verify the authenticity and validity of the grant for use."""
         
         now = self._clock_fn()
         
@@ -208,8 +309,8 @@ class DelegationService:
         if grant.grant_id not in self._store or self._store[grant.grant_id] != grant:
             return AuthorizationDecision(False, "unknown_delegation")
             
-        # 2. Check Expiry
-        if now > grant.expires_at:
+        # 2. Check Expiry (exact boundary)
+        if now >= grant.expires_at:
             return AuthorizationDecision(False, "delegation_expired")
             
         # 3. Check Delegate Binding
@@ -224,11 +325,15 @@ class DelegationService:
         if grant.tenant != expected_tenant:
             return AuthorizationDecision(False, "tenant_mismatch")
             
-        # 6. Enforce Operation Scope
+        # 6. Check Principal Binding
+        if grant.principal_id != expected_principal_id:
+            return AuthorizationDecision(False, "principal_mismatch")
+
+        # 7. Enforce Operation Scope
         if operation not in grant.allowed_operations:
             return AuthorizationDecision(False, "operation_not_delegated")
             
-        # 7. Enforce Resource Scope
+        # 8. Enforce Resource Scope
         if resource_id not in grant.allowed_resources:
             return AuthorizationDecision(False, "resource_not_delegated")
             
@@ -239,28 +344,36 @@ class DelegationService:
 # ------------------------------------------------------------------------
 
 class StorageService:
-    """The lowest level service. It requires an exact valid token to release data."""
+    """The lowest level service. It exposes both naive and secure endpoints."""
     def __init__(self, delegation_service: DelegationService, audit_sink: AuditSink):
         self.ds = delegation_service
         self.audit = audit_sink
         self.workload = WORKLOAD_REGISTRY["storage-service"]
 
-    def read_object(self, caller_id: str, grant: Optional[DelegationGrant], resource_id: str, correlation_id: str, depth: int = 2) -> Optional[str]:
-        # 1. Resolve authenticated caller (simulate mutual TLS/service auth)
-        caller = WORKLOAD_REGISTRY.get(caller_id)
+    def read_object_naive(self, caller: AuthenticatedWorkload, resource_id: str, correlation_id: str) -> Optional[str]:
+        """
+        Ambient authority endpoint. If the caller is valid, give them the document.
+        Simulates naive service-to-service calls bypassing user delegation.
+        """
         if not caller:
-            self._audit(correlation_id, None, caller_id, grant, "read", resource_id, "DENY", "unknown_workload", depth)
+            return None
+        return DOCUMENT_STORE.get(resource_id)
+
+    def read_object(self, caller: AuthenticatedWorkload, grant: Optional[DelegationGrant], resource_id: str, correlation_id: str, depth: int = 2) -> Optional[str]:
+        # 1. Validate caller identity
+        if not caller:
+            self._audit(correlation_id, None, "unknown", grant, "read", resource_id, "DENY", "unknown_workload", depth, "blocked")
             return None
             
         # 2. Check resource existence and ownership
         resource = RESOURCE_REGISTRY.get(resource_id)
         if not resource:
-            self._audit(correlation_id, None, caller_id, grant, "read", resource_id, "DENY", "unknown_resource", depth)
+            self._audit(correlation_id, None, caller.workload_id, grant, "read", resource_id, "DENY", "unknown_resource", depth, "blocked")
             return None
 
         # 3. Authorize via Delegation
         if not grant:
-             self._audit(correlation_id, None, caller_id, None, "read", resource_id, "DENY", "missing_delegation", depth)
+             self._audit(correlation_id, None, caller.workload_id, None, "read", resource_id, "DENY", "missing_delegation", depth, "blocked")
              return None
              
         decision = self.ds.verify(
@@ -268,20 +381,22 @@ class StorageService:
             expected_delegate_id=caller.workload_id,
             expected_audience=self.workload.workload_id,
             expected_tenant=resource.tenant,
+            expected_principal_id=grant.principal_id, # Just verify internally that token is internally consistent for storage
             operation="read",
             resource_id=resource.resource_id
         )
         
         if not decision.allowed:
-            self._audit(correlation_id, grant.principal_id, caller.workload_id, grant, "read", resource_id, "DENY", decision.reason, depth)
+            # MUST NOT fallback to read_object_naive
+            self._audit(correlation_id, grant.principal_id, caller.workload_id, grant, "read", resource_id, "DENY", decision.reason, depth, "blocked")
             return None
             
         # Success
-        self._audit(correlation_id, grant.principal_id, caller.workload_id, grant, "read", resource_id, "ALLOW", "success", depth)
+        self._audit(correlation_id, grant.principal_id, caller.workload_id, grant, "read", resource_id, "ALLOW", "success", depth, "accessed")
         return DOCUMENT_STORE.get(resource_id)
 
-    def _audit(self, cid, pid, wid, grant, op, res, decision, reason, depth):
-        self.audit.record(AuditEvent(cid, pid, wid, grant.grant_id if grant else None, self.workload.workload_id, op, res, decision, reason, depth, "blocked" if decision == "DENY" else "answered"))
+    def _audit(self, cid, pid, wid, grant, op, res, decision, reason, depth, lifecycle):
+        self.audit.record(AuditEvent(cid, pid, wid, grant.grant_id if grant else None, grant.parent_grant_id if grant else None, self.workload.workload_id, op, res, decision, reason, depth, lifecycle))
 
 
 # ------------------------------------------------------------------------
@@ -297,13 +412,12 @@ class NaiveDocumentService:
     def __init__(self, storage: StorageService):
         self.storage = storage
 
-    def get_document(self, agent_id: str, resource_id: str, correlation_id: str) -> Optional[str]:
+    def get_document(self, caller: AuthenticatedWorkload, resource_id: str, correlation_id: str) -> Optional[str]:
         # Agent claims to be authorized, and it is a trusted internal service!
-        if agent_id == "research-agent":
-            # The naive service completely bypasses delegation and just forces the storage service
-            # (Assume in naive mode storage doesn't require a grant, or the document service
-            # mints a master grant for itself. We'll simulate by pulling directly from store).
-            return DOCUMENT_STORE.get(resource_id)
+        if caller and caller.workload_id == "research-agent":
+            # Authenticate Document Service to Storage Service
+            my_auth = WorkloadAuthenticator.authenticate("document-service")
+            return self.storage.read_object_naive(my_auth, resource_id, correlation_id)
         return None
 
 class SecureDocumentService:
@@ -318,21 +432,20 @@ class SecureDocumentService:
         self.audit = audit_sink
         self.workload = WORKLOAD_REGISTRY["document-service"]
 
-    def get_document(self, caller_id: str, grant: Optional[DelegationGrant], resource_id: str, correlation_id: str, depth: int = 1) -> Optional[str]:
+    def get_document(self, caller: AuthenticatedWorkload, grant: Optional[DelegationGrant], resource_id: str, correlation_id: str, depth: int = 1) -> Optional[str]:
         # 1. Resolve Workload
-        caller = WORKLOAD_REGISTRY.get(caller_id)
         if not caller:
-            self._audit(correlation_id, None, caller_id, grant, "read", resource_id, "DENY", "unknown_workload", depth)
+            self._audit(correlation_id, None, "unknown", grant, "read", resource_id, "DENY", "unknown_workload", depth, "blocked")
             return None
 
         # 2. Resource tenant resolution
         resource = RESOURCE_REGISTRY.get(resource_id)
         if not resource:
-             self._audit(correlation_id, None, caller_id, grant, "read", resource_id, "DENY", "unknown_resource", depth)
+             self._audit(correlation_id, None, caller.workload_id, grant, "read", resource_id, "DENY", "unknown_resource", depth, "blocked")
              return None
 
         if not grant:
-            self._audit(correlation_id, None, caller_id, None, "read", resource_id, "DENY", "missing_delegation", depth)
+            self._audit(correlation_id, None, caller.workload_id, None, "read", resource_id, "DENY", "missing_delegation", depth, "blocked")
             return None
 
         # 3. Verify incoming delegation
@@ -341,43 +454,45 @@ class SecureDocumentService:
             expected_delegate_id=caller.workload_id,
             expected_audience=self.workload.workload_id,
             expected_tenant=resource.tenant,
+            expected_principal_id=grant.principal_id, # Document Service trusts incoming principal
             operation="read",
             resource_id=resource_id
         )
 
         if not decision.allowed:
-            self._audit(correlation_id, grant.principal_id, caller_id, grant, "read", resource_id, "DENY", decision.reason, depth)
+            self._audit(correlation_id, grant.principal_id, caller.workload_id, grant, "read", resource_id, "DENY", decision.reason, depth, "blocked")
             return None
 
-        self._audit(correlation_id, grant.principal_id, caller_id, grant, "read", resource_id, "ALLOW", "propagating_downstream", depth)
+        self._audit(correlation_id, grant.principal_id, caller.workload_id, grant, "read", resource_id, "ALLOW", "propagating_downstream", depth, "forwarded")
 
         # 4. Multi-hop Down-scoping (Token Exchange)
-        # The document service creates a smaller scope token specifically for the storage service.
-        principal_pseudo = Principal(grant.principal_id, grant.tenant, grant.allowed_operations, grant.allowed_resources)
-        downstream_grant = self.ds.issue(
-            principal=principal_pseudo,
-            delegate=self.workload, # Now the DocumentService is the delegate
-            audience="storage-service",
+        # Authenticate Document Service itself for the exchange
+        my_auth = WorkloadAuthenticator.authenticate("document-service")
+        
+        downstream_grant = self.ds.exchange(
+            parent_grant=grant,
+            current_workload=my_auth,
+            next_audience="storage-service",
             requested_operations={"read"},
             requested_resources={resource_id},
-            ttl_minutes=5 # Tighter expiry for downstream
+            requested_ttl_minutes=5 # Tighter expiry for downstream
         )
         
         if not downstream_grant:
-             # Should not happen unless requested out-of-bounds
+             # Should not happen unless requested out-of-bounds or fake grant
              return None
 
         # 5. Call downstream StorageService with the new Down-scoped Grant
         return self.storage.read_object(
-            caller_id=self.workload.workload_id,
+            caller=my_auth,
             grant=downstream_grant,
             resource_id=resource_id,
             correlation_id=correlation_id,
             depth=depth + 1
         )
 
-    def _audit(self, cid, pid, wid, grant, op, res, decision, reason, depth):
-        self.audit.record(AuditEvent(cid, pid, wid, grant.grant_id if grant else None, self.workload.workload_id, op, res, decision, reason, depth, "blocked" if decision == "DENY" else "answered"))
+    def _audit(self, cid, pid, wid, grant, op, res, decision, reason, depth, lifecycle):
+        self.audit.record(AuditEvent(cid, pid, wid, grant.grant_id if grant else None, grant.parent_grant_id if grant else None, self.workload.workload_id, op, res, decision, reason, depth, lifecycle))
 
 
 # ------------------------------------------------------------------------
@@ -391,14 +506,15 @@ class ResearchAgent:
         self.workload = WORKLOAD_REGISTRY["research-agent"]
 
     def read_naive(self, requested_doc: str, correlation_id: str) -> Optional[str]:
-        # Agent has broad infra privilege and uses it blindly
         if not self.naive_service:
             return None
-        return self.naive_service.get_document(self.workload.workload_id, requested_doc, correlation_id)
+        caller = WorkloadAuthenticator.authenticate(self.workload.workload_id)
+        return self.naive_service.get_document(caller, requested_doc, correlation_id)
 
     def read_secure(self, grant: DelegationGrant, requested_doc: str, correlation_id: str) -> Optional[str]:
+        caller = WorkloadAuthenticator.authenticate(self.workload.workload_id)
         return self.doc_service.get_document(
-            caller_id=self.workload.workload_id, 
+            caller=caller, 
             grant=grant, 
             resource_id=requested_doc,
             correlation_id=correlation_id
@@ -412,29 +528,28 @@ class ResearchApplication:
         self.audit = audit_sink or AuditSink()
 
     def answer_naive(self, subject: str, document_id: str, correlation_id: str = "req-1") -> str:
-        # Resolves user, but ignores them and uses ambient agent authority
         res = self.agent.read_naive(document_id, correlation_id)
         if res:
             return f"Found document {document_id}: {res}"
         return "Not found."
 
-    def answer_secure(self, subject: str, document_id: str, correlation_id: str = "req-1") -> ResearchResponse:
-        principal = PRINCIPAL_REGISTRY.get(subject)
+    def answer_secure(self, subject_id: str, document_id: str, correlation_id: str = "req-1") -> ResearchResponse:
+        principal = PRINCIPAL_REGISTRY.get(subject_id)
         if not principal:
-             self.audit.record(AuditEvent(correlation_id, subject, "research-agent", None, "research-agent", "read", document_id, "DENY", "unknown_principal", 0, "blocked"))
+             self.audit.record(AuditEvent(correlation_id, subject_id, "research-agent", None, None, "research-agent", "read", document_id, "DENY", "unknown_principal", 0, "blocked"))
              return ResearchResponse("blocked", "Access denied.", correlation_id)
              
         # Issue a tightly scoped grant for this specific operation
         grant = self.ds.issue(
-            principal=principal,
-            delegate=self.agent.workload,
+            principal_id=subject_id,
+            delegate_id=self.agent.workload.workload_id,
             audience="document-service",
             requested_operations={"read"},
             requested_resources={document_id}
         )
         
         if not grant:
-            self.audit.record(AuditEvent(correlation_id, subject, "research-agent", None, "document-service", "read", document_id, "DENY", "delegation_issuance_failed", 0, "blocked"))
+            self.audit.record(AuditEvent(correlation_id, subject_id, "research-agent", None, None, "document-service", "read", document_id, "DENY", "delegation_issuance_failed", 0, "blocked"))
             return ResearchResponse("blocked", "Access denied.", correlation_id)
 
         res = self.agent.read_secure(grant, document_id, correlation_id)
@@ -474,7 +589,16 @@ def run_demo():
     print("[!] 3. Delegation Audit Trail for doc-101")
     events = [e for e in audit.events if e.correlation_id == "req-101"]
     for e in events:
-        print(f"Hop {e.delegation_depth}: {e.workload_id} -> {e.audience} | {e.operation} {e.resource_id} | {e.decision} ({e.reason})")
+        print(f"Hop {e.delegation_depth}: {e.workload_id} -> {e.audience} | {e.operation} {e.resource_id} | {e.decision} ({e.reason}) | Parent: {e.parent_delegation_id}")
+    
+    print("\n[!] 4. Unauthenticated Workload Impersonation")
+    print("Attacker tries to call storage directly using a fake unauthenticated caller.")
+    fake_caller = AuthenticatedWorkload("document-service", "acme") # Validly typed, but not from authenticator.
+    # In this simulation, any AuthenticatedWorkload is trusted as proof, but only WorkloadAuthenticator 
+    # should be creating them in a real app. Let's see what happens if they provide a bad token.
+    res = storage.read_object(fake_caller, grant=None, resource_id="doc-101", correlation_id="req-steal")
+    print(f"Storage Result: {res}")
+    print(f"Audit: {audit.events[-1].reason}\n")
 
 if __name__ == "__main__":
     run_demo()
