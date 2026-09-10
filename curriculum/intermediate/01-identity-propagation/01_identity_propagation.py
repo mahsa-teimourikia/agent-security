@@ -10,7 +10,7 @@ Central Thesis: Propagate identity context, not ambient authority.
 from dataclasses import dataclass, field
 from datetime import datetime, timezone, timedelta
 from enum import Enum
-from typing import Optional, List, Set, Dict, Tuple, FrozenSet
+from typing import Optional, List, Set, Dict, Tuple, FrozenSet, Any
 
 # ------------------------------------------------------------------------
 # 1. Identity & Resource Models
@@ -42,6 +42,14 @@ class ExecutionMode(str, Enum):
     DELEGATED = "delegated"
 
 @dataclass(frozen=True)
+class AuthenticatedPrincipal:
+    """
+    A verified, authenticated principal context representing an end-user session.
+    """
+    principal_id: str
+    auth_context_id: str
+
+@dataclass(frozen=True)
 class AuthenticatedWorkload:
     """
     A verified, authenticated workload context. 
@@ -49,28 +57,55 @@ class AuthenticatedWorkload:
     """
     workload_id: str
     tenant: str
+    auth_context_id: str
+
+class ApplicationIdentityProvider:
+    """
+    Simulates front-door user authentication (e.g., Okta, Entra ID, web session).
+    """
+    _issued_contexts: Set[str] = {"ctx-alice", "ctx-bob", "ctx-mallory"}
+
+    @staticmethod
+    def for_alice() -> AuthenticatedPrincipal:
+        return AuthenticatedPrincipal("alice", "ctx-alice")
+        
+    @staticmethod
+    def for_bob() -> AuthenticatedPrincipal:
+        return AuthenticatedPrincipal("bob", "ctx-bob")
+        
+    @staticmethod
+    def for_mallory() -> AuthenticatedPrincipal:
+        return AuthenticatedPrincipal("mallory", "ctx-mallory")
+        
+    @classmethod
+    def verify(cls, context: Any) -> bool:
+        return isinstance(context, AuthenticatedPrincipal) and context.auth_context_id in cls._issued_contexts
 
 class InfrastructureIdentityProvider:
     """
     Simulates infrastructure-level mutual TLS or workload identity verification.
-    In a real system, ordinary application code cannot just 'ask' to be someone else.
-    The infrastructure injects the trusted identity into the application context.
     """
+    _issued_contexts: Set[str] = {"ctx-research", "ctx-doc", "ctx-storage", "ctx-evil"}
+
     @staticmethod
     def for_research_agent() -> AuthenticatedWorkload:
-        return AuthenticatedWorkload("research-agent", "acme")
+        return AuthenticatedWorkload("research-agent", "acme", "ctx-research")
 
     @staticmethod
     def for_document_service() -> AuthenticatedWorkload:
-        return AuthenticatedWorkload("document-service", "acme")
+        return AuthenticatedWorkload("document-service", "acme", "ctx-doc")
 
     @staticmethod
     def for_storage_service() -> AuthenticatedWorkload:
-        return AuthenticatedWorkload("storage-service", "acme")
+        return AuthenticatedWorkload("storage-service", "acme", "ctx-storage")
 
     @staticmethod
     def for_evil_agent() -> AuthenticatedWorkload:
-        return AuthenticatedWorkload("evil-agent", "globex")
+        return AuthenticatedWorkload("evil-agent", "globex", "ctx-evil")
+        
+    @classmethod
+    def verify(cls, context: Any) -> bool:
+        return isinstance(context, AuthenticatedWorkload) and context.auth_context_id in cls._issued_contexts
 
 # ------------------------------------------------------------------------
 # 2. Delegation Tokens & Audit
@@ -270,6 +305,9 @@ class DelegationService:
         now = self._clock_fn()
 
         # 0. Canonical Workload Validation
+        if not InfrastructureIdentityProvider.verify(current_workload):
+            return GrantExchangeResult(None, "unauthenticated_workload")
+
         canonical_workload = WORKLOAD_REGISTRY.get(current_workload.workload_id)
         if not canonical_workload or canonical_workload.tenant != current_workload.tenant:
             return GrantExchangeResult(None, "authenticated_workload_mismatch")
@@ -398,8 +436,8 @@ class StorageService:
 
         # Delegated mode requires delegation grant. No fallback to service mode.
         # 1. Validate caller identity
-        if not caller:
-            self._audit(correlation_id, None, "unknown", grant, "read", resource_id, "DENY", "unknown_workload", depth, "blocked")
+        if not InfrastructureIdentityProvider.verify(caller):
+            self._audit(correlation_id, None, getattr(caller, "workload_id", "unknown"), grant, "read", resource_id, "DENY", "unauthenticated_workload", depth, "blocked")
             return None
             
         # 2. Check resource existence and ownership
@@ -474,8 +512,8 @@ class SecureDocumentService:
             return self.storage.read_object(self.workload, None, resource_id, correlation_id, mode=ExecutionMode.SERVICE, depth=depth+1)
             
         # 1. Resolve Workload
-        if not caller:
-            self._audit(correlation_id, None, "unknown", grant, "read", resource_id, "DENY", "unknown_workload", depth, "blocked")
+        if not InfrastructureIdentityProvider.verify(caller):
+            self._audit(correlation_id, None, getattr(caller, "workload_id", "unknown"), grant, "read", resource_id, "DENY", "unauthenticated_workload", depth, "blocked")
             return None
 
         # 2. Resource tenant resolution
@@ -568,15 +606,20 @@ class ResearchApplication:
             return f"Found document {document_id}: {res}"
         return "Not found."
 
-    def answer_secure(self, subject_id: str, document_id: str, correlation_id: str = "req-1") -> ResearchResponse:
-        principal = PRINCIPAL_REGISTRY.get(subject_id)
+    def answer_secure(self, principal_context: AuthenticatedPrincipal, document_id: str, correlation_id: str = "req-1") -> ResearchResponse:
+        if not ApplicationIdentityProvider.verify(principal_context):
+            pid = getattr(principal_context, "principal_id", "unknown")
+            self.audit.record(AuditEvent(correlation_id, pid, "research-agent", None, None, "research-agent", "read", document_id, "DENY", "unauthenticated_principal", 0, "blocked"))
+            return ResearchResponse("blocked", "Access denied.", correlation_id)
+            
+        principal = PRINCIPAL_REGISTRY.get(principal_context.principal_id)
         if not principal:
-             self.audit.record(AuditEvent(correlation_id, subject_id, "research-agent", None, None, "research-agent", "read", document_id, "DENY", "unknown_principal", 0, "blocked"))
+             self.audit.record(AuditEvent(correlation_id, principal_context.principal_id, "research-agent", None, None, "research-agent", "read", document_id, "DENY", "unknown_principal", 0, "blocked"))
              return ResearchResponse("blocked", "Access denied.", correlation_id)
              
         # Issue a tightly scoped grant for this specific operation
         issue_result = self.ds.issue(
-            principal_id=subject_id,
+            principal_id=principal_context.principal_id,
             delegate_id=self.agent.workload.workload_id,
             audience="document-service",
             requested_operations={"read"},
@@ -584,7 +627,7 @@ class ResearchApplication:
         )
         
         if not issue_result.grant:
-            self.audit.record(AuditEvent(correlation_id, subject_id, "research-agent", None, None, "document-service", "read", document_id, "DENY", f"issuance_failed: {issue_result.reason}", 0, "blocked"))
+            self.audit.record(AuditEvent(correlation_id, principal_context.principal_id, "research-agent", None, None, "document-service", "read", document_id, "DENY", f"issuance_failed: {issue_result.reason}", 0, "blocked"))
             return ResearchResponse("blocked", "Access denied.", correlation_id)
 
         res = self.agent.read_secure(issue_result.grant, document_id, correlation_id)
@@ -604,6 +647,9 @@ def run_demo():
     audit = AuditSink()
     
     # 0. Infrastructure bootstraps application with identities
+    auth_alice = ApplicationIdentityProvider.for_alice()
+    auth_mallory = ApplicationIdentityProvider.for_mallory()
+    
     auth_agent = InfrastructureIdentityProvider.for_research_agent()
     auth_doc = InfrastructureIdentityProvider.for_document_service()
     auth_storage = InfrastructureIdentityProvider.for_storage_service()
@@ -620,14 +666,14 @@ def run_demo():
         scenarios.append((name, result))
         print(f"[+] {name}\n    -> {result}")
 
-    print("--- 16 Adversarial Scenarios ---\n")
+    print("--- 19 Adversarial Scenarios ---\n")
 
     # 1. Valid delegated read
-    res = app.answer_secure("alice", "doc-101", "req-1")
+    res = app.answer_secure(auth_alice, "doc-101", "req-1")
     log_scenario("Valid delegated read", "Allowed" if res.terminal_state == "answered" else "Denied")
 
     # 2. Unauthorized user resource
-    res = app.answer_secure("alice", "doc-secret", "req-2")
+    res = app.answer_secure(auth_alice, "doc-secret", "req-2")
     log_scenario("Unauthorized user resource (doc-secret)", "Blocked (issuance_failed: resource_not_owned)" if res.terminal_state == "blocked" else "Leaked")
 
     # 3. Resource outside grant (use-time check)
@@ -640,7 +686,7 @@ def run_demo():
     log_scenario("Operation outside grant (delete)", f"Denied ({decision.reason})" if not decision.allowed else "Allowed")
 
     # 5. Cross-tenant resource
-    res = app.answer_secure("mallory", "doc-101", "req-5")
+    res = app.answer_secure(auth_mallory, "doc-101", "req-5")
     log_scenario("Cross-tenant resource (mallory -> acme doc)", "Blocked" if res.terminal_state == "blocked" else "Allowed")
 
     # 6. Fabricated grant
@@ -675,11 +721,11 @@ def run_demo():
     log_scenario("Workload impersonation (no valid auth)", "Denied (unknown_workload)" if not res else "Allowed")
 
     # 11. Workload impersonation (forged identity)
-    forged_auth = AuthenticatedWorkload("document-service", "acme") # Valid ID, but not injected by infrastructure
+    forged_auth = AuthenticatedWorkload("document-service", "acme", "forged-ctx") # Valid ID, but not injected by infrastructure
     # It passes typing, but if we assume the infrastructure validates its own tokens (e.g. at exchange time):
     exch = ds.exchange(grant_wrong.grant, forged_auth, "storage-service", {"read"}, {"doc-101"}, 10)
     # Actually wait, in Python memory this matches the real one. Let's test a mismatched tenant to show consistency checks:
-    malformed_auth = AuthenticatedWorkload("document-service", "globex")
+    malformed_auth = AuthenticatedWorkload("document-service", "globex", "forged-ctx")
     exch_malformed = ds.exchange(grant_wrong.grant, malformed_auth, "storage-service", {"read"}, {"doc-101"}, 10)
     log_scenario("Malformed authenticated workload mismatch", f"Denied ({exch_malformed.reason})" if not exch_malformed.grant else "Allowed")
 
@@ -704,6 +750,21 @@ def run_demo():
     events = [e for e in audit.events if e.correlation_id == "req-1"]
     has_alice_everywhere = all(e.principal_id == "alice" for e in events)
     log_scenario("Principal Attribution Preserved", "Yes" if has_alice_everywhere else "No")
+
+    # 17. Principal impersonation (forged)
+    forged_alice = AuthenticatedPrincipal("alice", "forged-ctx")
+    res_fake_alice = app.answer_secure(forged_alice, "doc-101", "req-17")
+    log_scenario("Principal impersonation (forged auth)", "Denied (unauthenticated_principal)" if res_fake_alice.terminal_state == "blocked" and "unauthenticated_principal" in str(audit.events[-1].reason) else "Allowed")
+
+    # 18. Workload impersonation (missing ID)
+    res_missing_wl = storage.read_object(None, grant_aud.grant, "doc-101", "req-18")
+    log_scenario("Workload impersonation (missing identity)", "Denied (unauthenticated_workload)" if not res_missing_wl and audit.events[-1].reason == "unauthenticated_workload" else "Allowed")
+    
+    # 19. Workload impersonation (forged exact metadata)
+    forged_doc = AuthenticatedWorkload("document-service", "acme", "forged-ctx")
+    res_forged_wl = storage.read_object(forged_doc, grant_aud.grant, "doc-101", "req-19")
+    log_scenario("Workload impersonation (forged metadata)", "Denied (unauthenticated_workload)" if not res_forged_wl and audit.events[-1].reason == "unauthenticated_workload" else "Allowed")
+
 
     print("\n--- Summary ---")
     print(f"Total Scenarios Run: {len(scenarios)}")

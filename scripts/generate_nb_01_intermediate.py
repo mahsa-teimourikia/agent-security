@@ -29,10 +29,13 @@ def create_notebook():
             "clock = MutableClock(datetime(2025, 1, 1, 12, 0, tzinfo=timezone.utc))\n"
             "ds = lab.DelegationService(clock_fn=clock)\n"
             "audit = lab.AuditSink()\n"
-            "storage = lab.StorageService(ds, audit)\n"
-            "secure_docs = lab.SecureDocumentService(ds, storage, audit)\n"
-            "naive_docs = lab.NaiveDocumentService(storage)\n"
-            "app = lab.ResearchApplication(ds, secure_docs, naive_docs, audit)\n"
+            "auth_agent = lab.InfrastructureIdentityProvider.for_research_agent()\n"
+            "auth_doc = lab.InfrastructureIdentityProvider.for_document_service()\n"
+            "auth_storage = lab.InfrastructureIdentityProvider.for_storage_service()\n\n"
+            "storage = lab.StorageService(ds, audit, auth_storage)\n"
+            "secure_docs = lab.SecureDocumentService(ds, storage, audit, auth_doc)\n"
+            "naive_docs = lab.NaiveDocumentService(storage, auth_doc)\n"
+            "app = lab.ResearchApplication(ds, secure_docs, auth_agent, naive_docs, audit)\n"
         ),
         
         nbf.v4.new_markdown_cell(
@@ -69,7 +72,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_code_cell(
-            "my_auth = lab.WorkloadAuthenticator.authenticate('document-service')\n"
+            "my_auth = lab.InfrastructureIdentityProvider.for_document_service()\n"
             "res = storage.read_object_naive(my_auth, 'doc-secret', 'naive-req')\n"
             "print(f\"Storage Naive Read Result: {res}\")"
         ),
@@ -80,7 +83,8 @@ def create_notebook():
         ),
 
         nbf.v4.new_code_cell(
-            "ans = app.answer_naive('alice', 'doc-secret')\n"
+            "auth_alice = lab.ApplicationIdentityProvider.for_alice()\n"
+            "ans = app.answer_naive(auth_alice, 'doc-secret')\n"
             "print(f\"Exploit Result: {ans}\")"
         ),
 
@@ -96,11 +100,11 @@ def create_notebook():
 
         nbf.v4.new_markdown_cell(
             "## 7. Authoritative Workload Authentication\n"
-            "Similarly, a string `caller_id = 'document-service'` isn't proof of identity. Authentication requires trusted infrastructure (mTLS, SPIFFE). Our `WorkloadAuthenticator` represents this."
+            "Similarly, a string `caller_id = 'document-service'` isn't proof of identity. Authentication requires trusted infrastructure (mTLS, SPIFFE). Our `InfrastructureIdentityProvider` represents this."
         ),
 
         nbf.v4.new_code_cell(
-            "auth_workload = lab.WorkloadAuthenticator.authenticate('document-service')\n"
+            "auth_workload = lab.InfrastructureIdentityProvider.for_document_service()\n"
             "print(f\"Authenticated Context: {auth_workload}\")"
         ),
 
@@ -117,7 +121,7 @@ def create_notebook():
             "    requested_operations={'read'}, \n"
             "    requested_resources={'doc-101'}\n"
             ")\n"
-            "print(f\"Issued Grant ID: {grant_101.grant_id}\")"
+            "print(f\"Issued Grant ID: {grant_101.grant.grant_id}\")"
         ),
 
         nbf.v4.new_markdown_cell(
@@ -137,7 +141,7 @@ def create_notebook():
 
         nbf.v4.new_code_cell(
             "fake_obj = lab.DelegationGrant('fake-123', None, 'alice', 'document-service', 'acme', 'storage-service', frozenset({'read'}), frozenset({'doc-secret'}), clock(), clock() + timedelta(minutes=60), 'hacker')\n"
-            "decision = ds.verify(fake_obj, 'document-service', 'storage-service', 'acme', 'alice', 'read', 'doc-secret')\n"
+            "decision = ds.verify(fake_obj, 'document-service', 'storage-service', 'acme', 'read', 'doc-secret')\n"
             "print(f\"Forged Grant Verification: {decision.reason}\")"
         ),
 
@@ -147,7 +151,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_code_cell(
-            "decision = ds.verify(grant_101, 'research-agent', 'storage-service', 'acme', 'alice', 'read', 'doc-101')\n"
+            "decision = ds.verify(grant_101.grant, 'research-agent', 'storage-service', 'acme', 'read', 'doc-101')\n"
             "print(f\"Audience Mismatch: {decision.reason}\")"
         ),
 
@@ -189,7 +193,7 @@ def create_notebook():
         nbf.v4.new_code_cell(
             "grant_exp = ds.issue('alice', 'research-agent', 'document-service', {'read'}, {'doc-101'}, ttl_minutes=5)\n"
             "clock.advance(6)\n"
-            "decision = ds.verify(grant_exp, 'research-agent', 'document-service', 'acme', 'alice', 'read', 'doc-101')\n"
+            "decision = ds.verify(grant_exp.grant, 'research-agent', 'document-service', 'acme', 'read', 'doc-101')\n"
             "print(f\"Expired Token: {decision.reason}\")"
         ),
 
@@ -201,7 +205,8 @@ def create_notebook():
         nbf.v4.new_code_cell(
             "# Reset clock for valid tests\n"
             "clock.now = datetime(2025, 1, 1, 12, 0, tzinfo=timezone.utc)\n"
-            "res = app.answer_secure('alice', 'doc-secret')\n"
+            "auth_alice = lab.ApplicationIdentityProvider.for_alice()\n"
+            "res = app.answer_secure(auth_alice, 'doc-secret')\n"
             "print(f\"Secure Fail-Closed Result: {res.terminal_state}\")\n"
             "events = [e for e in audit.events if e.resource_id == 'doc-secret']\n"
             "print(f\"Audit shows DENY: {events[-1].decision} ({events[-1].reason})\")"
@@ -213,7 +218,8 @@ def create_notebook():
         ),
 
         nbf.v4.new_code_cell(
-            "res = app.answer_secure('alice', 'doc-101', 'req-secure-1')\n"
+            "auth_alice = lab.ApplicationIdentityProvider.for_alice()\n"
+            "res = app.answer_secure(auth_alice, 'doc-101', 'req-secure-1')\n"
             "print(f\"Valid Secure Read: {res.answer}\")"
         ),
 
@@ -224,10 +230,10 @@ def create_notebook():
 
         nbf.v4.new_code_cell(
             "parent = ds.issue('alice', 'research-agent', 'document-service', {'read', 'comment'}, {'doc-101'}, ttl_minutes=60)\n"
-            "doc_auth = lab.WorkloadAuthenticator.authenticate('document-service')\n\n"
-            "child = ds.exchange(parent, doc_auth, next_audience='storage-service', requested_operations={'read'}, requested_resources={'doc-101'}, requested_ttl_minutes=10)\n"
-            "print(f\"Child Audience: {child.audience}\")\n"
-            "print(f\"Child Delegate: {child.delegate_id}\")"
+            "doc_auth = lab.InfrastructureIdentityProvider.for_document_service()\n\n"
+            "child = ds.exchange(parent.grant, doc_auth, next_audience='storage-service', requested_operations={'read'}, requested_resources={'doc-101'}, requested_ttl_minutes=10)\n"
+            "print(f\"Child Audience: {child.grant.audience}\")\n"
+            "print(f\"Child Delegate: {child.grant.delegate_id}\")"
         ),
 
         nbf.v4.new_markdown_cell(
@@ -236,8 +242,8 @@ def create_notebook():
         ),
 
         nbf.v4.new_code_cell(
-            "print(f\"Parent ID: {parent.grant_id}\")\n"
-            "print(f\"Child Parent ID: {child.parent_grant_id}\")"
+            "print(f\"Parent ID: {parent.grant.grant_id}\")\n"
+            "print(f\"Child Parent ID: {child.grant.parent_grant_id}\")"
         ),
 
         nbf.v4.new_markdown_cell(
@@ -246,9 +252,9 @@ def create_notebook():
         ),
 
         nbf.v4.new_code_cell(
-            "child_long = ds.exchange(parent, doc_auth, 'storage-service', {'read'}, {'doc-101'}, requested_ttl_minutes=120)\n"
-            "print(f\"Parent Expiry: {parent.expires_at}\")\n"
-            "print(f\"Child Expiry : {child_long.expires_at}\")"
+            "child_long = ds.exchange(parent.grant, doc_auth, 'storage-service', {'read'}, {'doc-101'}, requested_ttl_minutes=120)\n"
+            "print(f\"Parent Expiry: {parent.grant.expires_at}\")\n"
+            "print(f\"Child Expiry : {child_long.grant.expires_at}\")"
         ),
 
         nbf.v4.new_markdown_cell(
@@ -257,7 +263,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_code_cell(
-            "bad_child = ds.exchange(parent, doc_auth, 'storage-service', {'read', 'delete'}, {'doc-101', 'doc-102'}, requested_ttl_minutes=10)\n"
+            "bad_child = ds.exchange(parent.grant, doc_auth, 'storage-service', {'read', 'delete'}, {'doc-101', 'doc-102'}, requested_ttl_minutes=10)\n"
             "print(f\"Scope Expansion Result: {bad_child}\")"
         ),
 
@@ -267,7 +273,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_code_cell(
-            "res = storage.read_object(caller=None, grant=child, resource_id='doc-101', correlation_id='req-impersonate')\n"
+            "res = storage.read_object(caller=None, grant=child.grant, resource_id='doc-101', correlation_id='req-impersonate')\n"
             "print(f\"Impersonation Result: {res}\")\n"
             "print(f\"Audit: {audit.events[-1].reason}\")"
         ),
@@ -287,9 +293,9 @@ def create_notebook():
 
         nbf.v4.new_markdown_cell(
             "## 24. Adversarial Matrix\n"
-            "Run `python3 01_identity_propagation.py` in your terminal to see the full demo covering all 14 scenarios.\n\n"
+            "Run `python3 01_identity_propagation.py` in your terminal to see the full demo covering all 19 scenarios.\n\n"
             "## 25. Exercises\n"
-            "1. Modify `WorkloadAuthenticator` to deny authentication if `tenant == 'globex'`. How does this affect Mallory?\n"
+            "1. Modify `InfrastructureIdentityProvider` to deny authentication if `tenant == 'globex'`. How does this affect Mallory?\n"
             "2. Modify the `exchange` method to enforce that the next audience must be in the same tenant.\n\n"
             "## 26. Production Mapping\n"
             "Real token exchange (RFC 8693) involves cryptographic signatures (JWT), Authorization Servers, and complex subject-token verification. This lab models the *semantics*, not the cryptography."

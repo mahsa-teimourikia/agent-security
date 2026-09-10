@@ -33,11 +33,11 @@ The central thesis of this course:
 A critical mistake in distributed systems is treating a known string (an identifier) as proof of identity (authentication).
 
 - **Identifier**: `caller_id = "document-service"`
-- **Authentication**: `AuthenticatedWorkload(workload_id="document-service", tenant="acme")`
+- **Authentication**: `AuthenticatedWorkload(workload_id="document-service", tenant="acme", auth_context_id="ctx-doc")`
 
 An attacker who knows your internal architecture can easily construct a payload claiming to be `"document-service"`. Secure systems rely on infrastructure (like mTLS, SPIFFE/SPIRE, or Cloud Workload Identity) to authenticate the caller *before* the application logic runs.
 
-In this simulation, `WorkloadAuthenticator` represents this trusted infrastructure context. Caller strings must not be trusted.
+In this simulation, `InfrastructureIdentityProvider` represents this trusted infrastructure context, and `ApplicationIdentityProvider` represents front-door user authentication (like Okta or Entra ID). Caller strings must not be trusted.
 
 ## Principal vs Workload vs Delegate
 
@@ -166,8 +166,9 @@ While this lab uses a deterministic, in-memory `DelegationGrant` simulation, rea
 
 | Teaching abstraction | Production concept |
 |---|---|
-| `PRINCIPAL_REGISTRY` | IdP / IAM directory (Entra ID, Okta) |
-| `WorkloadAuthenticator` | mTLS, SPIFFE/SPIRE, Cloud Workload Identity |
+| `PRINCIPAL_REGISTRY` | User Directory Metadata |
+| `ApplicationIdentityProvider` | Front-door IdP (Entra ID, Okta) / OIDC ID Token |
+| `InfrastructureIdentityProvider` | mTLS, SPIFFE/SPIRE, Cloud Workload Identity |
 | `DelegationGrant` | OAuth 2.0 Access Token / JWT / Macaroons |
 | Delegation Issuer | Authorization Server / Secure Token Service (STS) |
 | Audience | OAuth `aud` claim / Resource indicators |
