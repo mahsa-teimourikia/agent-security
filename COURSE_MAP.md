@@ -2,6 +2,10 @@
 
 Canonical map of every track and module in the Agent Security curriculum.
 
+This file lists published lessons. The separately labelled
+[36-course expansion roadmap](curriculum/README.md) contains reading sequences,
+pilot labs, and planned topics that have not yet passed the publication gate.
+
 ## Beginner
 
 | # | Module | Theory | Lab | Notebook |

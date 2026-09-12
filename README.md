@@ -6,13 +6,13 @@ A comprehensive, source-linked curriculum for securing AI agents, agentic workfl
 
 **[Open the Agent Security Learning Hub →](https://mahsa-teimourikia.github.io/agent-security/)**
 
-The Hub is organized into Beginner, Intermediate, and Advanced paths. Each lesson follows **Learn → Lab → Checkpoint**, includes theory and references, links to runnable Python code and notebooks, and records completion locally in the browser.
+The Hub is organized into Beginner, Intermediate, and Advanced published paths. Each published lesson follows **Learn → Lab → Checkpoint**, links to a credential-free notebook and reusable Python lab, uses a focused checkpoint, and records completion locally in the browser. Roadmap material is shown separately and cannot be marked complete before its runnable artifacts and evaluation are ready.
 
 ### Knowledge check
 
 Ready to test your understanding? Take the interactive [Agent Security Knowledge Check](https://mahsa-teimourikia.github.io/agent-security/quiz/) after completing the lessons. It includes multi-select questions, explanations, scoring, and retry support.
 
-## Curriculum
+## Published curriculum
 
 ### Beginner
 
@@ -38,6 +38,12 @@ Ready to test your understanding? Take the interactive [Agent Security Knowledge
 | 02 | Multi-Agent Delegation and Security | [02_multi_agent_security.py](curriculum/advanced/02-multi-agent-security/02_multi_agent_security.py) |
 | 03 | Governance and Production Readiness | [03_production_gate.py](curriculum/advanced/03-production-gate/03_production_gate.py) |
 
+## 36-course expansion roadmap
+
+The [AI Agent Security Engineering expansion map](curriculum/README.md) grows the published path across state and identity, execution and egress, MCP/A2A and multi-agent security, runtime assurance, incident operations, governance, and enterprise architecture. The [curriculum evolution plan](CURRICULUM_EVOLUTION_PLAN.md) records source material, delivery order, and the evidence gate for each course.
+
+Roadmap pages are intentionally labelled as reading sequences or pilot labs. A roadmap entry becomes published only when its chapter, credential-free notebook, reusable lab, failure injection, evaluation, production guidance, and focused checkpoint run together.
+
 ## Running locally
 
 The core labs use only the Python standard library and deterministic fixtures. No credentials, API keys, or cloud services are required.
@@ -47,13 +53,16 @@ The core labs use only the Python standard library and deterministic fixtures. N
 python3 curriculum/beginner/01-tool-policy/01_tool_policy.py
 
 # Run focused tests
-python3 -m pytest tests/test_tool_policy.py -v
+python3 -m pytest -q
 
 # Compile all Python
 python3 -m compileall -q curriculum tests
 
 # Run the guided notebook
 jupyter notebook curriculum/beginner/01-tool-policy/01_tool_policy.ipynb
+
+# Execute every credential-free notebook as CI does
+python3 scripts/execute-notebooks.py --timeout 90
 ```
 
 ## Security references

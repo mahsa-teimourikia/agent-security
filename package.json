@@ -1,10 +1,12 @@
 {
   "name": "agent-security",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build:pages": "vite build --config vite.pages.config.ts && node scripts/copy-quiz-to-pages.mjs",
-    "test:pages": "npm run build:pages && node tests/pages-smoke.mjs",
+    "test:hub": "node --test tests/course-registry.test.mjs",
+    "test:pages": "npm run test:hub && npm run build:pages && node tests/pages-smoke.mjs",
     "test:quiz": "node --test quiz/grading.test.mjs quiz/learning.test.mjs",
     "check:pages-links": "node scripts/validate-learning-links.mjs"
   },
@@ -13,6 +15,6 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "vite": "^5.2.0"
+    "vite": "^8.3.0"
   }
 }
