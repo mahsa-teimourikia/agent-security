@@ -39,3 +39,18 @@ jobs:
         env:
           PYTHONPATH: .
         run: python scripts/execute-notebooks.py --timeout 90
+  pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate learning links
+        run: npm run check:pages-links
+      - name: Build and smoke-test Pages
+        run: npm run test:pages
+      - name: Test quiz behavior
+        run: npm run test:quiz
