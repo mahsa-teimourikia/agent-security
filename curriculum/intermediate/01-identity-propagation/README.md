@@ -33,11 +33,11 @@ The central thesis of this course:
 A critical mistake in distributed systems is treating a known string (an identifier) as proof of identity (authentication).
 
 - **Identifier**: `caller_id = "document-service"`
-- **Authentication**: `AuthenticatedWorkload(workload_id="document-service", tenant="acme", auth_context_id="ctx-doc")`
+- **Authentication evidence**: a provider-issued `AuthenticatedWorkload` object whose claims are derived from verified infrastructure state
 
 An attacker who knows your internal architecture can easily construct a payload claiming to be `"document-service"`. Secure systems rely on infrastructure (like mTLS, SPIFFE/SPIRE, or Cloud Workload Identity) to authenticate the caller *before* the application logic runs.
 
-In this simulation, `InfrastructureIdentityProvider` represents this trusted infrastructure context, and `ApplicationIdentityProvider` represents front-door user authentication (like Okta or Entra ID). Caller strings must not be trusted.
+In this simulation, `InfrastructureIdentityProvider` represents this trusted infrastructure context, and `ApplicationIdentityProvider` represents front-door user authentication (like Okta or Entra ID). Their `for_*` methods are test-fixture seams that stand in for trusted middleware injection; they are not request-facing login APIs. Verification uses canonical object identity so recreating the same public field values does not recreate authentication evidence.
 
 ## Principal vs Workload vs Delegate
 
@@ -57,9 +57,9 @@ Every request has at least two identities you must untangle:
 Delegation grants (like OAuth tokens) cannot be minted by arbitrary clients. If a caller could pass a customized `Principal` object into an issuer and receive a valid token, they could forge any authority they desire.
 
 A secure issuer:
-1. Accepts only authenticated identifiers.
-2. Resolves those identifiers against an **Authoritative Registry** (like Entra ID or Okta).
-3. Ensures requested authority is a valid subset of the Principal's true authority.
+1. Accepts provider-verified principal and workload contexts, not caller-supplied identity strings.
+2. Derives identifiers from those contexts and resolves authorization attributes against an **Authoritative Registry** (like Entra ID or Okta).
+3. Ensures requested authority is a valid subset of the principal's true authority.
 
 > **Principal object != authenticated principal**
 > **workload ID != authenticated workload**
@@ -67,9 +67,9 @@ A secure issuer:
 
 ## Authentication Context Substitution
 
-A valid authentication context ID is not the same thing as a valid authentication. Because context IDs (like session IDs or connection tokens) might be exposed or leaked, a secure system must bind the authentication evidence to the exact principal or workload identity claims it was issued for. 
+A valid authentication context ID is not the same thing as a valid authentication. Because context IDs and identity claims can be copied, a secure system must verify provider-issued evidence and derive the trusted claims from it. Comparing caller-constructed values with a registry is not authentication.
 
-If Bob logs in and receives `ctx-bob`, but then passes `principal_id=alice` along with his context, the system must reject it. A valid context ID `ctx-bob` combined with a valid principal ID `alice` creates an invalid binding: `ctx-bob + principal_id=alice → invalid`. A valid auth context ID != valid authentication if the claims don't match.
+If Bob logs in and receives `ctx-bob`, but then passes `principal_id=alice` along with his context, the system must reject it. The simulation also rejects a newly constructed `AuthenticatedPrincipal("bob", "ctx-bob")`: matching fields do not prove that trusted middleware issued that object.
 
 ## Token-Claim Analogy
 
@@ -88,10 +88,12 @@ This is the **Confused Deputy** vulnerability. The agent was tricked into using 
 ## On-Behalf-Of Execution & No Fallback
 
 To fix this, services must distinguish between two execution modes:
-1. **Service Mode**: The service is doing its own background work (e.g., a scheduled cleanup job). It uses its own ambient service credentials.
-2. **Delegated Mode**: The service is acting on behalf of a user. It must use a **Delegation Grant**.
+1. **Service work**: a trusted internal scheduler invokes a separate service-only entry point using infrastructure-authenticated workload identity plus a bounded, provider-issued service-job context.
+2. **Delegated work**: a request-facing entry point acts on behalf of a user and always requires a **Delegation Grant**.
 
 **CRITICAL INVARIANT:** If a delegated request fails (e.g., token is expired or unauthorized), the service must **never** fall back to using its ambient service-level privileges.
+
+The execution mode must not be a request parameter. This lab therefore exposes separate `get_document(...)` and `run_service_read(...)` methods; the delegated method has no switch that can select service authority. The service-only path verifies both the calling workload and the job context, then enforces the job's operation and resource scope.
 
 ## Token Exchange and Parent-Child Delegation
 
@@ -170,6 +172,8 @@ Launch the lab via the interactive notebook:
 jupyter notebook curriculum/intermediate/01-identity-propagation/01_identity_propagation.ipynb
 ```
 
+The lab is credential-free and uses synthetic data. The identity-provider factories simulate trusted infrastructure and application middleware. Production code must validate signed or sender-constrained credentials at the network boundary rather than using Python object identity.
+
 ## Production Mapping
 
 While this lab uses a deterministic, in-memory `DelegationGrant` simulation, real-world systems use established protocols. 
@@ -188,3 +192,10 @@ While this lab uses a deterministic, in-memory `DelegationGrant` simulation, rea
 | Multi-hop delegation | On-Behalf-Of (OBO) flows / Token Exchange |
 | Resource Registry | Authoritative internal data service |
 | Audit event | SIEM / Security telemetry (Splunk, Datadog) |
+
+## References
+
+- [RFC 8693 — OAuth 2.0 Token Exchange](https://www.rfc-editor.org/rfc/rfc8693.html)
+- [RFC 8707 — Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707.html)
+- [RFC 9700 — Best Current Practice for OAuth 2.0 Security](https://www.rfc-editor.org/rfc/rfc9700.html)
+- [SPIFFE overview](https://spiffe.io/docs/latest/spiffe-about/overview/)

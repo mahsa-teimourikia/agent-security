@@ -3,14 +3,21 @@ import path from "path";
 
 const outDir = "out";
 if (!fs.existsSync(outDir)) {
-    console.error("out/ directory missing");
-    process.exit(1);
+  console.error("out/ directory missing");
+  process.exit(1);
 }
 
-// Assert assets exist
-if (!fs.existsSync(path.join(outDir, "assets/one-plus-i.png"))) {
-    console.error("one-plus-i.png missing in out/assets/");
-    // Temporarily disable strict failure for the brand asset if it doesnt exist in source yet
+const requiredFiles = [
+  "index.html",
+  "quiz/index.html",
+  "assets/one-plus-i.png",
+];
+
+for (const relativePath of requiredFiles) {
+  if (!fs.existsSync(path.join(outDir, relativePath))) {
+    console.error(`${relativePath} missing from out/`);
+    process.exit(1);
+  }
 }
 
 console.log("Smoke tests passed.");

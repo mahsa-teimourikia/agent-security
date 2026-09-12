@@ -1,9 +1,10 @@
 import nbformat as nbf
 from pathlib import Path
 
+
 def create_notebook():
     nb = nbf.v4.new_notebook()
-    
+
     nb.cells = [
         nbf.v4.new_markdown_cell(
             "# Intermediate 01: Identity Propagation and Delegated Authority\n\n"
@@ -11,7 +12,6 @@ def create_notebook():
             "If the Agent uses its own powerful infrastructure privileges to fetch data, it can be tricked into retrieving documents the original User isn't allowed to see. This is the **Confused Deputy** problem.\n\n"
             "The solution is **Identity Propagation**: securely passing the user's identity and a tightly scoped **Delegation Grant** all the way down the chain. At each hop, the token is **exchanged** for a narrower downstream token, ensuring monotonic attenuation."
         ),
-        
         nbf.v4.new_code_cell(
             "import sys\n"
             "from pathlib import Path\n"
@@ -29,15 +29,19 @@ def create_notebook():
             "clock = MutableClock(datetime(2025, 1, 1, 12, 0, tzinfo=timezone.utc))\n"
             "ds = lab.DelegationService(clock_fn=clock)\n"
             "audit = lab.AuditSink()\n"
+            "auth_alice = lab.ApplicationIdentityProvider.for_alice()\n"
+            "auth_bob = lab.ApplicationIdentityProvider.for_bob()\n"
+            "auth_mallory = lab.ApplicationIdentityProvider.for_mallory()\n"
             "auth_agent = lab.InfrastructureIdentityProvider.for_research_agent()\n"
             "auth_doc = lab.InfrastructureIdentityProvider.for_document_service()\n"
-            "auth_storage = lab.InfrastructureIdentityProvider.for_storage_service()\n\n"
+            "auth_storage = lab.InfrastructureIdentityProvider.for_storage_service()\n"
+            "auth_evil = lab.InfrastructureIdentityProvider.for_evil_agent()\n"
+            "auth_job = lab.ServiceJobIdentityProvider.for_document_maintenance()\n\n"
             "storage = lab.StorageService(ds, audit, auth_storage)\n"
             "secure_docs = lab.SecureDocumentService(ds, storage, audit, auth_doc)\n"
             "naive_docs = lab.NaiveDocumentService(storage, auth_doc)\n"
             "app = lab.ResearchApplication(ds, secure_docs, auth_agent, naive_docs, audit)\n"
         ),
-        
         nbf.v4.new_markdown_cell(
             "## 1. Scenario and Identity Map\n\n"
             "In this lab, we have three users:\n"
@@ -46,16 +50,14 @@ def create_notebook():
             "- **Mallory** (Tenant: Globex, Ops: read, Docs: doc-globex-01)\n\n"
             "And a highly classified document, `doc-secret`, that no user is allowed to access."
         ),
-        
         nbf.v4.new_code_cell(
             "print('--- Principals ---')\n"
             "for pid, p in lab.PRINCIPAL_REGISTRY.items():\n"
-            "    print(f\"{pid}: tenant={p.tenant}, ops={list(p.allowed_operations)}, resources={list(p.allowed_resources)}\")\n"
+            '    print(f"{pid}: tenant={p.tenant}, ops={list(p.allowed_operations)}, resources={list(p.allowed_resources)}")\n'
             "print('\\n--- Workloads ---')\n"
             "for wid, w in lab.WORKLOAD_REGISTRY.items():\n"
-            "    print(f\"{wid}: tenant={w.tenant}\")"
+            '    print(f"{wid}: tenant={w.tenant}")'
         ),
-
         nbf.v4.new_markdown_cell(
             "## 2. Principal vs Workload Identity\n"
             "A *Principal* is the human user (Alice). A *Workload Identity* is the software service (research-agent).\n"
@@ -65,262 +67,191 @@ def create_notebook():
             "- **Delegation:** Granting permission to a workload to act on your behalf.\n"
             "- **Authorization:** Deciding if a specific action is allowed based on the grant."
         ),
-
         nbf.v4.new_markdown_cell(
             "## 4. Naive Ambient Authority\n"
             "First, let's see how a vulnerable service behaves. The `NaiveDocumentService` trusts the Research Agent's workload identity completely. It uses its *ambient* service-level authority to query storage, ignoring the user."
         ),
-
         nbf.v4.new_code_cell(
             "my_auth = lab.InfrastructureIdentityProvider.for_document_service()\n"
             "res = storage.read_object_naive(my_auth, 'doc-secret', 'naive-req')\n"
-            "print(f\"Storage Naive Read Result: {res}\")"
+            'print(f"Storage Naive Read Result: {res}")'
         ),
-
         nbf.v4.new_markdown_cell(
             "## 5. Confused Deputy Exploit\n"
             "Because Alice can talk to the Research Agent, and the agent can talk to the Naive Document Service using ambient authority, Alice can trick the agent into retrieving `doc-secret`!"
         ),
-
         nbf.v4.new_code_cell(
-            "auth_alice = lab.ApplicationIdentityProvider.for_alice()\n"
-            "ans = app.answer_naive(auth_alice, 'doc-secret')\n"
-            "print(f\"Exploit Result: {ans}\")"
+            "auth_alice = lab.ApplicationIdentityProvider.for_alice()\nans = app.answer_naive(auth_alice, 'doc-secret')\nprint(f\"Exploit Result: {ans}\")"
         ),
-
         nbf.v4.new_markdown_cell(
             "## 6. Authoritative Principal Resolution\n"
-            "In a secure system, a delegation issuer doesn't accept a dictionary or raw object containing scopes. It accepts an identifier, and authoritatively resolves the scopes from a trusted registry (like Entra ID or Okta)."
+            "A secure delegation issuer accepts provider-verified principal and workload evidence, derives their identifiers, and then resolves authorization attributes from a trusted registry (like Entra ID or Okta). A registry lookup alone does not authenticate the caller."
         ),
-
-        nbf.v4.new_code_cell(
-            "principal_id = 'alice'\n"
-            "print(f\"Resolving {principal_id} -> {lab.PRINCIPAL_REGISTRY[principal_id]}\")"
-        ),
-
+        nbf.v4.new_code_cell("principal_id = 'alice'\nprint(f\"Resolving {principal_id} -> {lab.PRINCIPAL_REGISTRY[principal_id]}\")"),
         nbf.v4.new_markdown_cell(
             "## 7. Authoritative Workload Authentication\n"
             "Similarly, a string `caller_id = 'document-service'` isn't proof of identity. Authentication requires trusted infrastructure (mTLS, SPIFFE). Our `InfrastructureIdentityProvider` represents this."
         ),
-
-        nbf.v4.new_code_cell(
-            "auth_workload = lab.InfrastructureIdentityProvider.for_document_service()\n"
-            "print(f\"Authenticated Context: {auth_workload}\")"
-        ),
-
+        nbf.v4.new_code_cell('auth_workload = lab.InfrastructureIdentityProvider.for_document_service()\nprint(f"Authenticated Context: {auth_workload}")'),
         nbf.v4.new_markdown_cell(
             "## 8. Authentication Context Substitution\n"
-            "An attacker might try to transplant a valid authentication context ID onto another identity. "
-            "However, the infrastructure binds the context ID exactly to the issued identity. A valid context ID is not enough by itself."
+            "An attacker might transplant a valid context ID onto another identity or recreate all visible fields. "
+            "The simulation accepts only the canonical object injected by trusted middleware, so neither attack recreates authentication evidence."
         ),
-
         nbf.v4.new_code_cell(
-            "real_bob = lab.ApplicationIdentityProvider.for_bob()\n"
-            "forged_alice = lab.AuthenticatedPrincipal('alice', real_bob.auth_context_id)\n"
-            "print(f\"Forged Principal substitution verified: {lab.ApplicationIdentityProvider.verify(forged_alice)}\")\n\n"
-            "real_agent = lab.InfrastructureIdentityProvider.for_research_agent()\n"
-            "forged_doc = lab.AuthenticatedWorkload('document-service', 'acme', real_agent.auth_context_id)\n"
-            "print(f\"Forged Workload substitution verified: {lab.InfrastructureIdentityProvider.verify(forged_doc)}\")"
+            "forged_alice = lab.AuthenticatedPrincipal('alice', auth_bob.auth_context_id)\n"
+            'print(f"Forged Principal substitution verified: {lab.ApplicationIdentityProvider.verify(forged_alice)}")\n\n'
+            "copied_bob = lab.AuthenticatedPrincipal('bob', 'ctx-bob')\n"
+            'print(f"Exact-copy Principal verified: {lab.ApplicationIdentityProvider.verify(copied_bob)}")\n\n'
+            "forged_doc = lab.AuthenticatedWorkload('document-service', 'acme', auth_agent.auth_context_id)\n"
+            "copied_doc = lab.AuthenticatedWorkload('document-service', 'acme', 'ctx-doc')\n"
+            'print(f"Forged Workload substitution verified: {lab.InfrastructureIdentityProvider.verify(forged_doc)}")\n'
+            'print(f"Exact-copy Workload verified: {lab.InfrastructureIdentityProvider.verify(copied_doc)}")'
         ),
-
         nbf.v4.new_markdown_cell(
-            "## 10. Delegation Issuance\n"
-            "When Alice makes a request, the app issues a tightly scoped **Delegation Grant** binding Alice to the Research Agent."
+            "## 10. Delegation Issuance\nWhen Alice makes a request, the app issues a tightly scoped **Delegation Grant** binding Alice to the Research Agent."
         ),
-
         nbf.v4.new_code_cell(
             "grant_101 = ds.issue(\n"
-            "    principal_id='alice', \n"
-            "    delegate_id='research-agent', \n"
+            "    principal_context=auth_alice,\n"
+            "    delegate_context=auth_agent,\n"
             "    audience='document-service', \n"
             "    requested_operations={'read'}, \n"
             "    requested_resources={'doc-101'}\n"
             ")\n"
-            "print(f\"Issued Grant ID: {grant_101.grant.grant_id}\")"
+            'print(f"Issued Grant ID: {grant_101.grant.grant_id}")'
         ),
-
         nbf.v4.new_markdown_cell(
             "## 10. Forged Principal Attack\n"
-            "If an attacker tries to pass a forged principal string, the issuer rejects it because it's not in the registry."
+            "If an attacker constructs an identity object with copied fields, the issuer rejects it before resolving authorization attributes."
         ),
-
         nbf.v4.new_code_cell(
-            "fake_grant = ds.issue('hacker_alice', 'research-agent', 'document-service', {'read'}, {'doc-secret'})\n"
-            "print(f\"Forged Principal Grant: {fake_grant}\")"
+            "forged_principal = lab.AuthenticatedPrincipal('alice', 'ctx-alice')\n"
+            "fake_grant = ds.issue(forged_principal, auth_agent, 'document-service', {'read'}, {'doc-101'})\n"
+            'print(f"Forged Principal Grant: {fake_grant}")'
         ),
-
         nbf.v4.new_markdown_cell(
             "## 11. Forged Grant Attack\n"
             "If an attacker tries to construct a fake `DelegationGrant` object manually and pass it to a service, the service verifies it against the issuer's store. It will fail."
         ),
-
         nbf.v4.new_code_cell(
             "fake_obj = lab.DelegationGrant('fake-123', None, 'alice', 'document-service', 'acme', 'storage-service', frozenset({'read'}), frozenset({'doc-secret'}), clock(), clock() + timedelta(minutes=60), 'hacker')\n"
             "decision = ds.verify(fake_obj, 'document-service', 'storage-service', 'acme', 'read', 'doc-secret')\n"
-            "print(f\"Forged Grant Verification: {decision.reason}\")"
+            'print(f"Forged Grant Verification: {decision.reason}")'
         ),
-
-        nbf.v4.new_markdown_cell(
-            "## 12. Audience Restriction\n"
-            "A grant issued for `document-service` cannot be used directly against `storage-service`."
-        ),
-
+        nbf.v4.new_markdown_cell("## 12. Audience Restriction\nA grant issued for `document-service` cannot be used directly against `storage-service`."),
         nbf.v4.new_code_cell(
             "decision = ds.verify(grant_101.grant, 'research-agent', 'storage-service', 'acme', 'read', 'doc-101')\n"
-            "print(f\"Audience Mismatch: {decision.reason}\")"
+            'print(f"Audience Mismatch: {decision.reason}")'
         ),
-
-        nbf.v4.new_markdown_cell(
-            "## 13. Operation Down-Scoping\n"
-            "During issuance, you cannot request operations the principal doesn't have."
-        ),
-
+        nbf.v4.new_markdown_cell("## 13. Operation Down-Scoping\nDuring issuance, you cannot request operations the principal doesn't have."),
         nbf.v4.new_code_cell(
-            "grant = ds.issue('alice', 'research-agent', 'document-service', {'delete'}, {'doc-101'})\n"
-            "print(f\"Escalated Operation Grant: {grant}\")"
+            "grant = ds.issue(auth_alice, auth_agent, 'document-service', {'delete'}, {'doc-101'})\nprint(f\"Escalated Operation Grant: {grant}\")"
         ),
-
-        nbf.v4.new_markdown_cell(
-            "## 14. Resource Down-Scoping\n"
-            "Similarly, you cannot request resources the principal doesn't possess."
-        ),
-
+        nbf.v4.new_markdown_cell("## 14. Resource Down-Scoping\nSimilarly, you cannot request resources the principal doesn't possess."),
         nbf.v4.new_code_cell(
-            "grant = ds.issue('alice', 'research-agent', 'document-service', {'read'}, {'doc-secret'})\n"
-            "print(f\"Escalated Resource Grant: {grant}\")"
+            "grant = ds.issue(auth_alice, auth_agent, 'document-service', {'read'}, {'doc-secret'})\nprint(f\"Escalated Resource Grant: {grant}\")"
         ),
-
-        nbf.v4.new_markdown_cell(
-            "## 15. Tenant Binding\n"
-            "A user from Acme cannot delegate a workload from Globex, nor access a Globex resource."
-        ),
-
+        nbf.v4.new_markdown_cell("## 15. Tenant Binding\nA user from Acme cannot delegate a workload from Globex, nor access a Globex resource."),
+        nbf.v4.new_code_cell("grant = ds.issue(auth_alice, auth_evil, 'document-service', {'read'}, {'doc-101'})\nprint(f\"Cross-tenant delegate: {grant}\")"),
+        nbf.v4.new_markdown_cell("## 16. Expiry\nTokens are strictly time-bound."),
         nbf.v4.new_code_cell(
-            "grant = ds.issue('alice', 'evil-agent', 'document-service', {'read'}, {'doc-101'})\n"
-            "print(f\"Cross-tenant delegate: {grant}\")"
-        ),
-
-        nbf.v4.new_markdown_cell(
-            "## 16. Expiry\n"
-            "Tokens are strictly time-bound."
-        ),
-
-        nbf.v4.new_code_cell(
-            "grant_exp = ds.issue('alice', 'research-agent', 'document-service', {'read'}, {'doc-101'}, ttl_minutes=5)\n"
+            "grant_exp = ds.issue(auth_alice, auth_agent, 'document-service', {'read'}, {'doc-101'}, ttl_minutes=5)\n"
             "clock.advance(6)\n"
             "decision = ds.verify(grant_exp.grant, 'research-agent', 'document-service', 'acme', 'read', 'doc-101')\n"
-            "print(f\"Expired Token: {decision.reason}\")"
+            'print(f"Expired Token: {decision.reason}")'
         ),
-
         nbf.v4.new_markdown_cell(
-            "## 17. No Ambient-Authority Fallback\n"
-            "If delegation fails, the service MUST NOT fall back to its ambient privileges. It must fail closed."
+            "## 17. No Ambient-Authority Fallback\nIf delegation fails, the service MUST NOT fall back to its ambient privileges. It must fail closed."
         ),
-
         nbf.v4.new_code_cell(
             "# Reset clock for valid tests\n"
             "clock.now = datetime(2025, 1, 1, 12, 0, tzinfo=timezone.utc)\n"
-            "auth_alice = lab.ApplicationIdentityProvider.for_alice()\n"
             "res = app.answer_secure(auth_alice, 'doc-secret')\n"
-            "print(f\"Secure Fail-Closed Result: {res.terminal_state}\")\n"
+            'print(f"Secure Fail-Closed Result: {res.terminal_state}")\n'
             "events = [e for e in audit.events if e.resource_id == 'doc-secret']\n"
-            "print(f\"Audit shows DENY: {events[-1].decision} ({events[-1].reason})\")"
+            'print(f"Audit shows DENY: {events[-1].decision} ({events[-1].reason})")'
         ),
-
         nbf.v4.new_markdown_cell(
-            "## 18. First Secure Delegated Read\n"
-            "Now let's see a valid delegated read through the Secure API."
+            "## 18. Separate Service and Delegated Entry Points\n"
+            "Execution mode must come from trusted routing, not request data. The delegated `get_document` method has no `mode` parameter. Background work uses the separate `run_service_read` entry point, which passes the service's infrastructure-authenticated identity to storage."
         ),
-
         nbf.v4.new_code_cell(
-            "auth_alice = lab.ApplicationIdentityProvider.for_alice()\n"
-            "res = app.answer_secure(auth_alice, 'doc-101', 'req-secure-1')\n"
-            "print(f\"Valid Secure Read: {res.answer}\")"
+            "try:\n"
+            "    secure_docs.get_document(None, None, 'doc-secret', 'req-mode', mode='service')\n"
+            "except TypeError as exc:\n"
+            '    print(f"Request cannot select service mode: {exc}")\n\n'
+            "service_result = secure_docs.run_service_read(auth_job, 'doc-101', 'job-1')\n"
+            'print(f"Trusted service entry point: {service_result}")\n'
+            'print(f"Service audit: {audit.events[-1].reason}")'
         ),
-
+        nbf.v4.new_markdown_cell("## 19. First Secure Delegated Read\nNow let's see a valid delegated read through the Secure API."),
+        nbf.v4.new_code_cell("res = app.answer_secure(auth_alice, 'doc-101', 'req-secure-1')\nprint(f\"Valid Secure Read: {res.answer}\")"),
         nbf.v4.new_markdown_cell(
-            "## 19. Multi-Hop Token Exchange\n"
+            "## 20. Multi-Hop Token Exchange\n"
             "Notice how the Document Service couldn't use the Research Agent's token for Storage? It had to perform a **Token Exchange**. Let's simulate that manually."
         ),
-
         nbf.v4.new_code_cell(
-            "parent = ds.issue('alice', 'research-agent', 'document-service', {'read', 'comment'}, {'doc-101'}, ttl_minutes=60)\n"
-            "doc_auth = lab.InfrastructureIdentityProvider.for_document_service()\n\n"
-            "child = ds.exchange(parent.grant, doc_auth, next_audience='storage-service', requested_operations={'read'}, requested_resources={'doc-101'}, requested_ttl_minutes=10)\n"
-            "print(f\"Child Audience: {child.grant.audience}\")\n"
-            "print(f\"Child Delegate: {child.grant.delegate_id}\")"
+            "parent = ds.issue(auth_alice, auth_agent, 'document-service', {'read', 'comment'}, {'doc-101'}, ttl_minutes=60)\n"
+            "child = ds.exchange(parent.grant, auth_doc, next_audience='storage-service', requested_operations={'read'}, requested_resources={'doc-101'}, requested_ttl_minutes=10)\n"
+            'print(f"Child Audience: {child.grant.audience}")\n'
+            'print(f"Child Delegate: {child.grant.delegate_id}")'
         ),
-
+        nbf.v4.new_markdown_cell("## 21. Parent-Child Grant Chain\nThe child grant maintains a cryptographic or deterministic link to the parent grant."),
+        nbf.v4.new_code_cell('print(f"Parent ID: {parent.grant.grant_id}")\nprint(f"Child Parent ID: {child.grant.parent_grant_id}")'),
         nbf.v4.new_markdown_cell(
-            "## 20. Parent-Child Grant Chain\n"
-            "The child grant maintains a cryptographic or deterministic link to the parent grant."
+            "## 22. Expiry Attenuation\nDuring exchange, a child token cannot outlive its parent. It is clamped to `min(requested_expiry, parent_expiry)`."
         ),
-
         nbf.v4.new_code_cell(
-            "print(f\"Parent ID: {parent.grant.grant_id}\")\n"
-            "print(f\"Child Parent ID: {child.grant.parent_grant_id}\")"
+            "child_long = ds.exchange(parent.grant, auth_doc, 'storage-service', {'read'}, {'doc-101'}, requested_ttl_minutes=120)\n"
+            'print(f"Parent Expiry: {parent.grant.expires_at}")\n'
+            'print(f"Child Expiry : {child_long.grant.expires_at}")'
         ),
-
         nbf.v4.new_markdown_cell(
-            "## 21. Expiry Attenuation\n"
-            "During exchange, a child token cannot outlive its parent. It is clamped to `min(requested_expiry, parent_expiry)`."
+            "## 23. Scope-Expansion Attack\nIf a compromised intermediate service tries to ask for more permissions during exchange, it is denied."
         ),
-
         nbf.v4.new_code_cell(
-            "child_long = ds.exchange(parent.grant, doc_auth, 'storage-service', {'read'}, {'doc-101'}, requested_ttl_minutes=120)\n"
-            "print(f\"Parent Expiry: {parent.grant.expires_at}\")\n"
-            "print(f\"Child Expiry : {child_long.grant.expires_at}\")"
+            "bad_child = ds.exchange(parent.grant, auth_doc, 'storage-service', {'read', 'delete'}, {'doc-101', 'doc-102'}, requested_ttl_minutes=10)\n"
+            'print(f"Scope Expansion Result: {bad_child}")'
         ),
-
         nbf.v4.new_markdown_cell(
-            "## 22. Scope-Expansion Attack\n"
-            "If a compromised intermediate service tries to ask for more permissions during exchange, it is denied."
-        ),
-
-        nbf.v4.new_code_cell(
-            "bad_child = ds.exchange(parent.grant, doc_auth, 'storage-service', {'read', 'delete'}, {'doc-101', 'doc-102'}, requested_ttl_minutes=10)\n"
-            "print(f\"Scope Expansion Result: {bad_child}\")"
-        ),
-
-        nbf.v4.new_markdown_cell(
-            "## 23. Workload Impersonation Attack\n"
+            "## 24. Workload Impersonation Attack\n"
             "If an attacker tries to call the backend by simply passing a string ID without an AuthenticatedWorkload context, it fails."
         ),
-
         nbf.v4.new_code_cell(
             "res = storage.read_object(caller=None, grant=child.grant, resource_id='doc-101', correlation_id='req-impersonate')\n"
-            "print(f\"Impersonation Result: {res}\")\n"
-            "print(f\"Audit: {audit.events[-1].reason}\")"
+            'print(f"Impersonation Result: {res}")\n'
+            'print(f"Audit: {audit.events[-1].reason}")'
         ),
-
         nbf.v4.new_markdown_cell(
-            "## 24. Audit/Attribution Trace\n"
+            "## 25. Audit/Attribution Trace\n"
             "Let's look at the full audit trace for the successful secure multi-hop request. Notice how identities shift across hops, but Alice is preserved throughout."
         ),
-
         nbf.v4.new_code_cell(
             "events = [e for e in audit.events if e.correlation_id == 'req-secure-1']\n"
             "for e in events:\n"
-            "    print(f\"Hop {e.delegation_depth}: {e.workload_id} -> {e.audience} | {e.operation} {e.resource_id} | {e.lifecycle_state}\")\n"
-            "    print(f\"  Principal: {e.principal_id}\")\n"
-            "    print(f\"  Grant Chain: {e.delegation_id} (Parent: {e.parent_delegation_id})\\n\")"
+            '    print(f"Hop {e.delegation_depth}: {e.workload_id} -> {e.audience} | {e.operation} {e.resource_id} | {e.lifecycle_state}")\n'
+            '    print(f"  Principal: {e.principal_id}")\n'
+            '    print(f"  Grant Chain: {e.delegation_id} (Parent: {e.parent_delegation_id})\\n")'
         ),
-
         nbf.v4.new_markdown_cell(
-            "## 25. Adversarial Matrix\n"
-            "Run `python3 01_identity_propagation.py` in your terminal to see the full demo covering all 19 scenarios.\n\n"
-            "## 26. Exercises\n"
-            "1. Modify `InfrastructureIdentityProvider` to deny authentication if `tenant == 'globex'`. How does this affect Mallory?\n"
-            "2. Modify the `exchange` method to enforce that the next audience must be in the same tenant.\n\n"
-            "## 27. Production Mapping\n"
-            "Real token exchange (RFC 8693) involves cryptographic signatures (JWT), Authorization Servers, and complex subject-token verification. This lab models the *semantics*, not the cryptography."
-        )
+            "## 26. Adversarial Matrix\n"
+            "Run `python3 01_identity_propagation.py` in your terminal to execute the full adversarial scenario set.\n\n"
+            "## 27. Exercises\n"
+            "1. Extend `AuthenticatedServiceJob` with expiry and revocation, then test both exact boundary conditions.\n"
+            "2. Inject a token-exchange failure and verify that the audit trail records a terminal blocked event.\n"
+            "3. Explain why a registry lookup authorizes attributes but cannot authenticate a caller.\n\n"
+            "## 28. Production Mapping\n"
+            "Real token exchange (RFC 8693) uses authorization-server policy and verifiable credentials. Audience restriction and sender-constrained tokens reduce replay risk. This lab models the control semantics with canonical in-memory contexts; production systems must verify signed or opaque credentials at network boundaries.\n\n"
+            "References: RFC 8693, RFC 8707, RFC 9700, and the SPIFFE workload identity overview."
+        ),
     ]
-    
+
     out_path = Path("curriculum/intermediate/01-identity-propagation/01_identity_propagation.ipynb")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
         nbf.write(nb, f)
+
 
 if __name__ == "__main__":
     create_notebook()
