@@ -63,12 +63,17 @@ class TestIdentityPropagation:
         assert resp.terminal_state == "blocked"
         assert app.audit.events[-1].reason == "unauthenticated_principal"
 
-    def test_unknown_principal_rejected(self, app):
-        # Valid auth context, but principal not in application registry
-        fake_auth = lab.AuthenticatedPrincipal("dave", "ctx-alice")
+    def test_unknown_principal_rejected(self, delegation_service):
+        issue_result = delegation_service.issue("dave", "research-agent", "document-service", {"read"}, {"doc-101"})
+        assert issue_result.grant is None
+        assert issue_result.reason == "unknown_principal"
+
+    def test_principal_context_substitution(self, app):
+        # Valid principal ID, valid context ID, but wrong binding
+        fake_auth = lab.AuthenticatedPrincipal("alice", "ctx-bob")
         resp = app.answer_secure(fake_auth, "doc-101")
         assert resp.terminal_state == "blocked"
-        assert app.audit.events[-1].reason == "unknown_principal"
+        assert app.audit.events[-1].reason == "unauthenticated_principal"
 
     def test_known_principal_unauthorized_resource(self, app):
         auth_alice = lab.ApplicationIdentityProvider.for_alice()
@@ -77,11 +82,16 @@ class TestIdentityPropagation:
         assert "issuance_failed: " in app.audit.events[-1].reason
 
     def test_cross_tenant_rejected(self, app):
-        # Mallory is Globex, tries to access Acme doc
+        # Mallory is Globex, tries to delegate to Acme agent
         auth_mallory = lab.ApplicationIdentityProvider.for_mallory()
-        resp = app.answer_secure(auth_mallory, "doc-101")
+        resp = app.answer_secure(auth_mallory, "doc-globex-01")
         assert resp.terminal_state == "blocked"
-        assert "issuance_failed: " in app.audit.events[-1].reason
+        assert "issuance_failed: tenant_mismatch" in app.audit.events[-1].reason
+
+    # --- Service Role Binding ---
+    def test_service_role_binding_checked_at_construction(self, delegation_service, audit, auth_agent):
+        with pytest.raises(ValueError, match="invalid workload identity for StorageService"):
+            lab.StorageService(delegation_service, audit, auth_agent)
 
     # --- Trust Boundaries ---
     def test_forged_principal_cannot_issue(self, delegation_service):
@@ -116,18 +126,22 @@ class TestIdentityPropagation:
             requested_resources={"doc-101"}
         )
         assert issue_result.grant is None
+        assert issue_result.reason == "unknown_audience"
 
     def test_workload_impersonation(self, storage, delegation_service):
-        # An attacker knows "document-service" is a valid workload ID, 
-        # but they cannot create a valid AuthenticatedWorkload via the WorkloadAuthenticator 
-        # unless they truly are the document-service (simulated here).
-        # Even if they create a raw object (which is possible in Python but violates the API contract),
-        # the storage service validates against the grant. But let's test if we pass None.
         issue_result = delegation_service.issue("alice", "research-agent", "storage-service", {"read"}, {"doc-101"})
         res = storage.read_object(caller=None, grant=issue_result.grant, resource_id="doc-101", correlation_id="req-steal")
         assert res is None
         assert storage.audit.events[-1].reason == "unauthenticated_workload"
         assert storage.audit.events[-1].lifecycle_state == "blocked"
+
+    def test_workload_context_substitution(self, storage, delegation_service, auth_agent):
+        issue_result = delegation_service.issue("alice", "research-agent", "storage-service", {"read"}, {"doc-101"})
+        # Valid ID but wrong context binding
+        substituted_doc = lab.AuthenticatedWorkload("document-service", "acme", auth_agent.auth_context_id)
+        res = storage.read_object(caller=substituted_doc, grant=issue_result.grant, resource_id="doc-101", correlation_id="req-steal")
+        assert res is None
+        assert storage.audit.events[-1].reason == "unauthenticated_workload"
 
     # --- Confused Deputy ---
     def test_confused_deputy_naive(self, app):
@@ -271,6 +285,23 @@ class TestIdentityPropagation:
         doc_svc = auth_doc
         child = delegation_service.exchange(parent.grant, doc_svc, "evil-agent", {"read"}, {"doc-101"}, 5) # evil-agent is globex
         assert child.grant is None # Cross-tenant next audience denied
+
+    def test_exchange_parent_expired(self, delegation_service, auth_doc, clock):
+        parent = delegation_service.issue("alice", "research-agent", "document-service", {"read"}, {"doc-101"}, ttl_minutes=10)
+        
+        class MutableClock:
+            def __init__(self, start): self.now = start
+            def __call__(self): return self.now
+            def advance(self, minutes): self.now += timedelta(minutes=minutes)
+                
+        mc = MutableClock(clock())
+        delegation_service._clock_fn = mc
+        
+        mc.advance(11) # past parent expiry
+        child = delegation_service.exchange(parent.grant, auth_doc, "storage-service", {"read"}, {"doc-101"}, 5)
+        
+        assert child.grant is None
+        assert child.reason == "parent_expired"
 
     # --- Multi-Hop Downscoping & Audit ---
     def test_multi_hop_downscoping(self, app):

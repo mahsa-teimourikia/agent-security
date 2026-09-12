@@ -65,6 +65,18 @@ A secure issuer:
 > **workload ID != authenticated workload**
 > **grant object != verified delegation**
 
+## Authentication Context Substitution
+
+A valid authentication context ID is not the same thing as a valid authentication. Because context IDs (like session IDs or connection tokens) might be exposed or leaked, a secure system must bind the authentication evidence to the exact principal or workload identity claims it was issued for. 
+
+If Bob logs in and receives `ctx-bob`, but then passes `principal_id=alice` along with his context, the system must reject it. A valid context ID `ctx-bob` combined with a valid principal ID `alice` creates an invalid binding: `ctx-bob + principal_id=alice → invalid`. A valid auth context ID != valid authentication if the claims don't match.
+
+## Token-Claim Analogy
+
+In production, an authenticated session or signed workload token (e.g., JWTs, OIDC ID tokens, mTLS certificates, SPIFFE IDs, cloud workload credentials) binds identity claims *within* the signed credential. Applications should extract identity claims directly from the verified credential itself. 
+
+Applications must not verify a valid credential from one identity but then trust identity fields supplied independently outside the token (e.g., in a separate HTTP header or JSON payload).
+
 ## Ambient Authority and the Confused Deputy
 
 When an agent authenticates to a downstream service using its own service credentials (e.g., its broad service account), it uses **ambient authority**. 

@@ -109,7 +109,22 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 8. Delegation Issuance\n"
+            "## 8. Authentication Context Substitution\n"
+            "An attacker might try to transplant a valid authentication context ID onto another identity. "
+            "However, the infrastructure binds the context ID exactly to the issued identity. A valid context ID is not enough by itself."
+        ),
+
+        nbf.v4.new_code_cell(
+            "real_bob = lab.ApplicationIdentityProvider.for_bob()\n"
+            "forged_alice = lab.AuthenticatedPrincipal('alice', real_bob.auth_context_id)\n"
+            "print(f\"Forged Principal substitution verified: {lab.ApplicationIdentityProvider.verify(forged_alice)}\")\n\n"
+            "real_agent = lab.InfrastructureIdentityProvider.for_research_agent()\n"
+            "forged_doc = lab.AuthenticatedWorkload('document-service', 'acme', real_agent.auth_context_id)\n"
+            "print(f\"Forged Workload substitution verified: {lab.InfrastructureIdentityProvider.verify(forged_doc)}\")"
+        ),
+
+        nbf.v4.new_markdown_cell(
+            "## 10. Delegation Issuance\n"
             "When Alice makes a request, the app issues a tightly scoped **Delegation Grant** binding Alice to the Research Agent."
         ),
 
@@ -125,7 +140,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 9. Forged Principal Attack\n"
+            "## 10. Forged Principal Attack\n"
             "If an attacker tries to pass a forged principal string, the issuer rejects it because it's not in the registry."
         ),
 
@@ -135,7 +150,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 10. Forged Grant Attack\n"
+            "## 11. Forged Grant Attack\n"
             "If an attacker tries to construct a fake `DelegationGrant` object manually and pass it to a service, the service verifies it against the issuer's store. It will fail."
         ),
 
@@ -146,7 +161,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 11. Audience Restriction\n"
+            "## 12. Audience Restriction\n"
             "A grant issued for `document-service` cannot be used directly against `storage-service`."
         ),
 
@@ -156,7 +171,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 12. Operation Down-Scoping\n"
+            "## 13. Operation Down-Scoping\n"
             "During issuance, you cannot request operations the principal doesn't have."
         ),
 
@@ -166,7 +181,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 13. Resource Down-Scoping\n"
+            "## 14. Resource Down-Scoping\n"
             "Similarly, you cannot request resources the principal doesn't possess."
         ),
 
@@ -176,7 +191,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 14. Tenant Binding\n"
+            "## 15. Tenant Binding\n"
             "A user from Acme cannot delegate a workload from Globex, nor access a Globex resource."
         ),
 
@@ -186,7 +201,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 15. Expiry\n"
+            "## 16. Expiry\n"
             "Tokens are strictly time-bound."
         ),
 
@@ -198,7 +213,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 16. No Ambient-Authority Fallback\n"
+            "## 17. No Ambient-Authority Fallback\n"
             "If delegation fails, the service MUST NOT fall back to its ambient privileges. It must fail closed."
         ),
 
@@ -213,7 +228,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 17. First Secure Delegated Read\n"
+            "## 18. First Secure Delegated Read\n"
             "Now let's see a valid delegated read through the Secure API."
         ),
 
@@ -224,7 +239,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 18. Multi-Hop Token Exchange\n"
+            "## 19. Multi-Hop Token Exchange\n"
             "Notice how the Document Service couldn't use the Research Agent's token for Storage? It had to perform a **Token Exchange**. Let's simulate that manually."
         ),
 
@@ -237,7 +252,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 19. Parent-Child Grant Chain\n"
+            "## 20. Parent-Child Grant Chain\n"
             "The child grant maintains a cryptographic or deterministic link to the parent grant."
         ),
 
@@ -247,7 +262,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 20. Expiry Attenuation\n"
+            "## 21. Expiry Attenuation\n"
             "During exchange, a child token cannot outlive its parent. It is clamped to `min(requested_expiry, parent_expiry)`."
         ),
 
@@ -258,7 +273,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 21. Scope-Expansion Attack\n"
+            "## 22. Scope-Expansion Attack\n"
             "If a compromised intermediate service tries to ask for more permissions during exchange, it is denied."
         ),
 
@@ -268,7 +283,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 22. Workload Impersonation Attack\n"
+            "## 23. Workload Impersonation Attack\n"
             "If an attacker tries to call the backend by simply passing a string ID without an AuthenticatedWorkload context, it fails."
         ),
 
@@ -279,7 +294,7 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 23. Audit/Attribution Trace\n"
+            "## 24. Audit/Attribution Trace\n"
             "Let's look at the full audit trace for the successful secure multi-hop request. Notice how identities shift across hops, but Alice is preserved throughout."
         ),
 
@@ -292,12 +307,12 @@ def create_notebook():
         ),
 
         nbf.v4.new_markdown_cell(
-            "## 24. Adversarial Matrix\n"
+            "## 25. Adversarial Matrix\n"
             "Run `python3 01_identity_propagation.py` in your terminal to see the full demo covering all 19 scenarios.\n\n"
-            "## 25. Exercises\n"
+            "## 26. Exercises\n"
             "1. Modify `InfrastructureIdentityProvider` to deny authentication if `tenant == 'globex'`. How does this affect Mallory?\n"
             "2. Modify the `exchange` method to enforce that the next audience must be in the same tenant.\n\n"
-            "## 26. Production Mapping\n"
+            "## 27. Production Mapping\n"
             "Real token exchange (RFC 8693) involves cryptographic signatures (JWT), Authorization Servers, and complex subject-token verification. This lab models the *semantics*, not the cryptography."
         )
     ]
