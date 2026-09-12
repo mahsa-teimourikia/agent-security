@@ -1,7 +1,7 @@
-import json
-from pathlib import Path
+"""Compatibility entry point for the executable notebook validation suite."""
 
-for path in [*Path("labs/notebooks").glob("*.ipynb"), *Path("curriculum").glob("**/*.ipynb")]:
-    data = json.loads(path.read_text())
-    assert data.get("nbformat") == 4 and isinstance(data.get("cells"), list), path
-print("notebooks valid")
+from pathlib import Path
+import runpy
+
+
+runpy.run_path(Path(__file__).with_name("execute-notebooks.py"), run_name="__main__")

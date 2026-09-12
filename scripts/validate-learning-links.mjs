@@ -23,7 +23,21 @@ function checkTarget(sourceFile, rawTarget) {
   }
 }
 
-const markdownFiles = ["README.md", "COURSE_MAP.md", "LEARNING.md"];
+function markdownFilesUnder(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const candidate = path.join(directory, entry.name);
+    if (entry.isDirectory()) return markdownFilesUnder(candidate);
+    return entry.isFile() && entry.name.endsWith(".md") ? [candidate] : [];
+  });
+}
+
+const markdownFiles = [
+  "README.md",
+  "COURSE_MAP.md",
+  "LEARNING.md",
+  "CURRICULUM_EVOLUTION_PLAN.md",
+  ...markdownFilesUnder("curriculum"),
+];
 for (const sourceFile of markdownFiles) {
   const content = fs.readFileSync(sourceFile, "utf8");
   for (const match of content.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {

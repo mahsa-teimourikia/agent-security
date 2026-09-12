@@ -7,7 +7,9 @@ class Credential:
     subject: str; tenant: str; audience: str; scopes: frozenset[str]; expires_at: datetime; secret_ref: str
 
 def issue(subject: str, tenant: str, audience: str, scopes: frozenset[str], *, now: datetime) -> Credential:
-    assert scopes <= {"read_policy", "write_ticket"}
+    allowed_scopes = {"read_policy", "write_ticket"}
+    if not scopes <= allowed_scopes:
+        raise ValueError(f"unsupported credential scopes: {sorted(scopes - allowed_scopes)}")
     return Credential(subject, tenant, audience, scopes, now + timedelta(minutes=5), f"vault://agent/{subject}")
 
 def authorize(credential: Credential, *, tenant: str, audience: str, scope: str, now: datetime) -> dict:

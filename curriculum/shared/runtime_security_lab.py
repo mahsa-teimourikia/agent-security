@@ -39,14 +39,20 @@ class Run:
         self.event("delegation", child=envelope.child, allowed=allowed, scopes=sorted(envelope.child_scopes))
         return allowed
 
-    def egress_allowed(self, url: str, allow_hosts: set[str]) -> bool:
+    def egress_allowed(self, url: str, allow_hosts: set[str], *, resolved_ip: str) -> bool:
         host = (urlparse(url).hostname or "").lower()
         try:
-            private_ip = ip_address(host).is_private or ip_address(host).is_loopback
+            address = ip_address(resolved_ip)
+            safe_address = address.is_global
         except ValueError:
-            private_ip = host in PRIVATE_HOSTS
-        allowed = urlparse(url).scheme == "https" and host in allow_hosts and not private_ip
-        self.event("egress", destination=host, allowed=allowed)
+            safe_address = False
+        allowed = (
+            urlparse(url).scheme == "https"
+            and host in allow_hosts
+            and host not in PRIVATE_HOSTS
+            and safe_address
+        )
+        self.event("egress", destination=host, resolved_ip=resolved_ip, allowed=allowed)
         return allowed
 
     def revoke(self, capability: str) -> None:
@@ -79,8 +85,8 @@ def demo() -> Run:
     run = Run("run-1", "north", "state-v1", "policy-v1")
     envelope = Delegation("orchestrator", "researcher", "north", frozenset({"search", "read"}), frozenset({"read"}), now + timedelta(minutes=5))
     assert run.delegate(envelope, now=now)
-    assert not run.egress_allowed("http://localhost/admin", {"api.example.test"})
-    assert run.egress_allowed("https://api.example.test/policy", {"api.example.test"})
+    assert not run.egress_allowed("http://localhost/admin", {"api.example.test"}, resolved_ip="127.0.0.1")
+    assert run.egress_allowed("https://api.example.test/policy", {"api.example.test"}, resolved_ip="8.8.8.8")
     assert run.commit_once("close-9")
     assert not run.commit_once("close-9")
     run.revoke("writes")

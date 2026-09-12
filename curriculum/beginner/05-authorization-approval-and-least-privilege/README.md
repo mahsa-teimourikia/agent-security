@@ -38,7 +38,8 @@ sequenceDiagram
 
 Run `python curriculum/shared/foundation_lab.py`. The lab allows the exact
 approved refund, then denies an altered amount with the same approval ID. Add
-tests for an expired receipt, an approval from another tenant, and `used=True`.
+tests for an expired receipt, an approval from another tenant, and a second
+attempt to consume the same receipt from the trusted approval store.
 Also run `python labs/beginner/01_tool_policy.py` to compare an initial generic
 approval gate with the bound-receipt control.
 

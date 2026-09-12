@@ -39,7 +39,7 @@ an allowed call.
 Run `python curriculum/intermediate/16-mcp-security/lab.py`. The trace emits
 client, server, tenant, tool, and argument hash—not a raw prompt or token. Add
 a resource-read action and require a source classification. Then compare it to
-the earlier minimal [MCP gateway lab](../../../labs/intermediate/02_mcp_gateway.py).
+the earlier [MCP gateway lab](../02-mcp-gateway/02_mcp_gateway.py).
 
 ## Evaluation and production considerations
 
