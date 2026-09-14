@@ -1,5 +1,8 @@
 # 13 — Network, Egress, SSRF, and External Resource Security
 
+<!-- roadmap-status -->
+> **Roadmap status: Pilot.** Some executable evidence exists; the remaining gate is listed in the Learning Hub and review plan.
+
 ## Learning objectives
 
 Threat-model agent-controlled outbound requests; stop SSRF before a connection;

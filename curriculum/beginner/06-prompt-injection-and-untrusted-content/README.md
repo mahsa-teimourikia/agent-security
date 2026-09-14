@@ -1,5 +1,8 @@
 # 06 — Prompt Injection and Untrusted Content
 
+<!-- roadmap-status -->
+> **Roadmap status: Reading.** The chapter is available; course-owned lab, notebook, tests, and checkpoint are still required.
+
 ## Learning objectives
 
 Classify direct, indirect, retrieval, tool-result, memory, web, and document

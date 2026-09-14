@@ -19,7 +19,7 @@ Ready to test your understanding? Take the interactive [Agent Security Knowledge
 | # | Title | Lab | Notebook |
 |---|---|---|---|
 | 01 | [Security Foundations and Tool Policy](curriculum/beginner/01-tool-policy/README.md) | [01_tool_policy.py](curriculum/beginner/01-tool-policy/01_tool_policy.py) | [01_tool_policy.ipynb](curriculum/beginner/01-tool-policy/01_tool_policy.ipynb) |
-| 02 | Prompt Injection and Untrusted Content | [02_prompt_injection.py](curriculum/beginner/02-prompt-injection/02_prompt_injection.py) | — |
+| 02 | Prompt Injection and Untrusted Content | [02_prompt_injection.py](curriculum/beginner/02-prompt-injection/02_prompt_injection.py) | [02_prompt_injection.ipynb](curriculum/beginner/02-prompt-injection/02_prompt_injection.ipynb) |
 | 03 | Secure Research Agent | [03_secure_research_agent.py](curriculum/beginner/03-secure-research-agent/03_secure_research_agent.py) | [03_secure_research_agent.ipynb](curriculum/beginner/03-secure-research-agent/03_secure_research_agent.ipynb) |
 
 ### Intermediate
@@ -40,7 +40,7 @@ Ready to test your understanding? Take the interactive [Agent Security Knowledge
 
 ## 36-course expansion roadmap
 
-The [AI Agent Security Engineering expansion map](curriculum/README.md) grows the published path across state and identity, execution and egress, MCP/A2A and multi-agent security, runtime assurance, incident operations, governance, and enterprise architecture. The [curriculum evolution plan](CURRICULUM_EVOLUTION_PLAN.md) records source material, delivery order, and the evidence gate for each course.
+The [AI Agent Security Engineering expansion map](curriculum/README.md) grows the published path across state and identity, execution and egress, MCP/A2A and multi-agent security, runtime assurance, incident operations, governance, and enterprise architecture. The [curriculum evolution plan](CURRICULUM_EVOLUTION_PLAN.md) records source material and delivery order. The [course-by-course review and improvement plan](COURSE_REVIEW_AND_IMPROVEMENT_PLAN.md) records current evidence, priority, and the exact gate remaining for every course.
 
 Roadmap pages are intentionally labelled as reading sequences or pilot labs. A roadmap entry becomes published only when its chapter, credential-free notebook, reusable lab, failure injection, evaluation, production guidance, and focused checkpoint run together.
 
@@ -72,7 +72,7 @@ python3 scripts/execute-notebooks.py --timeout 90
 - [MITRE ATLAS](https://atlas.mitre.org/)
 - [NIST AI Agent Standards Initiative](https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative)
 - [Google Secure AI Framework](https://cloud.google.com/use-cases/secure-ai-framework)
-- [MCP Security Best Practices](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices)
+- [MCP Security Best Practices 2025-11-25](https://modelcontextprotocol.io/docs/2025-11-25/tutorials/security/security_best_practices)
 - [OWASP MCP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html)
 - [NSA MCP Security Design Considerations](https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/4496698/nsa-releases-security-design-considerations-for-ai-driven-automation-leveraging/)
 - [Microsoft Agent Safety](https://learn.microsoft.com/en-us/agent-framework/agents/safety)

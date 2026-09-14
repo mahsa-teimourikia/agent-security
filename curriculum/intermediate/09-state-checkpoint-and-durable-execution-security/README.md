@@ -1,5 +1,8 @@
 # 09 — State, Checkpoint, and Durable-Execution Security
 
+<!-- roadmap-status -->
+> **Roadmap status: Pilot.** Some executable evidence exists; the remaining gate is listed in the Learning Hub and review plan.
+
 ## Learning objectives
 
 Model the security boundary introduced by a pause; identify what must be bound

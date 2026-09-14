@@ -1,5 +1,8 @@
 # 25 — Agent Red Teaming and Adversarial Evaluation
 
+<!-- roadmap-status -->
+> **Roadmap status: Pilot.** Some executable evidence exists; the remaining gate is listed in the Learning Hub and review plan.
+
 ## Learning objectives
 
 Build a versioned attack suite, measure security and utility before release, inspect policy receipts and trajectories, and convert a verified finding into a regression test with an owner.

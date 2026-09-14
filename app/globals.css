@@ -80,6 +80,16 @@ main { max-width: 1440px; margin: auto; }
 .roadmap-grid h3 { margin: 18px 0 8px; font: 600 25px Georgia, serif; }
 .roadmap-grid p { color: var(--muted); line-height: 1.55; }
 .roadmap-grid strong { margin-top: auto; color: var(--green); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.roadmap-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 28px; }
+.roadmap-list a { display: grid; grid-template-columns: 42px 1fr auto; gap: 12px; align-items: center; min-height: 78px; padding: 14px; border: 1px solid var(--line); background: #fffdf8; text-decoration: none; }
+.roadmap-list a:hover { border-color: var(--green); background: var(--sage); }
+.roadmap-list a > span:first-child { color: var(--coral); font: 600 24px Georgia, serif; }
+.roadmap-list a > span:nth-child(2) { display: grid; gap: 4px; }
+.roadmap-list small { color: var(--muted); line-height: 1.35; }
+.roadmap-list em { padding: 6px 8px; font-size: 10px; font-style: normal; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.status-pilot { color: var(--green); background: var(--sage); }
+.status-reading { color: #6f4d00; background: #f5e9bf; }
+.status-planned { color: var(--muted); background: var(--mist); }
 
 footer { min-height: 110px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px 6vw; border-top: 1px solid var(--line); background: var(--mist); }
 footer p { color: var(--muted); }
@@ -89,6 +99,7 @@ footer p { color: var(--muted); }
   .signal-card { max-width: 520px; }
   .workspace { position: static; }
   .roadmap-grid { grid-template-columns: repeat(2, 1fr); }
+  .roadmap-list { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 620px) {
@@ -100,6 +111,8 @@ footer p { color: var(--muted); }
   .section { padding: 56px 5vw; }
   .section-head, footer { align-items: flex-start; flex-direction: column; }
   .roadmap-grid { grid-template-columns: 1fr; }
+  .roadmap-list a { grid-template-columns: 36px 1fr; }
+  .roadmap-list em { grid-column: 2; justify-self: start; }
   .tabs { overflow-x: auto; }
   .tabs button { white-space: nowrap; }
 }

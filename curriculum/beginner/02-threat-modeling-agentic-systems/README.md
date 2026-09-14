@@ -1,5 +1,8 @@
 # 02 — Threat Modeling Agentic Systems
 
+<!-- roadmap-status -->
+> **Roadmap status: Reading.** The chapter is available; course-owned lab, notebook, tests, and checkpoint are still required.
+
 ## Learning objectives
 
 Produce a data-flow diagram, STRIDE and abuse-case analysis, an attack tree,

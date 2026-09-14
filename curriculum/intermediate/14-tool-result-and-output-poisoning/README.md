@@ -1,5 +1,8 @@
 # 14 — Tool Result and Output Poisoning
 
+<!-- roadmap-status -->
+> **Roadmap status: Pilot.** Some executable evidence exists; the remaining gate is listed in the Learning Hub and review plan.
+
 ## Learning objectives
 
 Treat tool observations as untrusted, provenance-bearing data; validate their

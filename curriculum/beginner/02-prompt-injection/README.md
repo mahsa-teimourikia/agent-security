@@ -101,3 +101,19 @@ Or run the standalone script to see the adversarial scenarios in action:
 ```bash
 python3 curriculum/beginner/02-prompt-injection/02_prompt_injection.py
 ```
+
+## Checkpoint
+
+A trusted internal document contains an injected instruction to issue a refund.
+Does authentic provenance grant that instruction operational authority?
+
+**Answer:** No. Authenticity establishes where content came from; the trusted
+application still treats documents as informational evidence and independently
+authorizes any proposed action.
+
+Previous: [Beginner 01 — Tool Policy](../01-tool-policy/README.md).
+
+Next: [Beginner 03 — Secure Research Agent](../03-secure-research-agent/README.md).
+
+Focused continuation: [roadmap 06 — Prompt Injection](../06-prompt-injection-and-untrusted-content/README.md)
+and [07 — Context and Evidence](../07-context-and-evidence-security/README.md).
