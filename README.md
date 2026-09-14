@@ -40,7 +40,7 @@ Ready to test your understanding? Take the interactive [Agent Security Knowledge
 
 ## 36-course expansion roadmap
 
-The [AI Agent Security Engineering expansion map](curriculum/README.md) grows the published path across state and identity, execution and egress, MCP/A2A and multi-agent security, runtime assurance, incident operations, governance, and enterprise architecture. The [curriculum evolution plan](CURRICULUM_EVOLUTION_PLAN.md) records source material and delivery order. The [course-by-course review and improvement plan](COURSE_REVIEW_AND_IMPROVEMENT_PLAN.md) records current evidence, priority, and the exact gate remaining for every course.
+The [AI Agent Security Engineering expansion map](curriculum/README.md) grows the published path across state and identity, execution and egress, MCP/A2A and multi-agent security, runtime assurance, incident operations, governance, and enterprise architecture. The Learning Hub lists each course’s current status and the exact gate remaining before publication.
 
 Roadmap pages are intentionally labelled as reading sequences or pilot labs. A roadmap entry becomes published only when its chapter, credential-free notebook, reusable lab, failure injection, evaluation, production guidance, and focused checkpoint run together.
 

@@ -104,7 +104,7 @@ dependency inventory.
 
 Residual risks include compromise of an allowlisted server, malicious but
 schema-valid results, policy misconfiguration, and stolen valid credentials.
-Courses 14, 16, 23, 26, and 30 in the expansion roadmap address those layers.
+Courses I07, I09, A06, A09, and E03 in the expansion roadmap address those layers.
 
 ## Checkpoint
 
@@ -126,5 +126,5 @@ token also creates audience and confused-deputy risk.
 - [OWASP MCP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html)
 
 This published lesson is the concise gateway path. The broader canonical
-[roadmap course 16](../16-mcp-security/README.md) extends it to resources,
+[roadmap course I09](../../roadmap/intermediate/09-mcp-security/README.md) extends it to resources,
 prompts, result poisoning, protocol lifecycle, and supply-chain boundaries.

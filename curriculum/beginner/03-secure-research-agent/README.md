@@ -127,5 +127,5 @@ Previous: [Beginner 02 — Prompt Injection](../02-prompt-injection/README.md).
 
 Next: [Intermediate 01 — Identity Propagation](../../intermediate/01-identity-propagation/README.md).
 
-Focused continuation: [roadmap 07 — Context and Evidence](../07-context-and-evidence-security/README.md)
-and [15 — Agentic RAG Security](../../intermediate/15-agentic-rag-security/README.md).
+Focused continuation: [roadmap F07 — Context and Evidence](../../roadmap/beginner/07-context-and-evidence-security/README.md)
+and [I08 — Agentic RAG Security](../../roadmap/intermediate/08-agentic-rag-security/README.md).

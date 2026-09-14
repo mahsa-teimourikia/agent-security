@@ -35,8 +35,6 @@ const markdownFiles = [
   "README.md",
   "COURSE_MAP.md",
   "LEARNING.md",
-  "CURRICULUM_EVOLUTION_PLAN.md",
-  "COURSE_REVIEW_AND_IMPROVEMENT_PLAN.md",
   "CONTRIBUTING.md",
   ...markdownFilesUnder("curriculum"),
 ];

@@ -37,16 +37,31 @@ test("published lessons have runnable, course-specific artifacts", () => {
 });
 
 test("roadmap is clearly separate from published lessons", () => {
-  assert.deepEqual(roadmapTracks.map(({ range }) => range), ["01–07", "08–17", "18–27", "28–36"]);
+  assert.deepEqual(roadmapTracks.map(({ range }) => range), ["01–07", "01–10", "01–10", "01–09"]);
   assert.ok(roadmapTracks.every(({ status }) => status !== "Published"));
   assert.equal(roadmapCourses.length, 36);
-  assert.deepEqual(roadmapCourses.map(({ number }) => number), Array.from({ length: 36 }, (_, index) => String(index + 1).padStart(2, "0")));
+  assert.equal(new Set(roadmapCourses.map(({ code }) => code)).size, 36);
+  const expectedNumbers = new Map([
+    ["Foundation", 7],
+    ["State & execution", 10],
+    ["Distributed adversaries", 10],
+    ["Enterprise operations", 9],
+  ]);
+  for (const [level, count] of expectedNumbers) {
+    assert.deepEqual(
+      roadmapCourses.filter((course) => course.level === level).map(({ number }) => number),
+      Array.from({ length: count }, (_, index) => String(index + 1).padStart(2, "0")),
+      `${level}: numbering must restart at 01 and remain contiguous`,
+    );
+  }
   assert.equal(new Set(roadmapCourses.map(({ folder }) => folder)).size, 36);
   for (const course of roadmapCourses) {
-    assert.notEqual(course.status, "Published", `${course.number}: roadmap course was promoted without its gate`);
-    assert.ok(fs.existsSync(`curriculum/${course.folder}/README.md`), `${course.number}: missing roadmap page`);
-    assert.ok(course.evidence.includes("needs"), `${course.number}: remaining evidence must be explicit`);
+    assert.match(course.code, /^[FIAE]\d{2}$/);
+    assert.ok(course.folder.startsWith("roadmap/"), `${course.code}: roadmap pages must remain separate from published lessons`);
+    assert.notEqual(course.status, "Published", `${course.code}: roadmap course was promoted without its gate`);
+    assert.ok(fs.existsSync(`curriculum/${course.folder}/README.md`), `${course.code}: missing roadmap page`);
+    assert.ok(course.evidence.includes("needs"), `${course.code}: remaining evidence must be explicit`);
     const roadmapPage = fs.readFileSync(`curriculum/${course.folder}/README.md`, "utf8");
-    assert.ok(roadmapPage.includes(`Roadmap status: ${course.status}`), `${course.number}: page and registry status disagree`);
+    assert.ok(roadmapPage.includes(`Roadmap status: ${course.status}`), `${course.code}: page and registry status disagree`);
   }
 });

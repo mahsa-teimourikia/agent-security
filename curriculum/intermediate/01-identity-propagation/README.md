@@ -210,4 +210,4 @@ Previous: [Beginner 03 — Secure Research Agent](../../beginner/03-secure-resea
 
 Next: [Intermediate 02 — MCP Gateway](../02-mcp-gateway/README.md).
 
-Focused continuation: [roadmap 10 — Identity and Delegated Authority](../10-agent-identity-and-delegated-authority/README.md).
+Focused continuation: [roadmap I03 — Identity and Delegated Authority](../../roadmap/intermediate/03-agent-identity-and-delegated-authority/README.md).

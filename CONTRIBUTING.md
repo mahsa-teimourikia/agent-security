@@ -2,8 +2,8 @@
 
 ## Course workflow
 
-1. Read the [course review and improvement plan](COURSE_REVIEW_AND_IMPROVEMENT_PLAN.md)
-   and choose the next numbered release slice.
+1. Read the [curriculum roadmap](curriculum/README.md) and choose the next
+   numbered release slice.
 2. State one precise course capability before editing artifacts.
 3. Build README, reusable `lab.py`, guided notebook, negative tests, and focused
    checkpoint as one system.

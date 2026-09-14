@@ -101,7 +101,7 @@ old lease, or a queue may redeliver. Test those conditions explicitly.
 
 Residual risk includes compromised responders, delayed revocation, incomplete
 telemetry, side effects without provider idempotency, and tampering outside the
-audited boundary. The enterprise roadmap courses 29–31 deepen these controls.
+audited boundary. The enterprise roadmap courses E02–E04 deepen these controls.
 
 ## Checkpoint
 

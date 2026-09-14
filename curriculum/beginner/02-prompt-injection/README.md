@@ -115,5 +115,5 @@ Previous: [Beginner 01 — Tool Policy](../01-tool-policy/README.md).
 
 Next: [Beginner 03 — Secure Research Agent](../03-secure-research-agent/README.md).
 
-Focused continuation: [roadmap 06 — Prompt Injection](../06-prompt-injection-and-untrusted-content/README.md)
-and [07 — Context and Evidence](../07-context-and-evidence-security/README.md).
+Focused continuation: [roadmap F06 — Prompt Injection](../../roadmap/beginner/06-prompt-injection-and-untrusted-content/README.md)
+and [F07 — Context and Evidence](../../roadmap/beginner/07-context-and-evidence-security/README.md).

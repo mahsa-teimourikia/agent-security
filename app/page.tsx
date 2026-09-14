@@ -102,13 +102,13 @@ export default function App() {
           <div className="section-head"><div><p className="eyebrow">EXPANSION ROADMAP</p><h2>36 courses, released by evidence</h2></div><p>Roadmap entries are not counted as complete until their chapter, notebook, lab, evaluation, and focused checkpoint all run together.</p></div>
           <div className="roadmap-grid">{roadmapTracks.map((track) => <article key={track.level}><span>{track.range}</span><h3>{track.level}</h3><p>{track.summary}</p><strong>{track.status}</strong></article>)}</div>
           <div className="roadmap-list" aria-label="Course-by-course roadmap status">
-            {roadmapCourses.map((course) => <a key={course.number} href={sourceLink(`curriculum/${course.folder}/README.md`)} target="_blank" rel="noreferrer">
-              <span>{course.number}</span>
+            {roadmapCourses.map((course) => <a key={course.code} href={sourceLink(`curriculum/${course.folder}/README.md`)} target="_blank" rel="noreferrer">
+              <span>{course.code}</span>
               <span><strong>{course.title}</strong><small>{course.level} · {course.evidence}</small></span>
               <em className={`status-${course.status.toLowerCase()}`}>{course.status}</em>
             </a>)}
           </div>
-          <div className="roadmap-actions"><a className="primary" href={sourceLink("curriculum/README.md")} target="_blank" rel="noreferrer">Explore the curriculum map ↗</a><a className="secondary" href={sourceLink("CURRICULUM_EVOLUTION_PLAN.md")} target="_blank" rel="noreferrer">Read the delivery gates ↗</a></div>
+          <div className="roadmap-actions"><a className="primary" href={sourceLink("curriculum/README.md")} target="_blank" rel="noreferrer">Explore the curriculum map ↗</a><a className="secondary" href={sourceLink("ROADMAP.md")} target="_blank" rel="noreferrer">Read the publication rules ↗</a></div>
         </section>
       </main>
 
