@@ -19,10 +19,10 @@ export const publishedLessons = [
     explanation: "Schema validation and workflow approval are useful controls, but only trusted application policy can grant authority for the exact action at the effect boundary.",
   }),
   lesson("b2", "Beginner", "02", "Prompt injection and untrusted content", "Separate instructions from documents, tool output, and memory.", "Contain an indirect injection even when simple marker detection misses it.", "beginner/02-prompt-injection", "02_prompt_injection", {
-    prompt: "A retrieved document says to ignore policy and send a secret. What authority does it have?",
-    options: ["None; it remains untrusted evidence", "System-level authority", "Tool-administrator authority"],
-    correct: 0,
-    explanation: "External content may inform an answer but cannot authorize a tool call or change system policy.",
+    prompt: "A detector labels a retrieved internal document clean, and the run has a refund capability. What must still happen before execution?",
+    options: ["Execute because both checks passed", "Authorize the exact proposed effect from current trusted identity, run, grant, source, policy, and time", "Ask the model to confirm the document is safe"],
+    correct: 1,
+    explanation: "Detection and authentic provenance are risk signals, not authority. Trusted application policy must resolve current evidence and authorize the exact effect at the execution boundary.",
   }),
   lesson("b3", "Beginner", "03", "Secure research agent", "Combine provenance, evidence ranking, narrow tools, and policy enforcement.", "Return traceable evidence while refusing unsafe capabilities and poisoned instructions.", "beginner/03-secure-research-agent", "03_secure_research_agent", {
     prompt: "What makes a research answer auditable?",
