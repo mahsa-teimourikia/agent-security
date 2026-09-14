@@ -12,7 +12,10 @@ control sequence before reaching the (simulated) side-effect boundary.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
+import threading
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -78,6 +81,27 @@ class ActionProposal:
     arguments: dict[str, Any] = field(default_factory=dict)
 
 
+def proposal_digest(proposal: ActionProposal) -> str:
+    """Return a stable digest for the exact proposed effect.
+
+    The digest binds approval and audit evidence to the operation, primary
+    resource, and complete argument payload.  It is evidence of equality, not
+    a signature or an authorization decision.
+    """
+    canonical = json.dumps(
+        {
+            "operation": proposal.operation,
+            "resource_id": proposal.resource_id,
+            "arguments": proposal.arguments,
+        },
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 @dataclass(frozen=True)
 class ResourceMeta:
     """Trusted lookup result from the application resource registry.
@@ -113,7 +137,11 @@ class ApprovalReceipt:
         tenant:      The tenant scope of the approval.
         operation:   The approved operation.
         resource_id: The approved resource.
+        proposal_digest: Digest of operation, resource, and exact arguments.
+        run_id:      Agent run for which the receipt was issued.
+        policy_version: Policy version reviewed by the approver.
         approver:    Who granted the approval.
+        issued_at:   When the approval was issued (UTC).
         expires_at:  When the receipt expires (UTC).
     """
     receipt_id: str
@@ -121,7 +149,11 @@ class ApprovalReceipt:
     tenant: str
     operation: str
     resource_id: str
+    proposal_digest: str
+    run_id: str
+    policy_version: str
     approver: str
+    issued_at: datetime
     expires_at: datetime
 
 
@@ -161,6 +193,82 @@ class PolicyDecision:
     details: str = ""
 
 
+@dataclass(frozen=True)
+class EvaluationObservation:
+    """One labelled policy outcome used for deterministic evaluation."""
+
+    expected_state: str
+    actual_state: str
+    terminal_state: str
+    correlation_id: str
+    reason: str
+    proposal_digest: str
+    policy_version: str
+
+
+@dataclass(frozen=True)
+class EvaluationMetrics:
+    """Metrics with explicit populations and denominators."""
+
+    case_count: int
+    correct_decision_count: int
+    decision_accuracy: float | None
+    attack_case_count: int
+    unauthorized_execution_count: int
+    unauthorized_execution_rate: float | None
+    valid_case_count: int
+    valid_task_success_count: int
+    valid_task_success_rate: float | None
+    trace_complete_count: int
+    trace_coverage: float | None
+
+
+def calculate_evaluation_metrics(
+    observations: list[EvaluationObservation],
+) -> EvaluationMetrics:
+    """Calculate transparent policy metrics without hiding denominators."""
+    case_count = len(observations)
+    correct = sum(
+        item.actual_state == item.expected_state for item in observations
+    )
+    attacks = [item for item in observations if item.expected_state != "allow"]
+    unauthorized = sum(
+        item.terminal_state == "executed" for item in attacks
+    )
+    valid = [item for item in observations if item.expected_state == "allow"]
+    valid_success = sum(
+        item.actual_state == "allow" and item.terminal_state == "executed"
+        for item in valid
+    )
+    trace_complete = sum(
+        all(
+            (
+                item.correlation_id,
+                item.reason,
+                item.proposal_digest,
+                item.policy_version,
+            )
+        )
+        for item in observations
+    )
+
+    return EvaluationMetrics(
+        case_count=case_count,
+        correct_decision_count=correct,
+        decision_accuracy=correct / case_count if case_count else None,
+        attack_case_count=len(attacks),
+        unauthorized_execution_count=unauthorized,
+        unauthorized_execution_rate=(
+            unauthorized / len(attacks) if attacks else None
+        ),
+        valid_case_count=len(valid),
+        valid_task_success_count=valid_success,
+        valid_task_success_rate=valid_success / len(valid) if valid else None,
+        trace_complete_count=trace_complete,
+        trace_coverage=trace_complete / case_count if case_count else None,
+    )
+
+
 # ---------------------------------------------------------------------------
 # 2. Audit evidence
 # ---------------------------------------------------------------------------
@@ -180,8 +288,11 @@ class AuditEvent:
     tenant: str
     operation: str
     resource_id: str
+    proposal_digest: str
+    policy_version: str
     policy_state: str      # "allow" | "deny" | "pause"
     reason: str
+    budget_remaining: int
     approval_receipt_id: Optional[str] = None
     terminal_state: str = "decided"  # "executed" | "blocked"
     timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
@@ -248,6 +359,7 @@ POLICY_RULES: dict[str, PolicyRule] = {
 }
 
 RUN_BUDGET: int = 20  # max total cost per run
+POLICY_VERSION = "expense-policy-2026-09-01"
 
 
 # --- Approval store (simulated trusted approval service) ---
@@ -267,31 +379,55 @@ class ApprovalStore:
     def __init__(self) -> None:
         self._issued: dict[str, ApprovalReceipt] = {}
         self._consumed: set[str] = set()
+        self._lock = threading.Lock()
 
     def issue(
         self,
-        subject: str,
-        tenant: str,
-        operation: str,
-        resource_id: str,
+        actor: ActorContext,
+        proposal: ActionProposal,
         *,
         approver: str = "mgr-10",
+        policy_version: str = POLICY_VERSION,
         minutes_valid: int = 30,
         now: Optional[datetime] = None,
     ) -> ApprovalReceipt:
-        """Issue a new approval receipt and store it."""
+        """Issue approval for one exact proposal after trusted identity checks."""
         if now is None:
             now = datetime.now(timezone.utc)
+        if minutes_valid <= 0:
+            raise ValueError("approval lifetime must be positive")
+
+        actor_record = IDENTITY_REGISTRY.get(actor.subject)
+        if (
+            actor_record is None
+            or actor.tenant != actor_record.tenant
+            or not actor.scopes <= actor_record.scopes
+        ):
+            raise PermissionError("approval subject must come from trusted identity state")
+
+        approver_record = IDENTITY_REGISTRY.get(approver)
+        if (
+            approver_record is None
+            or approver_record.tenant != actor.tenant
+            or "expense:approve" not in approver_record.scopes
+        ):
+            raise PermissionError("approver lacks authority for this tenant")
+
         receipt = ApprovalReceipt(
             receipt_id=uuid.uuid4().hex[:12],
-            subject=subject,
-            tenant=tenant,
-            operation=operation,
-            resource_id=resource_id,
+            subject=actor.subject,
+            tenant=actor.tenant,
+            operation=proposal.operation,
+            resource_id=proposal.resource_id,
+            proposal_digest=proposal_digest(proposal),
+            run_id=actor.run_id,
+            policy_version=policy_version,
             approver=approver,
+            issued_at=now,
             expires_at=now + timedelta(minutes=minutes_valid),
         )
-        self._issued[receipt.receipt_id] = receipt
+        with self._lock:
+            self._issued[receipt.receipt_id] = receipt
         return receipt
 
     def verify(
@@ -299,6 +435,7 @@ class ApprovalStore:
         receipt: ApprovalReceipt,
         actor: ActorContext,
         proposal: ActionProposal,
+        policy_version: str,
         now: datetime,
     ) -> Optional[PolicyDecision]:
         """Verify a receipt's authenticity, binding, expiry, and replay state.
@@ -306,7 +443,38 @@ class ApprovalStore:
         Returns ``None`` if the receipt is valid, or a ``PolicyDecision``
         describing why verification failed.
         """
-        # Authenticity: receipt must have been issued by this store
+        with self._lock:
+            return self._verification_error(
+                receipt, actor, proposal, policy_version, now,
+            )
+
+    def verify_and_consume(
+        self,
+        receipt: ApprovalReceipt,
+        actor: ActorContext,
+        proposal: ActionProposal,
+        policy_version: str,
+        now: datetime,
+    ) -> Optional[PolicyDecision]:
+        """Atomically revalidate and consume a single-use approval."""
+        with self._lock:
+            error = self._verification_error(
+                receipt, actor, proposal, policy_version, now,
+            )
+            if error is not None:
+                return error
+            self._consumed.add(receipt.receipt_id)
+            return None
+
+    def _verification_error(
+        self,
+        receipt: ApprovalReceipt,
+        actor: ActorContext,
+        proposal: ActionProposal,
+        policy_version: str,
+        now: datetime,
+    ) -> Optional[PolicyDecision]:
+        """Return a deterministic reason when an approval is not executable."""
         stored = self._issued.get(receipt.receipt_id)
         if stored is None or stored != receipt:
             return PolicyDecision(
@@ -332,6 +500,11 @@ class ApprovalStore:
                 Decision.DENY, "approval_tenant_mismatch",
                 "Approval receipt is bound to a different tenant.",
             )
+        if receipt.run_id != actor.run_id:
+            return PolicyDecision(
+                Decision.DENY, "approval_run_mismatch",
+                "Approval receipt is bound to a different agent run.",
+            )
         if receipt.operation != proposal.operation:
             return PolicyDecision(
                 Decision.DENY, "approval_operation_mismatch",
@@ -342,8 +515,30 @@ class ApprovalStore:
                 Decision.DENY, "approval_resource_mismatch",
                 "Approval receipt is for a different resource.",
             )
+        try:
+            current_digest = proposal_digest(proposal)
+        except (TypeError, ValueError):
+            return PolicyDecision(
+                Decision.DENY, "proposal_not_canonical",
+                "Proposal arguments cannot be bound to deterministic evidence.",
+            )
+        if receipt.proposal_digest != current_digest:
+            return PolicyDecision(
+                Decision.DENY, "approval_proposal_mismatch",
+                "Approval receipt is bound to different tool arguments.",
+            )
+        if receipt.policy_version != policy_version:
+            return PolicyDecision(
+                Decision.DENY, "approval_policy_mismatch",
+                "Approval receipt was evaluated under a different policy version.",
+            )
 
-        # Expiry
+        # Lifetime: reject future-issued and expired receipts.
+        if now < receipt.issued_at:
+            return PolicyDecision(
+                Decision.DENY, "approval_not_yet_valid",
+                "Approval receipt was issued in the future.",
+            )
         if now >= receipt.expires_at:
             return PolicyDecision(
                 Decision.DENY, "approval_expired",
@@ -351,10 +546,6 @@ class ApprovalStore:
             )
 
         return None  # receipt is valid
-
-    def consume(self, receipt_id: str) -> None:
-        """Mark a receipt as consumed (one-time use)."""
-        self._consumed.add(receipt_id)
 
 
 # ---------------------------------------------------------------------------
@@ -481,11 +672,13 @@ class PolicyEngine:
         self,
         budget: int = RUN_BUDGET,
         approval_store: Optional[ApprovalStore] = None,
+        policy_version: str = POLICY_VERSION,
     ) -> None:
         self._budget_remaining: int = budget
         self._audit_log: list[AuditEvent] = []
         self._execution_log: list[str] = []
         self._approval_store: Optional[ApprovalStore] = approval_store
+        self._policy_version = policy_version
 
     # --- Public read-only properties ---
 
@@ -536,8 +729,11 @@ class PolicyEngine:
             tenant=actor.tenant,
             operation=proposal.operation,
             resource_id=proposal.resource_id,
+            proposal_digest=self._safe_proposal_digest(proposal),
+            policy_version=self._policy_version,
             policy_state=decision.state.value,
             reason=decision.reason,
+            budget_remaining=self._budget_remaining,
             approval_receipt_id=approval.receipt_id if approval else None,
             terminal_state="decided",
         )
@@ -545,9 +741,6 @@ class PolicyEngine:
         if decision.state is Decision.ALLOW:
             self._execute_stub(proposal)
             event.terminal_state = "executed"
-            # Consume the approval receipt only if verified, required, and executed
-            if consume_approval and approval is not None and self._approval_store is not None:
-                self._approval_store.consume(approval.receipt_id)
         else:
             event.terminal_state = "blocked"
 
@@ -642,7 +835,7 @@ class PolicyEngine:
                 ), False
             
             verification_error = self._approval_store.verify(
-                approval, actor, proposal, now,
+                approval, actor, proposal, self._policy_version, now,
             )
             if verification_error is not None:
                 return verification_error, False
@@ -655,9 +848,25 @@ class PolicyEngine:
                 f"Run budget exhausted ({self._budget_remaining} "
                 f"remaining, {rule.cost} required).",
             ), False
+
+        # Close the verify/use race immediately before granting execution.
+        if consume_approval and approval is not None and self._approval_store is not None:
+            verification_error = self._approval_store.verify_and_consume(
+                approval, actor, proposal, self._policy_version, now,
+            )
+            if verification_error is not None:
+                return verification_error, False
         self._budget_remaining -= rule.cost
 
         return PolicyDecision(Decision.ALLOW, "all_checks_passed"), consume_approval
+
+    @staticmethod
+    def _safe_proposal_digest(proposal: ActionProposal) -> str:
+        """Produce audit evidence without letting malformed data hide a decision."""
+        try:
+            return proposal_digest(proposal)
+        except (TypeError, ValueError):
+            return "unavailable"
 
 
 
@@ -726,21 +935,27 @@ def run_demo() -> None:
     )
 
     # --- Issue legitimate approval receipts via the store ---
+    valid_write = ActionProposal(
+        "submit_claim", "claim-501", {"amount": 250.0},
+    )
+    forged_write = ActionProposal(
+        "submit_claim", "claim-501", {"amount": 100.0},
+    )
+    wrong_resource_write = ActionProposal(
+        "submit_claim", "claim-999", {"amount": 100.0},
+    )
     valid_receipt = store.issue(
-        "emp-42", "acme", "submit_claim", "claim-501",
-        now=NOW, minutes_valid=30,
+        acme_employee, valid_write, now=NOW, minutes_valid=30,
     )
     forged_receipt = store.issue(
-        "emp-77", "acme", "submit_claim", "claim-501",
-        now=NOW, minutes_valid=30,
+        read_only_emp, forged_write, now=NOW, minutes_valid=30,
     )
     expired_receipt = store.issue(
-        "emp-42", "acme", "submit_claim", "claim-501",
-        now=NOW, minutes_valid=-10,
+        acme_employee, forged_write,
+        now=NOW - timedelta(minutes=31), minutes_valid=30,
     )
     wrong_resource_receipt = store.issue(
-        "emp-42", "acme", "submit_claim", "claim-999",
-        now=NOW, minutes_valid=30,
+        acme_employee, wrong_resource_write, now=NOW, minutes_valid=30,
     )
 
     # --- Fabricated receipt (never issued by the store) ---
@@ -748,14 +963,17 @@ def run_demo() -> None:
         receipt_id="made-up-id",
         subject="emp-42", tenant="acme",
         operation="submit_claim", resource_id="claim-501",
+        proposal_digest=proposal_digest(forged_write),
+        run_id=acme_employee.run_id,
+        policy_version=POLICY_VERSION,
         approver="mgr-10",
+        issued_at=NOW,
         expires_at=NOW + timedelta(minutes=30),
     )
 
     # --- Receipt for replay test ---
     replay_receipt = store.issue(
-        "emp-42", "acme", "submit_claim", "claim-501",
-        now=NOW, minutes_valid=30,
+        acme_employee, forged_write, now=NOW, minutes_valid=30,
     )
 
     # --- Scenarios ---
@@ -868,7 +1086,7 @@ def run_demo() -> None:
         (
             "Valid approved write allowed",
             acme_employee,
-            ActionProposal("submit_claim", "claim-501", {"amount": 250.0}),
+            valid_write,
             valid_receipt,
             "allow", "all_checks_passed",
         ),
@@ -880,9 +1098,22 @@ def run_demo() -> None:
     print("=" * 72)
 
     failures: list[str] = []
+    observations: list[EvaluationObservation] = []
 
     for label, actor, proposal, approval, exp_state, exp_reason in scenarios:
         decision = engine.evaluate(actor, proposal, approval, now=NOW)
+        event = engine.audit_log[-1]
+        observations.append(
+            EvaluationObservation(
+                expected_state=exp_state,
+                actual_state=decision.state.value,
+                terminal_state=event.terminal_state,
+                correlation_id=event.correlation_id,
+                reason=event.reason,
+                proposal_digest=event.proposal_digest,
+                policy_version=event.policy_version,
+            )
+        )
         status = "PASS" if (
             decision.state.value == exp_state and decision.reason == exp_reason
         ) else "FAIL"
@@ -965,6 +1196,26 @@ def run_demo() -> None:
     executed_count = sum(1 for e in log if e.terminal_state == "executed")
     print(f"\n--- Audit log: {len(log)} events, "
           f"{allowed_count} allowed, {executed_count} executed ---")
+
+    metrics = calculate_evaluation_metrics(observations)
+    print("\n--- Labelled evaluation metrics (primary scenarios only) ---")
+    print(
+        f"decision accuracy       : {metrics.correct_decision_count}/"
+        f"{metrics.case_count} = {metrics.decision_accuracy:.1%}"
+    )
+    print(
+        f"unauthorized execution  : {metrics.unauthorized_execution_count}/"
+        f"{metrics.attack_case_count} = "
+        f"{metrics.unauthorized_execution_rate:.1%}"
+    )
+    print(
+        f"valid-task success      : {metrics.valid_task_success_count}/"
+        f"{metrics.valid_case_count} = {metrics.valid_task_success_rate:.1%}"
+    )
+    print(
+        f"decision trace coverage : {metrics.trace_complete_count}/"
+        f"{metrics.case_count} = {metrics.trace_coverage:.1%}"
+    )
 
     print("\n" + "=" * 72)
     if failures:

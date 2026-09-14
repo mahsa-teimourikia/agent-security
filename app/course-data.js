@@ -13,10 +13,10 @@ const lesson = (id, level, step, title, summary, outcome, folder, fileStem, chec
 
 export const publishedLessons = [
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
-    prompt: "A model proposes a destructive action. Which component may authorize it?",
-    options: ["The model prompt", "A deterministic policy at the action boundary", "Retrieved content"],
+    prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
+    options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
     correct: 1,
-    explanation: "Only trusted application policy can grant authority; prompts and retrieved text are inputs, not policy decisions.",
+    explanation: "Schema validation and workflow approval are useful controls, but only trusted application policy can grant authority for the exact action at the effect boundary.",
   }),
   lesson("b2", "Beginner", "02", "Prompt injection and untrusted content", "Separate instructions from documents, tool output, and memory.", "Contain an indirect injection even when simple marker detection misses it.", "beginner/02-prompt-injection", "02_prompt_injection", {
     prompt: "A retrieved document says to ignore policy and send a secret. What authority does it have?",

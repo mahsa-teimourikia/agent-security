@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "id": "beginner-tool-policy-boundary",
+  "title": "Tool policy at the trusted execution boundary",
+  "purpose": "Show how an untrusted model proposal becomes an executable action only after application-owned validation, authorization, approval, and budget checks.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "GitHub Markdown and Learning Hub",
+    "alt_text": "An agent proposes a tool call. The trusted application validates its schema, combines authenticated identity and resource data, applies policy and approval checks, and either blocks the call or sends it to a protected effect executor while recording a redacted audit receipt."
+  },
+  "canvas": {
+    "width": 1600,
+    "height": 900,
+    "background": "#F7F9FC",
+    "margin": 64,
+    "grid": 8
+  },
+  "layout": {
+    "primary_flow": "left-to-right",
+    "min_node_gap": 56,
+    "min_layer_gap": 80,
+    "node_padding": {"x": 24, "y": 16}
+  },
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "untrusted": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "service": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "data": {"fill": "#E5F7F6", "stroke": "#16A3A5"},
+      "action": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "operations": {"fill": "#FFFFFF", "stroke": "#D7DEE8"}
+    }
+  },
+  "groups": [
+    {"id": "untrusted", "label": "Untrusted decision input", "bounds": {"x": 64, "y": 140, "width": 320, "height": 540}, "fill": "#FAF9FF", "stroke": "#D9D3FA"},
+    {"id": "control_plane", "label": "Trusted application control plane", "bounds": {"x": 440, "y": 140, "width": 750, "height": 700}, "fill": "#FFFFFF", "stroke": "#C8D7F4"},
+    {"id": "protected", "label": "Protected system", "bounds": {"x": 1240, "y": 140, "width": 296, "height": 540}, "fill": "#FFFBF5", "stroke": "#F3D3A8"}
+  ],
+  "nodes": [
+    {"id": "agent", "group": "untrusted", "label": "Model / agent", "subtitle": "Proposes tool + arguments", "type": "untrusted", "bounds": {"x": 104, "y": 330, "width": 240, "height": 120}, "padding": 20, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "identity", "group": "control_plane", "label": "Authenticated context", "subtitle": "Subject, tenant, scopes, run", "type": "service", "bounds": {"x": 488, "y": 205, "width": 250, "height": 100}, "padding": 20, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "schema", "group": "control_plane", "label": "SDK + Pydantic schema", "subtitle": "Parse shape; reject malformed input", "type": "service", "bounds": {"x": 488, "y": 365, "width": 250, "height": 120}, "padding": 20, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "policy", "group": "control_plane", "label": "Policy gateway", "subtitle": "Authorize resource and scope\nValidate business rules\nBind approval + enforce budget", "type": "service", "bounds": {"x": 820, "y": 330, "width": 300, "height": 200}, "padding": 24, "ports": {"proposal": {"side": "left", "offset": 0.5}, "identity": {"side": "top", "offset": 0.25}, "registry": {"side": "bottom", "offset": 0.25}, "approval": {"side": "bottom", "offset": 0.75}, "effect": {"side": "right", "offset": 0.5}, "audit": {"side": "bottom", "offset": 0.08}}},
+    {"id": "registry", "group": "control_plane", "label": "IAM + resource registry", "subtitle": "Authoritative ownership and grants", "type": "data", "bounds": {"x": 488, "y": 610, "width": 250, "height": 110}, "padding": 20, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "approval", "group": "control_plane", "label": "Approval service", "subtitle": "Exact digest, policy, expiry, one use", "type": "data", "bounds": {"x": 820, "y": 610, "width": 300, "height": 110}, "padding": 20, "ports": {"out": {"side": "top", "offset": 0.75}}},
+    {"id": "executor", "group": "protected", "label": "Effect executor", "subtitle": "Idempotent API / tool call", "type": "action", "bounds": {"x": 1275, "y": 365, "width": 225, "height": 120}, "padding": 20, "ports": {"in": {"side": "left", "offset": 0.5}, "result": {"side": "bottom", "offset": 0.5}}},
+    {"id": "audit", "group": "control_plane", "label": "Redacted decision and effect receipts", "subtitle": "Correlation, digest, policy version, reason, terminal state", "type": "operations", "bounds": {"x": 488, "y": 760, "width": 632, "height": 60}, "padding": 16, "ports": {"policy": {"side": "top", "offset": 0.462025316}, "effect": {"side": "right", "offset": 0.5}}}
+  ],
+  "edges": [
+    {"id": "propose", "from": {"node": "agent", "port": "out"}, "to": {"node": "schema", "port": "in"}, "label": "untrusted proposal", "kind": "primary", "route": [[344, 390], [488, 390], [488, 425]]},
+    {"id": "validated_shape", "from": {"node": "schema", "port": "out"}, "to": {"node": "policy", "port": "proposal"}, "label": "valid shape", "kind": "primary", "route": [[738, 425], [820, 425], [820, 430]]},
+    {"id": "identity_context", "from": {"node": "identity", "port": "out"}, "to": {"node": "policy", "port": "identity"}, "label": "trusted identity", "kind": "secondary", "route": [[738, 255], [895, 255], [895, 330]]},
+    {"id": "registry_context", "from": {"node": "registry", "port": "out"}, "to": {"node": "policy", "port": "registry"}, "label": "grants + ownership", "kind": "secondary", "route": [[738, 665], [780, 665], [780, 570], [895, 570], [895, 530]]},
+    {"id": "approval_context", "from": {"node": "approval", "port": "out"}, "to": {"node": "policy", "port": "approval"}, "label": "bound receipt", "kind": "secondary", "route": [[1045, 610], [1045, 530]]},
+    {"id": "authorized_effect", "from": {"node": "policy", "port": "effect"}, "to": {"node": "executor", "port": "in"}, "label": "ALLOW only", "kind": "primary", "route": [[1120, 430], [1275, 430], [1275, 425]]},
+    {"id": "policy_receipt", "from": {"node": "policy", "port": "audit"}, "to": {"node": "audit", "port": "policy"}, "label": "allow / deny / pause", "kind": "audit", "route": [[844, 530], [780, 530], [780, 760]]},
+    {"id": "effect_receipt", "from": {"node": "executor", "port": "result"}, "to": {"node": "audit", "port": "effect"}, "label": "verified effect", "kind": "audit", "route": [[1387.5, 485], [1387.5, 790], [1120, 790]]}
+  ],
+  "validation": {
+    "no_overlaps": true,
+    "route_around_nodes": true,
+    "min_text_padding": 16,
+    "min_connector_clearance": 12,
+    "verify_port_attachment": true,
+    "verify_contrast": true
+  },
+  "source": "architecture-spec.json is the authoritative geometry; architecture.svg is the deterministic vector render."
+}

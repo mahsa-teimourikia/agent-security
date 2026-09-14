@@ -7,6 +7,7 @@ with ``PYTHONPATH=. python3 -m pytest tests/test_tool_policy.py -v``.
 
 import sys
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -27,10 +28,14 @@ ApprovalReceipt = _mod.ApprovalReceipt
 ApprovalStore = _mod.ApprovalStore
 AuditEvent = _mod.AuditEvent
 Decision = _mod.Decision
+EvaluationObservation = _mod.EvaluationObservation
+POLICY_VERSION = _mod.POLICY_VERSION
 PolicyDecision = _mod.PolicyDecision
 PolicyEngine = _mod.PolicyEngine
 RiskLevel = _mod.RiskLevel
+calculate_evaluation_metrics = _mod.calculate_evaluation_metrics
 make_actor = _mod.make_actor
+proposal_digest = _mod.proposal_digest
 RUN_BUDGET = _mod.RUN_BUDGET
 
 
@@ -59,8 +64,11 @@ class TestToolPolicy(unittest.TestCase):
 
     def setUp(self):
         self.store = ApprovalStore()
+        self.valid_proposal = ActionProposal(
+            "submit_claim", "claim-501", {"amount": 250.0},
+        )
         self.valid_receipt = self.store.issue(
-            "emp-42", "acme", "submit_claim", "claim-501", now=NOW, minutes_valid=30,
+            ACME_EMPLOYEE, self.valid_proposal, now=NOW, minutes_valid=30,
         )
 
     def _eval(self, actor, proposal, approval=None, budget=RUN_BUDGET):
@@ -128,10 +136,11 @@ class TestToolPolicy(unittest.TestCase):
         self.assertEqual(eng.execution_count, 0)
 
     def test_missing_scope(self):
-        receipt = self.store.issue("emp-77", "acme", "submit_claim", "claim-501", now=NOW)
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        receipt = self.store.issue(READ_ONLY_EMPLOYEE, proposal, now=NOW)
         d, eng = self._eval(
             READ_ONLY_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            proposal,
             receipt,
         )
         self.assertEqual(d.state, Decision.DENY)
@@ -369,18 +378,23 @@ class TestToolPolicy(unittest.TestCase):
 
     def test_approval_verifier_unavailable(self):
         engine = PolicyEngine(budget=RUN_BUDGET) # No approval store
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
         fake = ApprovalReceipt(
             receipt_id="fabricated",
             subject="emp-42",
             tenant="acme",
             operation="submit_claim",
             resource_id="claim-501",
+            proposal_digest=proposal_digest(proposal),
+            run_id=ACME_EMPLOYEE.run_id,
+            policy_version=POLICY_VERSION,
             approver="mgr-10",
+            issued_at=NOW,
             expires_at=NOW + timedelta(minutes=30)
         )
         d = engine.evaluate(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            proposal,
             fake,
             now=NOW
         )
@@ -389,73 +403,162 @@ class TestToolPolicy(unittest.TestCase):
         self.assertEqual(engine.execution_count, 0)
 
     def test_fabricated_approval(self):
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
         fabricated = ApprovalReceipt(
             receipt_id="made-up", subject="emp-42", tenant="acme",
             operation="submit_claim", resource_id="claim-501",
-            approver="mgr-10", expires_at=NOW + timedelta(minutes=30),
+            proposal_digest=proposal_digest(proposal),
+            run_id=ACME_EMPLOYEE.run_id,
+            policy_version=POLICY_VERSION,
+            approver="mgr-10", issued_at=NOW,
+            expires_at=NOW + timedelta(minutes=30),
         )
         d, eng = self._eval(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            proposal,
             fabricated,
         )
         self.assertEqual(d.state, Decision.DENY)
         self.assertEqual(d.reason, "approval_unknown")
 
     def test_forged_approval_wrong_subject(self):
-        forged = self.store.issue("emp-77", "acme", "submit_claim", "claim-501", now=NOW)
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        forged = self.store.issue(READ_ONLY_EMPLOYEE, proposal, now=NOW)
         d, eng = self._eval(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            proposal,
             forged,
         )
         self.assertEqual(d.state, Decision.DENY)
         self.assertEqual(d.reason, "approval_subject_mismatch")
 
-    def test_approval_tenant_mismatch(self):
-        wrong_tenant = self.store.issue("emp-42", "globex", "submit_claim", "claim-501", now=NOW)
-        d, eng = self._eval(
-            ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
-            wrong_tenant,
+    def test_approval_issuer_rejects_forged_tenant(self):
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        forged_actor = ActorContext(
+            subject="emp-42",
+            tenant="globex",
+            scopes=ACME_EMPLOYEE.scopes,
+            run_id="forged-tenant-run",
         )
-        self.assertEqual(d.state, Decision.DENY)
-        self.assertEqual(d.reason, "approval_tenant_mismatch")
+        with self.assertRaises(PermissionError):
+            self.store.issue(
+                forged_actor, proposal, approver="mgr-20", now=NOW,
+            )
 
     def test_approval_operation_mismatch(self):
-        wrong_op = self.store.issue("emp-42", "acme", "delete_claim", "claim-501", now=NOW)
+        requested = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        wrong_op = self.store.issue(
+            ACME_EMPLOYEE,
+            ActionProposal("delete_claim", "claim-501", {"amount": 100.0}),
+            now=NOW,
+        )
         d, eng = self._eval(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            requested,
             wrong_op,
         )
         self.assertEqual(d.state, Decision.DENY)
         self.assertEqual(d.reason, "approval_operation_mismatch")
 
     def test_expired_approval(self):
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
         expired = self.store.issue(
-            "emp-42", "acme", "submit_claim", "claim-501",
-            now=NOW, minutes_valid=-10,
+            ACME_EMPLOYEE, proposal,
+            now=NOW - timedelta(minutes=31), minutes_valid=30,
         )
         d, eng = self._eval(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            proposal,
             expired,
         )
         self.assertEqual(d.state, Decision.DENY)
         self.assertEqual(d.reason, "approval_expired")
 
+    def test_future_issued_approval_is_not_yet_valid(self):
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        future = self.store.issue(
+            ACME_EMPLOYEE, proposal,
+            now=NOW + timedelta(minutes=1), minutes_valid=30,
+        )
+
+        decision, engine = self._eval(ACME_EMPLOYEE, proposal, future)
+
+        self.assertEqual(decision.state, Decision.DENY)
+        self.assertEqual(decision.reason, "approval_not_yet_valid")
+        self.assertEqual(engine.execution_count, 0)
+
     def test_approval_wrong_resource(self):
+        requested = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
         wrong_res = self.store.issue(
-            "emp-42", "acme", "submit_claim", "claim-999", now=NOW,
+            ACME_EMPLOYEE,
+            ActionProposal("submit_claim", "claim-999", {"amount": 100.0}),
+            now=NOW,
         )
         d, eng = self._eval(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            requested,
             wrong_res,
         )
         self.assertEqual(d.state, Decision.DENY)
         self.assertEqual(d.reason, "approval_resource_mismatch")
+
+    def test_approval_is_bound_to_exact_arguments(self):
+        approved = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        receipt = self.store.issue(ACME_EMPLOYEE, approved, now=NOW)
+        altered = ActionProposal("submit_claim", "claim-501", {"amount": 101.0})
+
+        decision, engine = self._eval(ACME_EMPLOYEE, altered, receipt)
+
+        self.assertEqual(decision.state, Decision.DENY)
+        self.assertEqual(decision.reason, "approval_proposal_mismatch")
+        self.assertEqual(engine.execution_count, 0)
+
+    def test_approval_is_bound_to_policy_version(self):
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        receipt = self.store.issue(
+            ACME_EMPLOYEE, proposal, policy_version="expense-policy-old", now=NOW,
+        )
+
+        decision, engine = self._eval(ACME_EMPLOYEE, proposal, receipt)
+
+        self.assertEqual(decision.state, Decision.DENY)
+        self.assertEqual(decision.reason, "approval_policy_mismatch")
+        self.assertEqual(engine.execution_count, 0)
+
+    def test_approval_is_bound_to_run(self):
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        receipt = self.store.issue(ACME_EMPLOYEE, proposal, now=NOW)
+        another_run = make_actor("emp-42", run_id="different-run")
+
+        decision, engine = self._eval(another_run, proposal, receipt)
+
+        self.assertEqual(decision.state, Decision.DENY)
+        self.assertEqual(decision.reason, "approval_run_mismatch")
+        self.assertEqual(engine.execution_count, 0)
+
+    def test_approval_issuer_rejects_unauthorized_approver(self):
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        with self.assertRaises(PermissionError):
+            self.store.issue(
+                ACME_EMPLOYEE, proposal, approver="emp-77", now=NOW,
+            )
+
+    def test_approval_consumption_is_atomic_under_concurrency(self):
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        receipt = self.store.issue(ACME_EMPLOYEE, proposal, now=NOW)
+
+        def attempt() -> PolicyDecision:
+            engine = PolicyEngine(approval_store=self.store)
+            return engine.evaluate(ACME_EMPLOYEE, proposal, receipt, now=NOW)
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            decisions = list(pool.map(lambda _: attempt(), range(2)))
+
+        self.assertEqual(
+            sorted(decision.state.value for decision in decisions),
+            ["allow", "deny"],
+        )
+        self.assertIn("approval_replayed", {decision.reason for decision in decisions})
 
     def test_valid_approved_write(self):
         d, eng = self._eval(
@@ -468,12 +571,13 @@ class TestToolPolicy(unittest.TestCase):
         self.assertEqual(eng.execution_count, 1)
 
     def test_approval_replay(self):
-        receipt = self.store.issue("emp-42", "acme", "submit_claim", "claim-501", now=NOW)
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        receipt = self.store.issue(ACME_EMPLOYEE, proposal, now=NOW)
         
         # First use
         d1, eng1 = self._eval(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            proposal,
             receipt,
         )
         self.assertEqual(d1.state, Decision.ALLOW)
@@ -482,7 +586,7 @@ class TestToolPolicy(unittest.TestCase):
         # Second use (replay)
         d2, eng2 = self._eval(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            proposal,
             receipt,
         )
         self.assertEqual(d2.state, Decision.DENY)
@@ -490,7 +594,8 @@ class TestToolPolicy(unittest.TestCase):
         self.assertEqual(eng2.execution_count, 0)
 
     def test_unrelated_low_risk_action_does_not_consume_approval(self):
-        receipt = self.store.issue("emp-42", "acme", "submit_claim", "claim-501", now=NOW)
+        proposal = ActionProposal("submit_claim", "claim-501", {"amount": 100.0})
+        receipt = self.store.issue(ACME_EMPLOYEE, proposal, now=NOW)
         engine = PolicyEngine(budget=RUN_BUDGET, approval_store=self.store)
         
         # Unrelated read request passes with the receipt, but shouldn't consume it
@@ -505,7 +610,7 @@ class TestToolPolicy(unittest.TestCase):
         # Now submit claim should succeed because the receipt wasn't consumed
         d2 = engine.evaluate(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            proposal,
             receipt,
             now=NOW
         )
@@ -514,7 +619,7 @@ class TestToolPolicy(unittest.TestCase):
         # Replay should now fail
         d3 = engine.evaluate(
             ACME_EMPLOYEE,
-            ActionProposal("submit_claim", "claim-501", {"amount": 100.0}),
+            proposal,
             receipt,
             now=NOW
         )
@@ -627,6 +732,9 @@ class TestToolPolicy(unittest.TestCase):
         self.assertEqual(e_allow.tenant, "acme")
         self.assertEqual(e_allow.operation, "read_receipt")
         self.assertEqual(e_allow.resource_id, "receipt-101")
+        self.assertEqual(len(e_allow.proposal_digest), 64)
+        self.assertEqual(e_allow.policy_version, POLICY_VERSION)
+        self.assertEqual(e_allow.budget_remaining, RUN_BUDGET - 1)
         self.assertEqual(e_allow.policy_state, "allow")
         self.assertEqual(e_allow.terminal_state, "executed")
         self.assertIsNone(e_allow.approval_receipt_id)
@@ -678,6 +786,48 @@ class TestToolPolicy(unittest.TestCase):
             ActionProposal("submit_claim", "claim-501", {"amount": 100}),
         )
         self.assertEqual(d5.reason, "approval_required")
+
+    def test_evaluation_metrics_expose_populations_and_denominators(self):
+        observations = [
+            EvaluationObservation(
+                expected_state="deny",
+                actual_state="deny",
+                terminal_state="blocked",
+                correlation_id="r1",
+                reason="cross_tenant",
+                proposal_digest="a" * 64,
+                policy_version=POLICY_VERSION,
+            ),
+            EvaluationObservation(
+                expected_state="deny",
+                actual_state="allow",
+                terminal_state="executed",
+                correlation_id="r2",
+                reason="all_checks_passed",
+                proposal_digest="b" * 64,
+                policy_version=POLICY_VERSION,
+            ),
+            EvaluationObservation(
+                expected_state="allow",
+                actual_state="allow",
+                terminal_state="executed",
+                correlation_id="r3",
+                reason="all_checks_passed",
+                proposal_digest="c" * 64,
+                policy_version=POLICY_VERSION,
+            ),
+        ]
+
+        metrics = calculate_evaluation_metrics(observations)
+
+        self.assertEqual(metrics.case_count, 3)
+        self.assertEqual(metrics.correct_decision_count, 2)
+        self.assertEqual(metrics.attack_case_count, 2)
+        self.assertEqual(metrics.unauthorized_execution_count, 1)
+        self.assertEqual(metrics.unauthorized_execution_rate, 0.5)
+        self.assertEqual(metrics.valid_case_count, 1)
+        self.assertEqual(metrics.valid_task_success_rate, 1.0)
+        self.assertEqual(metrics.trace_coverage, 1.0)
 
 
 if __name__ == "__main__":
