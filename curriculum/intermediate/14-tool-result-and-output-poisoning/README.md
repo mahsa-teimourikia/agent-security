@@ -1,7 +1,7 @@
 # 14 — Tool Result and Output Poisoning
 
 <!-- roadmap-status -->
-> **Roadmap status: Pilot.** Some executable evidence exists; the remaining gate is listed in the Learning Hub and review plan.
+> **Roadmap status: Pilot.** Some executable evidence exists; the remaining gate is listed in the Learning Hub.
 
 ## Learning objectives
 

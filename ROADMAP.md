@@ -31,9 +31,8 @@ four stages:
    forensics, release gates, governance, architecture, review, and capstone.
 
 The Learning Hub lists every course’s Reading, Pilot, or Planned state and its
-remaining evidence. The detailed [review and improvement plan](COURSE_REVIEW_AND_IMPROVEMENT_PLAN.md)
-is the prioritized backlog; the [evolution plan](CURRICULUM_EVOLUTION_PLAN.md)
-records source-material disposition and migration decisions.
+remaining evidence. The [curriculum map](curriculum/README.md) is the canonical
+sequence and links to every course page.
 
 ## Promotion rule
 

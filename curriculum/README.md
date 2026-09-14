@@ -36,13 +36,9 @@ adds a top-to-bottom executable notebook, and receives a focused checkpoint.
 
 [28 Long-running agents](enterprise-agent/28-secure-long-running-agents/) · [29 Kill switches](enterprise-agent/29-kill-switches-revocation-and-safe-degradation/) · [30 Containment](enterprise-agent/30-agent-incident-detection-and-containment/) · [31 Forensics](enterprise-agent/31-agent-forensics-recovery-and-safe-replay/) · [32 Release gates](enterprise-agent/32-security-release-gates-and-production-readiness/) · [33 Governance](enterprise-agent/33-agent-security-governance/) · [34 Enterprise architecture](enterprise-agent/34-enterprise-agent-security-architecture/) · [35 Review workshop](enterprise-agent/35-agent-security-architecture-review-workshop/) · [36 Capstone](enterprise-agent/36-production-secure-agent-capstone/)
 
-The [evolution plan](../CURRICULUM_EVOLUTION_PLAN.md) remains the authoritative
-asset-migration record, including source material, attacks, controls, and the
-evaluation expected for each course.
-
-The [course-by-course review and improvement plan](../COURSE_REVIEW_AND_IMPROVEMENT_PLAN.md)
-records the evidence inspected for every published and roadmap course, its
-priority, and the exact artifacts still required for promotion.
+The Learning Hub is the authoritative status view. Each course page states its
+current Reading, Pilot, or Planned status and the artifacts still required for
+promotion.
 
 ## Shared lab
 

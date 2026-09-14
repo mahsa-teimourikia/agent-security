@@ -38,7 +38,5 @@ green happy-path demo as security evidence.
 
 Complete the nine [published lessons](COURSE_MAP.md) first. Use the
 [thirty-six-course roadmap](curriculum/README.md) as additional reading, but
-respect its Reading, Pilot, and Planned labels. The
-[course review and improvement plan](COURSE_REVIEW_AND_IMPROVEMENT_PLAN.md)
-shows exactly which evidence still separates each roadmap topic from
-publication.
+respect its Reading, Pilot, and Planned labels. The Learning Hub shows exactly
+which evidence still separates each roadmap topic from publication.

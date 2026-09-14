@@ -28,7 +28,7 @@ for path in sorted(Path("curriculum").glob("*/*/README.md")):
     if status == "Reading":
         detail = "The chapter is available; course-owned lab, notebook, tests, and checkpoint are still required."
     elif status == "Pilot":
-        detail = "Some executable evidence exists; the remaining gate is listed in the Learning Hub and review plan."
+        detail = "Some executable evidence exists; the remaining gate is listed in the Learning Hub."
     else:
         detail = "The release contract is defined; lab, notebook, tests, and checkpoint are still required."
     banner = f"\n\n<!-- roadmap-status -->\n> **Roadmap status: {status}.** {detail}\n"

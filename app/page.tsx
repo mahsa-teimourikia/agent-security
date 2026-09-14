@@ -108,7 +108,7 @@ export default function App() {
               <em className={`status-${course.status.toLowerCase()}`}>{course.status}</em>
             </a>)}
           </div>
-          <div className="roadmap-actions"><a className="primary" href={sourceLink("curriculum/README.md")} target="_blank" rel="noreferrer">Explore the curriculum map ↗</a><a className="secondary" href={sourceLink("CURRICULUM_EVOLUTION_PLAN.md")} target="_blank" rel="noreferrer">Read the delivery gates ↗</a></div>
+          <div className="roadmap-actions"><a className="primary" href={sourceLink("curriculum/README.md")} target="_blank" rel="noreferrer">Explore the curriculum map ↗</a><a className="secondary" href={sourceLink("ROADMAP.md")} target="_blank" rel="noreferrer">Read the publication rules ↗</a></div>
         </section>
       </main>
 
