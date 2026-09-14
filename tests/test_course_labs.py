@@ -9,14 +9,14 @@ ROOT = Path(__file__).parents[1]
 LABS = [
     "curriculum/shared/foundation_lab.py",
     "curriculum/shared/runtime_security_lab.py",
-    "curriculum/intermediate/08-agent-memory-security/lab.py",
-    "curriculum/intermediate/11-secrets-and-credential-security/lab.py",
-    "curriculum/intermediate/13-network-egress-ssrf-and-external-resource-security/lab.py",
-    "curriculum/intermediate/14-tool-result-and-output-poisoning/lab.py",
-    "curriculum/intermediate/16-mcp-security/lab.py",
-    "curriculum/advanced/25-agent-red-teaming-and-adversarial-evaluation/lab.py",
-    "curriculum/enterprise-agent/33-agent-security-governance/lab.py",
-    "curriculum/enterprise-agent/36-production-secure-agent-capstone/lab.py",
+    "curriculum/roadmap/intermediate/01-agent-memory-security/lab.py",
+    "curriculum/roadmap/intermediate/04-secrets-and-credential-security/lab.py",
+    "curriculum/roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/lab.py",
+    "curriculum/roadmap/intermediate/07-tool-result-and-output-poisoning/lab.py",
+    "curriculum/roadmap/intermediate/09-mcp-security/lab.py",
+    "curriculum/roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation/lab.py",
+    "curriculum/roadmap/enterprise/06-agent-security-governance/lab.py",
+    "curriculum/roadmap/enterprise/09-production-secure-agent-capstone/lab.py",
 ]
 
 

@@ -23,7 +23,7 @@ def load_module(name: str, relative_path: str):
 def test_credential_scope_validation_is_explicit() -> None:
     secrets = load_module(
         "secrets_course_lab",
-        "curriculum/intermediate/11-secrets-and-credential-security/lab.py",
+        "curriculum/roadmap/intermediate/04-secrets-and-credential-security/lab.py",
     )
     with pytest.raises(ValueError, match="unsupported credential scopes"):
         secrets.issue(
@@ -38,7 +38,7 @@ def test_credential_scope_validation_is_explicit() -> None:
 def test_capstone_rejects_empty_or_unreported_evidence() -> None:
     capstone = load_module(
         "capstone_course_lab",
-        "curriculum/enterprise-agent/36-production-secure-agent-capstone/lab.py",
+        "curriculum/roadmap/enterprise/09-production-secure-agent-capstone/lab.py",
     )
     empty = {key: "" for key in capstone.REQUIRED_DOSSIER}
     empty["controls"] = {name: "" for name in capstone.REQUIRED_CONTROLS}

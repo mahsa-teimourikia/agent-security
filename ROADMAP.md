@@ -20,14 +20,14 @@ directory or filename alone.
 The canonical [thirty-six-course map](curriculum/README.md) is delivered in
 four stages:
 
-1. Foundation 01–07: boundaries, threats, invariants, tools, authorization,
+1. Foundation F01–F07: boundaries, threats, invariants, tools, authorization,
    prompt injection, and evidence.
-2. State and execution 08–17: memory, durable state, identity, secrets,
+2. State and execution I01–I10: memory, durable state, identity, secrets,
    sandboxing, egress, tool results, RAG, MCP, and human approval.
-3. Distributed adversaries 18–27: delegation, cross-agent injection, cascades,
+3. Distributed adversaries A01–A10: delegation, cross-agent injection, cascades,
    A2A, protocol composition, supply chain, fuzzing, red teaming,
    observability, and hunting.
-4. Enterprise operations 28–36: long-running agents, kill switches, incidents,
+4. Enterprise operations E01–E09: long-running agents, kill switches, incidents,
    forensics, release gates, governance, architecture, review, and capstone.
 
 The Learning Hub lists every course’s Reading, Pilot, or Planned state and its

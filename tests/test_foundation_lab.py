@@ -8,9 +8,9 @@ import importlib.util
 sys.path.insert(0, str(Path(__file__).parents[1] / "curriculum" / "shared"))
 from foundation_lab import Action, Approval, ApprovalStore, ContextItem, arguments_hash, build_context
 from runtime_security_lab import Delegation, Run, release_gate
-sys.path.insert(0, str(Path(__file__).parents[1] / "curriculum" / "intermediate" / "13-network-egress-ssrf-and-external-resource-security"))
+sys.path.insert(0, str(Path(__file__).parents[1] / "curriculum" / "roadmap" / "intermediate" / "06-network-egress-ssrf-and-external-resource-security"))
 from lab import FetchPolicy, allowed_url
-_mcp_spec = importlib.util.spec_from_file_location("mcp_security_lab", Path(__file__).parents[1] / "curriculum" / "intermediate" / "16-mcp-security" / "lab.py")
+_mcp_spec = importlib.util.spec_from_file_location("mcp_security_lab", Path(__file__).parents[1] / "curriculum" / "roadmap" / "intermediate" / "09-mcp-security" / "lab.py")
 assert _mcp_spec and _mcp_spec.loader
 _mcp_lab = importlib.util.module_from_spec(_mcp_spec)
 sys.modules[_mcp_spec.name] = _mcp_lab

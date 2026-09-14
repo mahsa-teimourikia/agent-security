@@ -140,5 +140,5 @@ python3 -m compileall -q curriculum tests
 
 Next: [Beginner 02 — Prompt Injection](../02-prompt-injection/README.md). This
 integrated published lesson is also the source implementation for focused
-roadmap courses [04 — Tool Interfaces](../04-secure-tool-and-action-interface-design/README.md)
-and [05 — Authorization and Approval](../05-authorization-approval-and-least-privilege/README.md).
+roadmap courses [F04 — Tool Interfaces](../../roadmap/beginner/04-secure-tool-and-action-interface-design/README.md)
+and [F05 — Authorization and Approval](../../roadmap/beginner/05-authorization-approval-and-least-privilege/README.md).
