@@ -31,6 +31,7 @@ jobs:
               data = json.loads(path.read_text())
               assert data['nbformat'] == 4, path
               assert data['cells'], path
+              assert all(cell.get('id') for cell in data['cells']), f'{path}: cell id missing'
               print(f'valid notebook: {path}')
           PY
       - name: Compile Python course modules

@@ -30,7 +30,7 @@ const bundledSource = fs.readdirSync(path.join(outDir, "assets"))
   .filter((name) => name.endsWith(".js"))
   .map((name) => fs.readFileSync(path.join(outDir, "assets", name), "utf8"))
   .join("\n");
-if (!bundledSource.includes("PUBLISHED CURRICULUM") || !bundledSource.includes("EXPANSION ROADMAP")) {
+if (!bundledSource.includes("PUBLISHED CURRICULUM") || !bundledSource.includes("EXPANSION ROADMAP") || !bundledSource.includes("Course-by-course roadmap status")) {
   console.error("Learning Hub sections missing from the production bundle");
   process.exit(1);
 }

@@ -11,7 +11,7 @@ pilot labs, and planned topics that have not yet passed the publication gate.
 | # | Module | Theory | Lab | Notebook |
 |---|---|---|---|---|
 | 01 | Security Foundations and Tool Policy | [README](curriculum/beginner/01-tool-policy/README.md) | [01_tool_policy.py](curriculum/beginner/01-tool-policy/01_tool_policy.py) | [01_tool_policy.ipynb](curriculum/beginner/01-tool-policy/01_tool_policy.ipynb) |
-| 02 | Prompt Injection and Untrusted Content | [README](curriculum/beginner/02-prompt-injection/README.md) | [02_prompt_injection.py](curriculum/beginner/02-prompt-injection/02_prompt_injection.py) | — |
+| 02 | Prompt Injection and Untrusted Content | [README](curriculum/beginner/02-prompt-injection/README.md) | [02_prompt_injection.py](curriculum/beginner/02-prompt-injection/02_prompt_injection.py) | [02_prompt_injection.ipynb](curriculum/beginner/02-prompt-injection/02_prompt_injection.ipynb) |
 | 03 | Secure Research Agent | [README](curriculum/beginner/03-secure-research-agent/README.md) | [03_secure_research_agent.py](curriculum/beginner/03-secure-research-agent/03_secure_research_agent.py) | [03_secure_research_agent.ipynb](curriculum/beginner/03-secure-research-agent/03_secure_research_agent.ipynb) |
 
 ## Intermediate

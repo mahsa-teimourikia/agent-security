@@ -1,5 +1,8 @@
 # 01 — Agent Security Architecture and Trust Boundaries
 
+<!-- roadmap-status -->
+> **Roadmap status: Reading.** The chapter is available; course-owned lab, notebook, tests, and checkpoint are still required.
+
 ## Learning objectives
 
 Map the complete agent system; identify the data, authority, identity,

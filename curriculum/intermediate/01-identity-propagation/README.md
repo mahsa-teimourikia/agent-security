@@ -199,3 +199,15 @@ While this lab uses a deterministic, in-memory `DelegationGrant` simulation, rea
 - [RFC 8707 — Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707.html)
 - [RFC 9700 — Best Current Practice for OAuth 2.0 Security](https://www.rfc-editor.org/rfc/rfc9700.html)
 - [SPIFFE overview](https://spiffe.io/docs/latest/spiffe-about/overview/)
+
+## Checkpoint
+
+An agent presents a valid token for `document-service` to `storage-service`.
+Should storage accept it? No. Storage must validate that it is the intended
+audience and require a separately issued, down-scoped grant for that hop.
+
+Previous: [Beginner 03 — Secure Research Agent](../../beginner/03-secure-research-agent/README.md).
+
+Next: [Intermediate 02 — MCP Gateway](../02-mcp-gateway/README.md).
+
+Focused continuation: [roadmap 10 — Identity and Delegated Authority](../10-agent-identity-and-delegated-authority/README.md).

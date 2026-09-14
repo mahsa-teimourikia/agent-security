@@ -1,5 +1,8 @@
 # 11 — Secrets and Credential Security
 
+<!-- roadmap-status -->
+> **Roadmap status: Pilot.** Some executable evidence exists; the remaining gate is listed in the Learning Hub and review plan.
+
 ## Learning objectives
 
 Keep secret material outside context, memory, and traces; issue short-lived,

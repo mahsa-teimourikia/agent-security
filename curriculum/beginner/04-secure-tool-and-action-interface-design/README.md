@@ -1,5 +1,8 @@
 # 04 — Secure Tool and Action Interface Design
 
+<!-- roadmap-status -->
+> **Roadmap status: Reading.** The chapter is available; course-owned lab, notebook, tests, and checkpoint are still required.
+
 ## Learning objectives
 
 Refactor a broad agent capability into narrow typed actions; distinguish read,

@@ -1,5 +1,8 @@
 # 03 — Security Objectives, Invariants, and Blast Radius
 
+<!-- roadmap-status -->
+> **Roadmap status: Reading.** The chapter is available; course-owned lab, notebook, tests, and checkpoint are still required.
+
 ## Learning objectives
 
 Turn requirements into measurable invariants, choose a test oracle, and reduce

@@ -115,3 +115,17 @@ Follow along in `03_secure_research_agent.ipynb` to build and test the secure re
 
 ## Exercises
 (See the Jupyter Notebook for interactive exercises).
+
+## Checkpoint
+
+Why must authorization filtering occur before sensitive documents enter model
+context? Because a model is not an access-control boundary: post-generation
+instructions cannot undo disclosure to the model or prevent metadata leakage
+during retrieval.
+
+Previous: [Beginner 02 — Prompt Injection](../02-prompt-injection/README.md).
+
+Next: [Intermediate 01 — Identity Propagation](../../intermediate/01-identity-propagation/README.md).
+
+Focused continuation: [roadmap 07 — Context and Evidence](../07-context-and-evidence-security/README.md)
+and [15 — Agentic RAG Security](../../intermediate/15-agentic-rag-security/README.md).

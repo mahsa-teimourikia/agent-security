@@ -1,5 +1,8 @@
 # 08 — Agent Memory Security
 
+<!-- roadmap-status -->
+> **Roadmap status: Pilot.** Some executable evidence exists; the remaining gate is listed in the Learning Hub and review plan.
+
 ## Learning objectives
 
 Classify working, episodic, semantic, procedural, and long-term memory; scope

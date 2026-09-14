@@ -40,6 +40,10 @@ The [evolution plan](../CURRICULUM_EVOLUTION_PLAN.md) remains the authoritative
 asset-migration record, including source material, attacks, controls, and the
 evaluation expected for each course.
 
+The [course-by-course review and improvement plan](../COURSE_REVIEW_AND_IMPROVEMENT_PLAN.md)
+records the evidence inspected for every published and roadmap course, its
+priority, and the exact artifacts still required for promotion.
+
 ## Shared lab
 
 Run from the repository root:

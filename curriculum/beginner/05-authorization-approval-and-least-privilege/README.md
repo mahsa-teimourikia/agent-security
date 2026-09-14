@@ -1,5 +1,8 @@
 # 05 — Authorization, Approval, and Least Privilege
 
+<!-- roadmap-status -->
+> **Roadmap status: Reading.** The chapter is available; course-owned lab, notebook, tests, and checkpoint are still required.
+
 ## Learning objectives
 
 Implement deterministic authorization from identity, tenant, action, resource,

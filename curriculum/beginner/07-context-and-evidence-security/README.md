@@ -1,5 +1,8 @@
 # 07 — Context and Evidence Security
 
+<!-- roadmap-status -->
+> **Roadmap status: Reading.** The chapter is available; course-owned lab, notebook, tests, and checkpoint are still required.
+
 ## Learning objectives
 
 Build a context-admission policy that distinguishes trusted policy, developer
