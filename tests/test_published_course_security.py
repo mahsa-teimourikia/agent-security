@@ -88,38 +88,46 @@ def test_mcp_gateway_enforces_quota_atomically_for_sequence(mcp):
 
 
 def test_incident_recovery_rejects_tampered_checkpoint(incident):
-    run = incident.IncidentRun("run", "north", "policy-v1", "cred-v1")
-    digest = incident.checkpoint_digest({"version": 1})
-    assert run.detect("signal", detector="monitor", now=NOW)
-    assert run.contain(capabilities={"ticket:write"}, responder="operator:a", now=NOW)
-    assert run.propose_recovery(incident.RecoveryPlan("cp-1", digest, "policy-v1", "cred-v1", "automation:planner"), now=NOW)
-    assert not run.authorize_recovery(
-        approver="operator:b",
-        expected_checkpoint_digest=incident.checkpoint_digest({"version": 2}),
-        current_policy_version="policy-v1",
-        current_credential_version="cred-v1",
-        now=NOW,
+    run, responder, planner, _, signal, receipt, checkpoint, plan = incident.build_scenario(now=NOW)
+    assert run.detect(signal, now=NOW)
+    assert run.contain(receipt, responder=responder, now=NOW)
+    tampered = incident.CheckpointSnapshot(
+        checkpoint.checkpoint_id,
+        checkpoint.run_id,
+        checkpoint.tenant,
+        incident.checkpoint_digest({"version": 2}),
+        checkpoint.policy_version,
+        checkpoint.credential_version,
+        checkpoint.created_at,
     )
+    assert not run.propose_recovery(plan, tampered, planner=planner, now=NOW)
 
 
 def test_incident_recovery_requires_independent_operator(incident):
-    run = incident.IncidentRun("run", "north", "policy-v1", "cred-v1")
-    digest = incident.checkpoint_digest({"version": 1})
-    run.detect("signal", detector="monitor", now=NOW)
-    run.contain(capabilities={"ticket:write"}, responder="operator:a", now=NOW)
-    run.propose_recovery(incident.RecoveryPlan("cp-1", digest, "policy-v1", "cred-v1", "operator:a"), now=NOW)
+    run, responder, planner, _, signal, receipt, checkpoint, plan = incident.build_scenario(now=NOW)
+    assert run.detect(signal, now=NOW)
+    assert run.contain(receipt, responder=responder, now=NOW)
+    assert run.propose_recovery(plan, checkpoint, planner=planner, now=NOW)
+    self_approver = incident.ActorContext(plan.requested_by, "north", frozenset({"recovery-approver"}))
+    approval = incident.issue_approval(plan, self_approver, approval_id="self-approval", now=NOW)
     assert not run.authorize_recovery(
-        approver="operator:a",
-        expected_checkpoint_digest=digest,
-        current_policy_version="policy-v1",
-        current_credential_version="cred-v1",
+        approval,
+        checkpoint,
+        current_policy_version=run.policy_version,
+        current_credential_version=run.credential_version,
         now=NOW,
     )
 
 
-def test_incident_effect_is_exactly_once(incident):
+def test_incident_effect_blocks_duplicate_provider_call(incident):
     run = incident.demo()
-    assert not run.commit_once("effect-T-7-close", "close-ticket", now=NOW)
+    blocked = run.execute_effect(
+        attempt_id="retry",
+        capability="ticket:write",
+        now=NOW,
+        provider=lambda _: incident.ProviderResult(incident.EffectState.CONFIRMED, "duplicate"),
+    )
+    assert blocked.reason == "duplicate-confirmed"
     assert run.verify_event_chain()
 
 

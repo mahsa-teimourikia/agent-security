@@ -42,11 +42,11 @@ export const publishedLessons = [
     correct: 0,
     explanation: "Server metadata and annotations are not caller authority. The application gateway must deny the call before execution using trusted identity and policy context.",
   }),
-  lesson("i3", "Intermediate", "03", "Incident response and recovery", "Contain suspicious runs, revoke capabilities, and recover with safe replay.", "Prevent duplicate effects and reauthorize changed state before resuming.", "intermediate/03-incident-recovery", "03_incident_recovery", {
-    prompt: "Why must a replay reuse the original idempotency key?",
-    options: ["To improve prompts", "To prevent a second external side effect", "To replace authorization"],
-    correct: 1,
-    explanation: "Idempotency deduplicates uncertain retries; authorization is still evaluated independently.",
+  lesson("i3", "Intermediate", "03", "Incident response and recovery", "Admit evidence, verify containment, and restore only an independently approved narrow capability.", "Preserve unknown provider outcomes and reconcile them before retrying the same logical effect.", "intermediate/03-incident-recovery", "03_incident_recovery", {
+    prompt: "An approved effect timed out after reaching the provider, and its outcome is unknown. What should recovery do?",
+    options: ["Reconcile the original operation before retrying", "Create a new operation ID and retry", "Treat the approval as proof of success"],
+    correct: 0,
+    explanation: "Approval authorizes one exact operation but does not prove its outcome. Recovery must preserve the stable operation ID and reconcile provider state before any retry.",
   }),
   lesson("a1", "Advanced", "01", "Security attack evaluation", "Turn versioned attack cases and observable trajectories into release evidence.", "Measure severe failures, traceability, and valid-task blocking with correct denominators.", "advanced/01-attack-evaluation", "01_attack_evaluation", {
     prompt: "What should block release even if the average score improves?",
