@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "beginner-prompt-injection-containment",
+  "title": "Contain prompt injection at the effect boundary",
+  "purpose": "Show that probabilistic detection can miss while canonical provenance, strict schemas, and exact application authorization prevent influenced model output from becoming a side effect.",
+  "output": {
+    "svg": "architecture2.svg",
+    "medium": "GitHub Markdown and Learning Hub",
+    "alt_text": "Untrusted documents pass through canonical ingestion and a probabilistic detector to a model that may be influenced. The model proposes an action, but a trusted policy gateway resolves source evidence and validates the proposal against authenticated workflow context and an exact one-use grant before sending only allowed effects to an executor. Decisions and effects produce redacted receipts."
+  },
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC", "margin": 56, "grid": 8},
+  "layout": {"primary_flow": "left-to-right", "min_node_gap": 40, "min_layer_gap": 56, "node_padding": {"x": 20, "y": 16}},
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "untrusted": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "signal": {"fill": "#FFF7E8", "stroke": "#E09B32"},
+      "service": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "data": {"fill": "#E5F7F6", "stroke": "#16A3A5"},
+      "action": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "operations": {"fill": "#FFFFFF", "stroke": "#AAB7C7"}
+    }
+  },
+  "groups": [
+    {"id": "evidence", "label": "Untrusted evidence path", "bounds": {"x": 56, "y": 140, "width": 660, "height": 540}, "fill": "#FAF9FF", "stroke": "#D9D3FA"},
+    {"id": "control", "label": "Trusted application control plane", "bounds": {"x": 760, "y": 140, "width": 500, "height": 700}, "fill": "#FFFFFF", "stroke": "#C8D7F4"},
+    {"id": "protected", "label": "Protected system", "bounds": {"x": 1304, "y": 140, "width": 240, "height": 540}, "fill": "#FFFBF5", "stroke": "#F3D3A8"}
+  ],
+  "nodes": [
+    {"id": "content", "group": "evidence", "label": "External content", "subtitle": "Web, files, memory, tool output", "type": "untrusted", "bounds": {"x": 88, "y": 300, "width": 176, "height": 112}},
+    {"id": "ingestion", "group": "evidence", "label": "Canonical ingestion", "subtitle": "ID, version, digest, provenance", "type": "data", "bounds": {"x": 304, "y": 292, "width": 188, "height": 128}},
+    {"id": "detector", "group": "evidence", "label": "Detector signal", "subtitle": "Probabilistic; may miss", "type": "signal", "bounds": {"x": 532, "y": 300, "width": 152, "height": 112}},
+    {"id": "model", "group": "evidence", "label": "Model", "subtitle": "Assume influenced", "type": "untrusted", "bounds": {"x": 532, "y": 500, "width": 152, "height": 104}},
+    {"id": "policy", "group": "control", "label": "Policy gateway", "subtitle": "Resolve sources + validate schema\nBind exact effect + consume grant", "type": "service", "bounds": {"x": 808, "y": 330, "width": 260, "height": 160}},
+    {"id": "trusted_context", "group": "control", "label": "Trusted workflow context", "subtitle": "Subject, tenant, run, time", "type": "data", "bounds": {"x": 808, "y": 190, "width": 260, "height": 96}},
+    {"id": "grant", "group": "control", "label": "Exact one-use grant", "subtitle": "Effect digest, policy, expiry", "type": "data", "bounds": {"x": 808, "y": 550, "width": 260, "height": 104}},
+    {"id": "decision", "group": "control", "label": "Decision", "subtitle": "DENY or ALLOW only", "type": "service", "bounds": {"x": 1112, "y": 354, "width": 116, "height": 112}},
+    {"id": "audit", "group": "control", "label": "Redacted evidence receipt", "subtitle": "Digests, policy, reason, terminal state", "type": "operations", "bounds": {"x": 808, "y": 730, "width": 420, "height": 80}},
+    {"id": "executor", "group": "protected", "label": "Effect executor", "subtitle": "Idempotent API / tool", "type": "action", "bounds": {"x": 1336, "y": 350, "width": 176, "height": 120}}
+  ],
+  "edges": [
+    {"id": "snapshot", "from": "content", "to": "ingestion", "label": "ingest", "kind": "primary", "route": [[264, 356], [304, 356]]},
+    {"id": "screen", "from": "ingestion", "to": "detector", "label": "snapshot", "kind": "primary", "route": [[492, 356], [532, 356]]},
+    {"id": "context", "from": "detector", "to": "model", "label": "signal + content", "kind": "probabilistic", "route": [[608, 412], [608, 500]]},
+    {"id": "proposal", "from": "model", "to": "policy", "label": "untrusted proposal", "kind": "primary", "route": [[684, 552], [744, 552], [744, 410], [808, 410]]},
+    {"id": "identity", "from": "trusted_context", "to": "policy", "label": "authenticated", "kind": "secondary", "route": [[938, 286], [938, 330]]},
+    {"id": "capability", "from": "grant", "to": "policy", "label": "exact intent", "kind": "secondary", "route": [[938, 550], [938, 490]]},
+    {"id": "authorize", "from": "policy", "to": "decision", "label": "authorize", "kind": "primary", "route": [[1068, 410], [1112, 410]]},
+    {"id": "execute", "from": "decision", "to": "executor", "label": "ALLOW only", "kind": "primary", "route": [[1228, 410], [1336, 410]]},
+    {"id": "policy_receipt", "from": "policy", "to": "audit", "label": "allow / deny", "kind": "audit", "route": [[1060, 490], [1092, 490], [1092, 702], [1060, 702], [1060, 730]]},
+    {"id": "effect_receipt", "from": "executor", "to": "audit", "label": "effect receipt", "kind": "audit", "route": [[1424, 470], [1424, 770], [1228, 770]]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_contrast": true},
+  "source": "architecture-spec.json is the authoritative geometry; architecture2.svg is the deterministic vector render."
+}
