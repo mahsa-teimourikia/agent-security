@@ -1,0 +1,67 @@
+{
+  "spec_version": "1.0",
+  "canvas": {
+    "width": 1600,
+    "height": 900,
+    "background": "#F7F9FC",
+    "title": "Secure Research Agent: Authorization Before Ranking",
+    "intended_medium": "GitHub README and Jupyter notebook",
+    "flow_direction": "left-to-right, then down to release verification"
+  },
+  "grid": 10,
+  "palette": {
+    "structure": "#16324F",
+    "processing": "#2F6BFF",
+    "model_untrusted": "#7667E8",
+    "retrieval_data": "#16A3A5",
+    "denial": "#C2413B",
+    "operations": "#52606D",
+    "card": "#FFFFFF",
+    "border": "#D7DEE8"
+  },
+  "typography": {
+    "family": "Inter, ui-sans-serif, system-ui, sans-serif",
+    "title_px": 30,
+    "group_px": 16,
+    "node_title_px": 17,
+    "body_px": 13
+  },
+  "groups": [
+    {"id": "trusted-search", "label": "TRUSTED SEARCH CONTROL PLANE", "bounds": {"x": 50, "y": 110, "width": 1210, "height": 270}, "children": ["request", "policy", "corpus", "rank", "snapshot"]},
+    {"id": "untrusted-zone", "label": "UNTRUSTED GENERATION", "bounds": {"x": 1310, "y": 110, "width": 240, "height": 270}, "children": ["model"]},
+    {"id": "release-zone", "label": "DETERMINISTIC RELEASE CONTROL", "bounds": {"x": 930, "y": 440, "width": 620, "height": 210}, "children": ["verify", "response"]},
+    {"id": "operations-zone", "label": "DEFENDER-ONLY OPERATIONS", "bounds": {"x": 570, "y": 710, "width": 660, "height": 130}, "children": ["audit"]}
+  ],
+  "nodes": [
+    {"id": "request", "label": "Verified request", "type": "structure", "bounds": {"x": 80, "y": 190, "width": 180, "height": 100}, "padding": 18, "subtitle": "subject + bounded query", "ports": ["east"]},
+    {"id": "policy", "label": "Policy resolver", "type": "processing", "bounds": {"x": 320, "y": 180, "width": 200, "height": 120}, "padding": 18, "subtitle": "tenant • sensitivity\nlifecycle • freshness", "ports": ["west", "east", "south"]},
+    {"id": "corpus", "label": "Protected corpus", "type": "retrieval_data", "bounds": {"x": 580, "y": 180, "width": 190, "height": 120}, "padding": 18, "subtitle": "canonical metadata\nversions + digests", "ports": ["west", "east"]},
+    {"id": "rank", "label": "Rank eligible only", "type": "retrieval_data", "bounds": {"x": 830, "y": 180, "width": 190, "height": 120}, "padding": 18, "subtitle": "BM25 • vector • hybrid", "ports": ["west", "east"]},
+    {"id": "snapshot", "label": "Evidence snapshots", "type": "retrieval_data", "bounds": {"x": 1080, "y": 180, "width": 150, "height": 120}, "padding": 16, "subtitle": "ID + version + digest", "ports": ["west", "east", "south"]},
+    {"id": "model", "label": "Model drafts", "type": "model_untrusted", "bounds": {"x": 1340, "y": 180, "width": 180, "height": 120}, "padding": 18, "subtitle": "claims • citations\naction proposals", "ports": ["west", "south"]},
+    {"id": "verify", "label": "Verify before release", "type": "processing", "bounds": {"x": 960, "y": 510, "width": 280, "height": 100}, "padding": 18, "subtitle": "capability • exact refs • support", "ports": ["north_model", "north_evidence", "east", "south"]},
+    {"id": "response", "label": "Safe terminal result", "type": "structure", "bounds": {"x": 1300, "y": 510, "width": 220, "height": 100}, "padding": 18, "subtitle": "answer • abstain • block", "ports": ["west"]},
+    {"id": "audit", "label": "Minimized audit receipt", "type": "operations", "bounds": {"x": 600, "y": 750, "width": 600, "height": 76}, "padding": 14, "subtitle": "query digest • scope/policy • authorized evidence refs • decision", "ports": ["north_policy", "north_decision"]}
+  ],
+  "edges": [
+    {"id": "e-request-policy", "source": "request.east", "target": "policy.west", "routing_points": [[260, 240], [320, 240]], "label": "trusted session", "priority": "primary"},
+    {"id": "e-policy-corpus", "source": "policy.east", "target": "corpus.west", "routing_points": [[520, 240], [580, 240]], "label": "security trim", "priority": "primary"},
+    {"id": "e-corpus-rank", "source": "corpus.east", "target": "rank.west", "routing_points": [[770, 240], [830, 240]], "label": "eligible records", "priority": "primary"},
+    {"id": "e-rank-snapshot", "source": "rank.east", "target": "snapshot.west", "routing_points": [[1020, 240], [1080, 240]], "label": "top-k", "priority": "primary"},
+    {"id": "e-snapshot-model", "source": "snapshot.east", "target": "model.west", "routing_points": [[1230, 240], [1340, 240]], "label": "informational evidence", "priority": "primary"},
+    {"id": "e-model-verify", "source": "model.south", "target": "verify.north_model", "routing_points": [[1430, 300], [1430, 410], [1050, 410], [1050, 510]], "label": "untrusted draft", "priority": "primary"},
+    {"id": "e-snapshot-verify", "source": "snapshot.south", "target": "verify.north_evidence", "routing_points": [[1155, 300], [1155, 460], [1150, 460], [1150, 510]], "label": "exact reference set", "priority": "secondary"},
+    {"id": "e-verify-response", "source": "verify.east", "target": "response.west", "routing_points": [[1240, 560], [1300, 560]], "label": "allow / safe deny", "priority": "primary"},
+    {"id": "e-verify-audit", "source": "verify.south", "target": "audit.north_decision", "routing_points": [[1100, 610], [1100, 680], [1000, 680], [1000, 750]], "label": "decision receipt", "priority": "secondary"},
+    {"id": "e-policy-audit", "source": "policy.south", "target": "audit.north_policy", "routing_points": [[420, 300], [420, 680], [800, 680], [800, 750]], "label": "policy + scope digest", "priority": "secondary"}
+  ],
+  "accessibility": {
+    "title": "Secure research agent with authorization before ranking",
+    "description": "A verified request enters a trusted policy resolver. Tenant, sensitivity, lifecycle, and freshness rules trim a protected corpus before eligible records are ranked. Versioned evidence snapshots go to an untrusted model. Deterministic capability, citation, and support checks produce a safe answer, abstention, or block, while a minimized audit receipt records policy and evidence references."
+  },
+  "reproduction": {
+    "source": "architecture-spec.json",
+    "renderer": "deterministic hand-authored SVG using the exact bounds and orthogonal routes in this specification",
+    "output": "architecture.svg"
+  }
+}
