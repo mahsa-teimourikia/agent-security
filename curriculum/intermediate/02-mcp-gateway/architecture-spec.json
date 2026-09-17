@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "id": "mcp-gateway-trust-boundaries",
+  "title": "MCP gateway: authorize before call, validate before release",
+  "purpose": "Show that discovery, model proposals, and tool results remain untrusted while a gateway binds identity, token, catalog, schema, quota, lifecycle, and output policy around an MCP call.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation-and-notebook",
+    "alt_text": "A model proposal and authenticated runtime context enter an MCP gateway admission gate. Only an authorized, narrow call reaches an allowlisted MCP server. The result returns through a result validation gate before entering model context. Admission and result decisions produce privacy-aware receipts."
+  },
+  "canvas": {"width": 1600, "height": 820, "background": "#F7F9FC", "margin": 64, "grid": 8},
+  "layout": {"primary_flow": "left-to-right-then-return", "min_node_gap": 40, "min_layer_gap": 80, "node_padding": {"x": 24, "y": 16}},
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "untrusted": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "policy": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "tool": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "audit": {"fill": "#E5F7F6", "stroke": "#16A3A5"},
+      "trusted": {"fill": "#FFFFFF", "stroke": "#52606D"}
+    }
+  },
+  "groups": [
+    {"id": "application", "label": "Application boundary", "bounds": {"x": 64, "y": 144, "width": 296, "height": 592}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "gateway", "label": "Trusted MCP gateway", "bounds": {"x": 408, "y": 144, "width": 600, "height": 592}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "server", "label": "Allowlisted MCP server", "bounds": {"x": 1056, "y": 144, "width": 480, "height": 360}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "operations", "label": "Operations", "bounds": {"x": 1056, "y": 528, "width": 480, "height": 208}, "fill": "#FFFFFF", "stroke": "#D7DEE8"}
+  ],
+  "nodes": [
+    {"id": "proposal", "group": "application", "label": "Model proposal", "subtitle": "server · tool · arguments", "type": "untrusted", "bounds": {"x": 104, "y": 240, "width": 216, "height": 112}, "padding": 16, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "identity", "group": "application", "label": "Trusted context", "subtitle": "identity · token · tenant", "type": "trusted", "bounds": {"x": 104, "y": 440, "width": 216, "height": 112}, "padding": 16, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "release", "group": "application", "label": "Model context", "subtitle": "validated data only", "type": "untrusted", "bounds": {"x": 104, "y": 632, "width": 216, "height": 72}, "padding": 16, "ports": {"in": {"side": "right", "offset": 0.5}}},
+    {"id": "admission", "group": "gateway", "label": "Admission gate", "subtitle": "issuer · audience · scope · catalog\nschema · quota · replay · deadline", "type": "policy", "bounds": {"x": 456, "y": 240, "width": 504, "height": 144}, "padding": 16, "ports": {"proposal": {"side": "left", "offset": 0.38}, "context": {"side": "left", "offset": 0.78}, "call": {"side": "right", "offset": 0.38}, "audit": {"side": "top", "offset": 0.88}}},
+    {"id": "result_gate", "group": "gateway", "label": "Result gate", "subtitle": "structured schema · size · terminal state", "type": "policy", "bounds": {"x": 456, "y": 520, "width": 504, "height": 144}, "padding": 16, "ports": {"result": {"side": "right", "offset": 0.38}, "audit": {"side": "right", "offset": 0.72}, "release": {"side": "left", "offset": 0.72}}},
+    {"id": "mcp_server", "group": "server", "label": "MCP Python SDK v2 server", "subtitle": "Streamable HTTP in production\nin-memory transport in this lab", "type": "tool", "bounds": {"x": 1104, "y": 240, "width": 384, "height": 144}, "padding": 16, "ports": {"call": {"side": "left", "offset": 0.38}, "result": {"side": "bottom", "offset": 0.5}}},
+    {"id": "receipts", "group": "operations", "label": "Decision receipts", "subtitle": "phase · reason · policy/catalog version · hashes", "type": "audit", "bounds": {"x": 1104, "y": 584, "width": 384, "height": 104}, "padding": 16, "ports": {"admission": {"side": "right", "offset": 0.35}, "result": {"side": "left", "offset": 0.72}}}
+  ],
+  "edges": [
+    {"id": "proposal_to_admission", "from": {"node": "proposal", "port": "out"}, "to": {"node": "admission", "port": "proposal"}, "label": "untrusted proposal", "kind": "primary", "route": [[320, 296], [456, 295]]},
+    {"id": "context_to_admission", "from": {"node": "identity", "port": "out"}, "to": {"node": "admission", "port": "context"}, "label": "server-owned context", "kind": "trusted", "route": [[320, 496], [392, 496], [392, 352], [456, 352]]},
+    {"id": "admission_to_server", "from": {"node": "admission", "port": "call"}, "to": {"node": "mcp_server", "port": "call"}, "label": "narrow authorized call", "kind": "primary", "route": [[960, 295], [1104, 295]]},
+    {"id": "server_to_result", "from": {"node": "mcp_server", "port": "result"}, "to": {"node": "result_gate", "port": "result"}, "label": "untrusted structured result", "kind": "secondary", "route": [[1296, 384], [1296, 464], [1024, 464], [1024, 575], [960, 575]]},
+    {"id": "result_to_context", "from": {"node": "result_gate", "port": "release"}, "to": {"node": "release", "port": "in"}, "label": "release or block", "kind": "primary", "route": [[456, 624], [392, 624], [392, 668], [320, 668]]},
+    {"id": "admission_receipt", "from": {"node": "admission", "port": "audit"}, "to": {"node": "receipts", "port": "admission"}, "label": "admission decision", "kind": "audit", "route": [[900, 240], [900, 208], [1512, 208], [1512, 620], [1488, 620]]},
+    {"id": "result_receipt", "from": {"node": "result_gate", "port": "audit"}, "to": {"node": "receipts", "port": "result"}, "label": "result decision", "kind": "audit", "route": [[960, 624], [1032, 624], [1032, 659], [1104, 659]]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true},
+  "reproduce": "Render architecture.svg deterministically from these exact groups, node bounds, ports, and orthogonal edge routes."
+}

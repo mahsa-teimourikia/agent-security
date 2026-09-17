@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="820" viewBox="0 0 1600 820" role="img" aria-labelledby="title desc">
+  <title id="title">MCP gateway: authorize before call, validate before release</title>
+  <desc id="desc">A model proposal and trusted identity enter a gateway admission gate. An authorized narrow call reaches an allowlisted MCP server. The untrusted result returns through schema and size validation before release. Both phases emit privacy-aware receipts.</desc>
+  <defs>
+    <marker id="blue-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2F6BFF"/></marker>
+    <marker id="slate-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52606D"/></marker>
+    <marker id="teal-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#16A3A5"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#16324F" flood-opacity="0.10"/></filter>
+    <style>
+      text{font-family:Inter,Arial,sans-serif;fill:#16324F}.group{fill:#fff;stroke:#D7DEE8;stroke-width:2}.group-label{font-size:18px;font-weight:700}.node{stroke-width:2.5;rx:14;filter:url(#shadow)}.label{font-size:20px;font-weight:700;text-anchor:middle}.subtitle{font-size:14px;fill:#52606D;text-anchor:middle}.edge{fill:none;stroke-width:2.5;stroke-linejoin:round}.edge-label{font-size:14px;font-weight:600;text-anchor:middle;paint-order:stroke;stroke:#F7F9FC;stroke-width:8px;stroke-linejoin:round}
+    </style>
+  </defs>
+  <rect width="1600" height="820" fill="#F7F9FC"/>
+  <text x="64" y="72" font-size="32" font-weight="800">MCP gateway: authorize before call, validate before release</text>
+  <text x="64" y="108" font-size="17" fill="#52606D">Discovery and model output propose; trusted application policy grants, verifies, and records.</text>
+
+  <rect class="group" x="64" y="144" width="296" height="592" rx="18"/><text class="group-label" x="88" y="180">Application boundary</text>
+  <rect class="group" x="408" y="144" width="600" height="592" rx="18"/><text class="group-label" x="432" y="180">Trusted MCP gateway</text>
+  <rect class="group" x="1056" y="144" width="480" height="360" rx="18"/><text class="group-label" x="1080" y="180">Allowlisted MCP server</text>
+  <rect class="group" x="1056" y="528" width="480" height="208" rx="18"/><text class="group-label" x="1080" y="564">Operations</text>
+
+  <rect class="node" x="104" y="240" width="216" height="112" fill="#F0EEFF" stroke="#7667E8"/><text class="label" x="212" y="286">Model proposal</text><text class="subtitle" x="212" y="319">server · tool · arguments</text>
+  <rect class="node" x="104" y="440" width="216" height="112" fill="#FFFFFF" stroke="#52606D"/><text class="label" x="212" y="486">Trusted context</text><text class="subtitle" x="212" y="519">identity · token · tenant</text>
+  <rect class="node" x="104" y="632" width="216" height="72" fill="#F0EEFF" stroke="#7667E8"/><text class="label" x="212" y="664">Model context</text><text class="subtitle" x="212" y="687">validated data only</text>
+
+  <rect class="node" x="456" y="240" width="504" height="144" fill="#EAF1FF" stroke="#2F6BFF"/><text class="label" x="708" y="286">Admission gate</text><text class="subtitle" x="708" y="321">issuer · audience · scope · catalog</text><text class="subtitle" x="708" y="345">schema · quota · replay · deadline</text>
+  <rect class="node" x="456" y="520" width="504" height="144" fill="#EAF1FF" stroke="#2F6BFF"/><text class="label" x="708" y="574">Result gate</text><text class="subtitle" x="708" y="609">structured schema · size · terminal state</text>
+
+  <rect class="node" x="1104" y="240" width="384" height="144" fill="#FFF1DF" stroke="#F59E42"/><text class="label" x="1296" y="286">MCP Python SDK v2 server</text><text class="subtitle" x="1296" y="321">Streamable HTTP in production</text><text class="subtitle" x="1296" y="345">in-memory transport in this lab</text>
+  <rect class="node" x="1104" y="584" width="384" height="104" fill="#E5F7F6" stroke="#16A3A5"/><text class="label" x="1296" y="624">Decision receipts</text><text class="subtitle" x="1296" y="652">phase · reason · policy/catalog version · hashes</text>
+
+  <path class="edge" d="M320 296H456" stroke="#2F6BFF" marker-end="url(#blue-arrow)"/><text class="edge-label" x="388" y="281">untrusted proposal</text>
+  <path class="edge" d="M320 496H392V352H456" stroke="#52606D" marker-end="url(#slate-arrow)"/><text class="edge-label" x="382" y="420">server-owned context</text>
+  <path class="edge" d="M960 295H1104" stroke="#2F6BFF" marker-end="url(#blue-arrow)"/><text class="edge-label" x="1032" y="280">narrow authorized call</text>
+  <path class="edge" d="M1296 384V464H1024V575H960" stroke="#52606D" stroke-dasharray="7 6" marker-end="url(#slate-arrow)"/><text class="edge-label" x="1144" y="449">untrusted structured result</text>
+  <path class="edge" d="M456 624H392V668H320" stroke="#2F6BFF" marker-end="url(#blue-arrow)"/><text class="edge-label" x="388" y="653">release or block</text>
+  <path class="edge" d="M900 240V208H1512V620H1488" stroke="#16A3A5" marker-end="url(#teal-arrow)"/><text class="edge-label" x="1220" y="226">admission decision</text>
+  <path class="edge" d="M960 624H1032V659H1104" stroke="#16A3A5" marker-end="url(#teal-arrow)"/><text class="edge-label" x="1033" y="647">result decision</text>
+
+  <rect x="64" y="772" width="12" height="12" rx="3" fill="#7667E8"/><text x="84" y="783" font-size="14">Untrusted model boundary</text>
+  <rect x="280" y="772" width="12" height="12" rx="3" fill="#2F6BFF"/><text x="300" y="783" font-size="14">Gateway policy</text>
+  <rect x="440" y="772" width="12" height="12" rx="3" fill="#F59E42"/><text x="460" y="783" font-size="14">MCP server</text>
+  <rect x="568" y="772" width="12" height="12" rx="3" fill="#16A3A5"/><text x="588" y="783" font-size="14">Audit evidence</text>
+</svg>
