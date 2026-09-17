@@ -36,11 +36,11 @@ export const publishedLessons = [
     correct: 0,
     explanation: "The correct answer is only the document identifier (the first option). Identity, tenant, audience, scope, grant lineage, and request ID must come from authenticated server-owned context.",
   }),
-  lesson("i2", "Intermediate", "02", "MCP gateway security", "Treat discovery as metadata and independently authenticate and authorize every invocation.", "Enforce server trust, scopes, schemas, limits, and privacy-aware receipts.", "intermediate/02-mcp-gateway", "02_mcp_gateway", {
-    prompt: "A discovered MCP server advertises an admin tool. What should the gateway do?",
-    options: ["Trust discovery", "Require server trust and caller authorization", "Forward the caller token"],
-    correct: 1,
-    explanation: "Discovery does not prove server identity, tool safety, or caller authority.",
+  lesson("i2", "Intermediate", "02", "MCP gateway security", "Authorize version-bound MCP calls before execution and validate structured results before model exposure.", "Reject stale discovery, token confusion, replay, quota races, and poisoned or oversized tool results.", "intermediate/02-mcp-gateway", "02_mcp_gateway", {
+    prompt: "A trusted MCP server advertises a schema-valid destructive tool and marks it safe, but the caller lacks application permission. What should happen?",
+    options: ["Deny the call at the gateway", "Trust the server annotation", "Forward the caller token so the tool can decide"],
+    correct: 0,
+    explanation: "Server metadata and annotations are not caller authority. The application gateway must deny the call before execution using trusted identity and policy context.",
   }),
   lesson("i3", "Intermediate", "03", "Incident response and recovery", "Contain suspicious runs, revoke capabilities, and recover with safe replay.", "Prevent duplicate effects and reauthorize changed state before resuming.", "intermediate/03-incident-recovery", "03_incident_recovery", {
     prompt: "Why must a replay reuse the original idempotency key?",
