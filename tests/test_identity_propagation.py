@@ -82,6 +82,13 @@ class TestIdentityPropagation:
         assert resp.terminal_state == "answered"
         assert "Found document" in resp.answer
 
+    def test_application_issues_unique_request_ids(self, app):
+        auth_alice = lab.ApplicationIdentityProvider.for_alice()
+        first = app.answer_secure(auth_alice, "doc-101")
+        second = app.answer_secure(auth_alice, "doc-102")
+        assert first.correlation_id == "request-1"
+        assert second.correlation_id == "request-2"
+
     def test_unauthenticated_principal_rejected(self, app):
         fake_auth = lab.AuthenticatedPrincipal("unknown_user", "ctx-unknown")
         resp = app.answer_secure(fake_auth, "doc-101")
@@ -286,6 +293,22 @@ class TestIdentityPropagation:
         mc.advance(1)  # exactly 60
         assert not storage.ds.verify(issue_result.grant, "storage-service", "storage-service", "acme", "read", "doc-101").allowed
 
+    def test_delegation_not_valid_before_issuance(self):
+        class MutableClock:
+            def __init__(self):
+                self.now = datetime(2025, 1, 1, 12, 0, tzinfo=timezone.utc)
+
+            def __call__(self):
+                return self.now
+
+        clock = MutableClock()
+        service = lab.DelegationService(clock_fn=clock)
+        result = issue_grant(service, "alice", "research-agent", "document-service", {"read"}, {"doc-101"})
+        clock.now -= timedelta(seconds=1)
+        decision = service.verify(result.grant, "research-agent", "document-service", "acme", "read", "doc-101")
+        assert not decision.allowed
+        assert decision.reason == "delegation_not_yet_valid"
+
     def test_audience_mismatch(self, delegation_service, storage, auth_agent):
         issue_result = issue_grant(delegation_service, "alice", "research-agent", "document-service", {"read"}, {"doc-101"})
         caller = auth_agent
@@ -337,6 +360,46 @@ class TestIdentityPropagation:
         assert child.grant.audience == "storage-service"
         assert child.grant.allowed_operations == frozenset({"read"})
         assert child.grant.allowed_resources == frozenset({"doc-101"})
+        assert child.grant.delegation_depth == 2
+
+    def test_exchange_enforces_maximum_delegation_depth(self, delegation_service, auth_doc, auth_storage):
+        parent = issue_grant(delegation_service, "alice", "research-agent", "document-service", {"read"}, {"doc-101"})
+        child = delegation_service.exchange(parent.grant, auth_doc, "storage-service", {"read"}, {"doc-101"}, 5)
+        grandchild = delegation_service.exchange(child.grant, auth_storage, "research-agent", {"read"}, {"doc-101"}, 5)
+        assert grandchild.grant is None
+        assert grandchild.reason == "maximum_delegation_depth_exceeded"
+
+    def test_revoking_parent_invalidates_entire_lineage(self, delegation_service, auth_doc):
+        parent = issue_grant(delegation_service, "alice", "research-agent", "document-service", {"read"}, {"doc-101"})
+        child = delegation_service.exchange(parent.grant, auth_doc, "storage-service", {"read"}, {"doc-101"}, 5)
+        result = delegation_service.revoke_lineage(parent.grant.grant_id, "incident containment")
+
+        assert result.revoked_count == 2
+        assert not delegation_service.verify(parent.grant, "research-agent", "document-service", "acme", "read", "doc-101").allowed
+        child_decision = delegation_service.verify(child.grant, "document-service", "storage-service", "acme", "read", "doc-101")
+        assert not child_decision.allowed
+        assert child_decision.reason == "revoked"
+
+    def test_revoked_parent_cannot_be_exchanged(self, delegation_service, auth_doc):
+        parent = issue_grant(delegation_service, "alice", "research-agent", "document-service", {"read"}, {"doc-101"})
+        delegation_service.revoke_lineage(parent.grant.grant_id, "session ended")
+        child = delegation_service.exchange(parent.grant, auth_doc, "storage-service", {"read"}, {"doc-101"}, 5)
+        assert child.grant is None
+        assert child.reason == "parent_revoked"
+
+    def test_revocation_requires_reason(self, delegation_service):
+        parent = issue_grant(delegation_service, "alice", "research-agent", "document-service", {"read"}, {"doc-101"})
+        result = delegation_service.revoke_lineage(parent.grant.grant_id, "")
+        assert result.revoked_count == 0
+        assert result.reason == "reason_required"
+
+    def test_evaluation_reports_security_and_utility_metrics(self):
+        report = lab.evaluate_security_controls()
+        assert report.compliant_success_rate == 1.0
+        assert report.correct_block_rate == 1.0
+        assert report.unsafe_disclosure_count == 0
+        assert report.valid_work_block_count == 0
+        assert report.trace_completeness_rate == 1.0
 
     def test_exchange_operation_expansion_denied(self, delegation_service, auth_doc):
         parent = issue_grant(delegation_service, "alice", "research-agent", "document-service", {"read"}, {"doc-101"})

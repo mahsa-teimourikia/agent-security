@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="820" viewBox="0 0 1600 820" role="img" aria-labelledby="title desc">
+  <title id="title">Identity propagation and per-hop delegation</title>
+  <desc id="desc">An authenticated principal enters a research agent. A security token service issues a grant for the document service, which exchanges it for a narrower storage grant. Both resource services audit their authorization decisions.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F6BFF"/></marker>
+    <marker id="arrow-control" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#F59E42"/></marker>
+    <marker id="arrow-audit" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#16A3A5"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#16324F" flood-opacity="0.10"/></filter>
+    <style>
+      text { font-family: Inter, Arial, sans-serif; fill: #16324F; }
+      .group { fill: #fff; stroke: #D7DEE8; stroke-width: 2; }
+      .group-label { font-size: 18px; font-weight: 700; }
+      .node { stroke-width: 2.5; rx: 14; filter: url(#shadow); }
+      .label { font-size: 20px; font-weight: 700; text-anchor: middle; }
+      .subtitle { font-size: 14px; fill: #52606D; text-anchor: middle; }
+      .edge { fill: none; stroke-width: 2.5; stroke-linejoin: round; }
+      .edge-label { font-size: 14px; font-weight: 600; text-anchor: middle; paint-order: stroke; stroke: #F7F9FC; stroke-width: 8px; stroke-linejoin: round; }
+    </style>
+  </defs>
+  <rect width="1600" height="820" fill="#F7F9FC"/>
+  <text x="64" y="72" font-size="32" font-weight="800">Identity propagation and per-hop delegation</text>
+  <text x="64" y="108" font-size="17" fill="#52606D">Authority narrows at every hop; identity and grant lifecycle remain server-owned.</text>
+
+  <rect class="group" x="64" y="144" width="296" height="360" rx="18"/><text class="group-label" x="88" y="180">Authenticated entry</text>
+  <rect class="group" x="408" y="144" width="312" height="360" rx="18"/><text class="group-label" x="432" y="180">Agent application</text>
+  <rect class="group" x="768" y="144" width="768" height="360" rx="18"/><text class="group-label" x="792" y="180">Resource services</text>
+  <rect class="group" x="408" y="528" width="1128" height="208" rx="18"/><text class="group-label" x="432" y="564">Delegation lifecycle, audit, and evaluation</text>
+
+  <rect class="node" x="104" y="264" width="216" height="112" fill="#FFFFFF" stroke="#52606D"/><text class="label" x="212" y="310">Alice</text><text class="subtitle" x="212" y="340">Provider-authenticated session</text>
+  <rect class="node" x="456" y="264" width="216" height="112" fill="#F0EEFF" stroke="#7667E8"/><text class="label" x="564" y="310">Research agent</text><text class="subtitle" x="564" y="340">Trusted runtime context</text>
+  <rect class="node" x="816" y="264" width="240" height="112" fill="#EAF1FF" stroke="#2F6BFF"/><text class="label" x="936" y="310">Document service</text><text class="subtitle" x="936" y="340">Verify G1 · exchange</text>
+  <rect class="node" x="1216" y="264" width="264" height="112" fill="#EAF1FF" stroke="#2F6BFF"/><text class="label" x="1348" y="310">Storage service</text><text class="subtitle" x="1348" y="340">Verify G2 · authorize object</text>
+  <rect class="node" x="608" y="584" width="352" height="112" fill="#FFF1DF" stroke="#F59E42"/><text class="label" x="784" y="626">Security token service</text><text class="subtitle" x="784" y="655">Scope · audience · tenant · time</text><text class="subtitle" x="784" y="676">depth · revocation status</text>
+  <rect class="node" x="1176" y="568" width="304" height="112" fill="#E5F7F6" stroke="#16A3A5"/><text class="label" x="1328" y="610">Audit and evaluation</text><text class="subtitle" x="1328" y="639">Principal · actor · grant lineage</text><text class="subtitle" x="1328" y="660">resource · decision · outcome</text>
+
+  <path class="edge" d="M320 320 H456" stroke="#2F6BFF" marker-end="url(#arrow)"/><text class="edge-label" x="388" y="304">trusted principal</text>
+  <path class="edge" d="M672 320 H816" stroke="#2F6BFF" marker-end="url(#arrow)"/><text class="edge-label" x="744" y="304">request + G1</text>
+  <path class="edge" d="M1056 320 H1216" stroke="#2F6BFF" marker-end="url(#arrow)"/><text class="edge-label" x="1136" y="304">request + G2</text>
+
+  <path class="edge" d="M532 376 V544 H671 V584" stroke="#F59E42" marker-end="url(#arrow-control)"/><text class="edge-label" x="590" y="532">issue narrow G1</text>
+  <path class="edge" d="M742 584 V512 H607 V376" stroke="#52606D" stroke-dasharray="7 6" marker-end="url(#arrow)"/><text class="edge-label" x="674" y="500">aud=document</text>
+  <path class="edge" d="M900 376 V496 H847 V584" stroke="#F59E42" marker-end="url(#arrow-control)"/><text class="edge-label" x="852" y="482">verify + exchange</text>
+  <path class="edge" d="M918 584 V456 H984 V376" stroke="#52606D" stroke-dasharray="7 6" marker-end="url(#arrow)"/><text class="edge-label" x="991" y="442">aud=storage</text>
+
+  <path class="edge" d="M1032 376 V607 H1176" stroke="#16A3A5" marker-end="url(#arrow-audit)"/><text class="edge-label" x="1106" y="592">decision event</text>
+  <path class="edge" d="M1348 376 V568" stroke="#16A3A5" marker-end="url(#arrow-audit)"/><text class="edge-label" x="1410" y="478">resource decision</text>
+
+  <rect x="64" y="764" width="12" height="12" rx="3" fill="#7667E8"/><text x="84" y="775" font-size="14">Agent/runtime</text>
+  <rect x="220" y="764" width="12" height="12" rx="3" fill="#2F6BFF"/><text x="240" y="775" font-size="14">Resource service</text>
+  <rect x="400" y="764" width="12" height="12" rx="3" fill="#F59E42"/><text x="420" y="775" font-size="14">Lifecycle control</text>
+  <rect x="584" y="764" width="12" height="12" rx="3" fill="#16A3A5"/><text x="604" y="775" font-size="14">Audit/evaluation</text>
+</svg>

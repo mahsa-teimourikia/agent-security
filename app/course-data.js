@@ -30,11 +30,11 @@ export const publishedLessons = [
     correct: 1,
     explanation: "Authorization before ranking prevents unauthorized records from entering model context or influencing counts, timing, facets, and ranking behavior.",
   }),
-  lesson("i1", "Intermediate", "01", "Identity propagation", "Preserve user, workload, tenant, resource, operation, and delegated scope.", "Reject tenant swaps, audience confusion, and authority widening across service hops.", "intermediate/01-identity-propagation", "01_identity_propagation", {
-    prompt: "A service receives both a signed principal and a tenant supplied in tool arguments. Which tenant is authoritative?",
-    options: ["The tool argument", "The trusted identity context", "Whichever appears first"],
-    correct: 1,
-    explanation: "Authorization scope must be derived from authenticated application state, never model-controlled arguments.",
+  lesson("i1", "Intermediate", "01", "Identity propagation", "Exchange audience-bound authority per hop while preserving principal and workload attribution.", "Reject identity substitution, tenant swaps, replay, authority widening, excessive chain depth, and revoked lineages.", "intermediate/01-identity-propagation", "01_identity_propagation", {
+    prompt: "Which fields should an agent-facing document-read tool allow the model to supply?",
+    options: ["Only the document identifier", "Document, principal, tenant, audience, and scope", "A serialized delegation grant"],
+    correct: 0,
+    explanation: "The correct answer is only the document identifier (the first option). Identity, tenant, audience, scope, grant lineage, and request ID must come from authenticated server-owned context.",
   }),
   lesson("i2", "Intermediate", "02", "MCP gateway security", "Treat discovery as metadata and independently authenticate and authorize every invocation.", "Enforce server trust, scopes, schemas, limits, and privacy-aware receipts.", "intermediate/02-mcp-gateway", "02_mcp_gateway", {
     prompt: "A discovered MCP server advertises an admin tool. What should the gateway do?",
