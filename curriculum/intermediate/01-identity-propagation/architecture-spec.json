@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "identity-propagation-trust-boundaries",
+  "title": "Identity propagation and per-hop delegation",
+  "purpose": "Show how authenticated principal and workload state is converted into audience-bound, down-scoped grants across two service hops, with lifecycle control and audit.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation-and-notebook",
+    "alt_text": "Alice's authenticated session enters a research agent. The agent obtains a document-service grant from a security token service. The document service validates and exchanges it for a storage-service grant. Storage authorizes the exact resource. Both services emit audit events, and revocation state is checked by the token service."
+  },
+  "canvas": {"width": 1600, "height": 820, "background": "#F7F9FC", "margin": 64, "grid": 8},
+  "layout": {
+    "primary_flow": "left-to-right",
+    "min_node_gap": 56,
+    "min_layer_gap": 80,
+    "node_padding": {"x": 24, "y": 16}
+  },
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "identity": {"fill": "#FFFFFF", "stroke": "#52606D"},
+      "agent": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "service": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "control": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "audit": {"fill": "#E5F7F6", "stroke": "#16A3A5"}
+    }
+  },
+  "groups": [
+    {"id": "identity", "label": "Authenticated entry", "bounds": {"x": 64, "y": 144, "width": 296, "height": 360}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "application", "label": "Agent application", "bounds": {"x": 408, "y": 144, "width": 312, "height": 360}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "services", "label": "Resource services", "bounds": {"x": 768, "y": 144, "width": 768, "height": 360}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "control", "label": "Delegation lifecycle, audit, and evaluation", "bounds": {"x": 408, "y": 528, "width": 1128, "height": 208}, "fill": "#FFFFFF", "stroke": "#D7DEE8"}
+  ],
+  "nodes": [
+    {"id": "principal", "group": "identity", "label": "Alice", "subtitle": "Provider-authenticated session", "type": "identity", "bounds": {"x": 104, "y": 264, "width": 216, "height": 112}, "padding": 16, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "research_agent", "group": "application", "label": "Research agent", "subtitle": "Trusted runtime context", "type": "agent", "bounds": {"x": 456, "y": 264, "width": 216, "height": 112}, "padding": 16, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}, "issue": {"side": "bottom", "offset": 0.35}, "grant": {"side": "bottom", "offset": 0.7}}},
+    {"id": "document_service", "group": "services", "label": "Document service", "subtitle": "Verify G1 · exchange", "type": "service", "bounds": {"x": 816, "y": 264, "width": 240, "height": 112}, "padding": 16, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}, "exchange": {"side": "bottom", "offset": 0.35}, "grant": {"side": "bottom", "offset": 0.7}, "audit": {"side": "bottom", "offset": 0.9}}},
+    {"id": "storage_service", "group": "services", "label": "Storage service", "subtitle": "Verify G2 · authorize object", "type": "service", "bounds": {"x": 1216, "y": 264, "width": 264, "height": 112}, "padding": 16, "ports": {"in": {"side": "left", "offset": 0.5}, "audit": {"side": "bottom", "offset": 0.5}}},
+    {"id": "sts", "group": "control", "label": "Security token service", "subtitle": "Scope · audience · tenant · time · depth · status", "type": "control", "bounds": {"x": 608, "y": 584, "width": 352, "height": 112}, "padding": 16, "ports": {"issue_in": {"side": "top", "offset": 0.18}, "issue_out": {"side": "top", "offset": 0.38}, "exchange_in": {"side": "top", "offset": 0.68}, "exchange_out": {"side": "top", "offset": 0.88}}},
+    {"id": "audit", "group": "control", "label": "Audit and evaluation", "subtitle": "Principal · actor · grant lineage · decision", "type": "audit", "bounds": {"x": 1176, "y": 568, "width": 304, "height": 112}, "padding": 16, "ports": {"document": {"side": "left", "offset": 0.35}, "storage": {"side": "top", "offset": 0.7}}}
+  ],
+  "edges": [
+    {"id": "session", "from": {"node": "principal", "port": "out"}, "to": {"node": "research_agent", "port": "in"}, "label": "trusted principal", "kind": "primary", "route": [[320, 320], [456, 320]]},
+    {"id": "delegated_request", "from": {"node": "research_agent", "port": "out"}, "to": {"node": "document_service", "port": "in"}, "label": "request + G1", "kind": "primary", "route": [[672, 320], [816, 320]]},
+    {"id": "storage_request", "from": {"node": "document_service", "port": "out"}, "to": {"node": "storage_service", "port": "in"}, "label": "request + G2", "kind": "primary", "route": [[1056, 320], [1216, 320]]},
+    {"id": "issue_request", "from": {"node": "research_agent", "port": "issue"}, "to": {"node": "sts", "port": "issue_in"}, "label": "issue narrow G1", "kind": "control", "route": [[532, 376], [532, 544], [671, 544], [671, 584]]},
+    {"id": "issue_response", "from": {"node": "sts", "port": "issue_out"}, "to": {"node": "research_agent", "port": "grant"}, "label": "aud=document", "kind": "secondary", "route": [[742, 584], [742, 512], [607, 512], [607, 376]]},
+    {"id": "exchange_request", "from": {"node": "document_service", "port": "exchange"}, "to": {"node": "sts", "port": "exchange_in"}, "label": "verify + exchange", "kind": "control", "route": [[900, 376], [900, 496], [847, 496], [847, 584]]},
+    {"id": "exchange_response", "from": {"node": "sts", "port": "exchange_out"}, "to": {"node": "document_service", "port": "grant"}, "label": "aud=storage", "kind": "secondary", "route": [[918, 584], [918, 456], [984, 456], [984, 376]]},
+    {"id": "document_audit", "from": {"node": "document_service", "port": "audit"}, "to": {"node": "audit", "port": "document"}, "label": "decision event", "kind": "audit", "route": [[1032, 376], [1032, 607], [1176, 607]]},
+    {"id": "storage_audit", "from": {"node": "storage_service", "port": "audit"}, "to": {"node": "audit", "port": "storage"}, "label": "resource decision", "kind": "audit", "route": [[1348, 376], [1348, 568]]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true},
+  "reproduce": "Render architecture.svg deterministically from this geometry and keep node, group, port, and edge IDs aligned with this specification."
+}

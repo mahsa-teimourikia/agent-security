@@ -1,213 +1,242 @@
-# Intermediate 01 — Identity Propagation: Delegation, Down-Scoping, and the Confused Deputy
+# Intermediate 01 — Identity Propagation and Delegated Authority
 
 ## Course metadata
-- **Level**: Intermediate
-- **Prerequisites**: Beginner 01 (Authorization), Beginner 03 (Request Boundaries)
-- **Time**: 60 minutes
+
+- **Level:** Intermediate
+- **Prerequisites:** Beginner 01 (tool authorization), Beginner 03 (secure research boundaries), OAuth 2.0 vocabulary, and basic Python
+- **Time:** 3–4 hours
+- **Format:** standards review, deterministic Python lab, credential-free Agents SDK lab, adversarial tests, and measurable evaluation
+- **Central thesis:** propagate bounded identity context—not ambient authority.
 
 ## Learning objectives
-- Distinguish between **Principal** (User) identity and **Workload** (Agent/Service) identity.
-- Understand the difference between **Identifier** and **Authentication**.
-- Establish strict **Grant Issuance Trust Boundaries** using authoritative registries.
-- Identify and mitigate **Confused Deputy** vulnerabilities arising from ambient authority.
-- Enforce secure multi-hop Identity Propagation through **Token Exchange** and **Parent-Child Delegation**.
-- Implement **monotonic down-scoping**, **audience restriction**, and **tenant binding** for downstream requests.
-- Track accurate end-to-end audit trails across service boundaries without logging secrets.
 
-## Why identity propagation matters
+By the end of this course, you can:
 
-In simple monolithic applications, resolving "who is acting" happens once at the front door. 
+1. Distinguish the end-user **principal**, authenticated **workload**, current **actor**, token **audience**, and target **resource**.
+2. Explain why an identifier or copied claim set is not authentication evidence.
+3. Issue authority only from provider-verified identity state and authoritative entitlement data.
+4. Exchange a grant at each service hop while monotonically narrowing operation, resource, audience, lifetime, tenant, and delegation depth.
+5. Prevent confused-deputy attacks, bearer-token replay, identity substitution, and ambient-authority fallback.
+6. Validate issuer, lifecycle, audience, tenant, actor, operation, resource, and lineage at the resource server.
+7. Contain an incident by revoking a grant lineage and verify that descendants stop working.
+8. Keep identity and grants out of model-controlled tool arguments when using the OpenAI Agents SDK.
+9. Evaluate both security and utility: correct blocks, unsafe disclosures, valid-work blocks, compliant success, and trace completeness.
 
-In agentic, multi-service architectures, a request often crosses several boundaries:
-1. The **User (Alice)** talks to the **Research Agent**.
-2. The **Research Agent** talks to the **Document Service**.
-3. The **Document Service** talks to the **Storage Service**.
+## Scenario and security outcome
 
-If downstream services only authenticate the *caller* (e.g., the Document Service authenticating to Storage), they lose the original context (Alice). If the Agent uses its own powerful infrastructure privileges to fulfill Alice's request, an attacker could trick the Agent into retrieving a document they don't own.
+Alice asks a research agent to read a document. The request crosses the research agent, document service, and storage service. Each workload has its own identity, but none of those workload identities proves that Alice may read the document.
 
-The central thesis of this course:
-> **Propagate identity context, not ambient authority.**
+The secure outcome is:
 
-## Identifier vs Authentication
+- the front door authenticates Alice;
+- the runtime authenticates each workload independently;
+- an issuer grants the research agent only Alice’s permitted operation and resource, for the document-service audience;
+- the document service validates that grant and exchanges it for a narrower storage-service grant;
+- storage authorizes the exact object and never falls back to its service privileges; and
+- every hop records the principal, actor, grant lineage, audience, resource, and decision without logging token material.
 
-A critical mistake in distributed systems is treating a known string (an identifier) as proof of identity (authentication).
+![Identity propagation trust boundaries](architecture.svg)
 
-- **Identifier**: `caller_id = "document-service"`
-- **Authentication evidence**: a provider-issued `AuthenticatedWorkload` object whose claims are derived from verified infrastructure state
+The editable geometry and accessibility description live in [`architecture-spec.json`](architecture-spec.json).
 
-An attacker who knows your internal architecture can easily construct a payload claiming to be `"document-service"`. Secure systems rely on infrastructure (like mTLS, SPIFFE/SPIRE, or Cloud Workload Identity) to authenticate the caller *before* the application logic runs.
+## Threat model
 
-In this simulation, `InfrastructureIdentityProvider` represents this trusted infrastructure context, and `ApplicationIdentityProvider` represents front-door user authentication (like Okta or Entra ID). Their `for_*` methods are test-fixture seams that stand in for trusted middleware injection; they are not request-facing login APIs. Verification uses canonical object identity so recreating the same public field values does not recreate authentication evidence.
+| Asset or boundary | Attacker capability | Failure mode | Required control | Lab evidence |
+|---|---|---|---|---|
+| Front-door principal | Copy visible IDs or submit another tenant | Principal/context substitution | Accept provider-issued context and derive claims from it | copied and substituted contexts are denied |
+| Workload-to-workload call | Claim an internal service name | Workload impersonation | Verify infrastructure identity before application authorization | copied workload objects are denied |
+| Delegation issuer | Request authority the user lacks | Privilege expansion | Resolve authoritative entitlements and enforce subset checks | operation/resource expansion tests |
+| Downstream resource server | Replay a valid token at another service | Audience confusion | Per-hop token exchange and exact audience validation | document grant is rejected by storage |
+| Intermediate service | Ask for broader or longer authority | Scope/time expansion | Monotonic operation, resource, tenant, and expiry attenuation | exchange tests and expiry clamp |
+| Long service chain | Re-delegate indefinitely | Authority-chain sprawl | Maximum delegation depth | third-hop exchange is denied |
+| Incident response | Continue using descendants after parent compromise | Incomplete containment | Stateful lineage revocation or equivalent introspection policy | parent and child become unusable |
+| Agent tool call | Put identity, tenant, audience, or grant in model arguments | Model-selected authority | Server-owned typed runtime context; minimal strict schema | SDK schema exposes only `document_id` |
+| Observability | Log access tokens or omit actors | Credential exposure or unattributable action | Log identifiers and decisions, never token material | trace-completeness evaluation |
 
-## Principal vs Workload vs Delegate
+The lab uses canonical Python objects as a deterministic seam for already-authenticated middleware. That is deliberately not a production authentication mechanism.
 
-Every request has at least two identities you must untangle:
+## Identity model: keep the nouns separate
 
-- **Principal**: The end-user or human on whose behalf the action is being performed (e.g., Alice).
-- **Workload Identity**: The software component making the request (e.g., `research-agent`).
-- **Delegate**: When a workload is granted permission to act for a principal, it becomes the delegate.
+| Term | Question answered | Lab example | Must come from |
+|---|---|---|---|
+| Principal / subject | On whose behalf? | `alice` | authenticated application session |
+| Workload identity | Which software instance is calling? | `document-service` | mTLS, SPIFFE/SPIRE, or cloud workload identity |
+| Delegate / actor | Which workload is exercising delegated authority? | `research-agent` then `document-service` | issuer-bound grant plus authenticated caller |
+| Audience / resource server | Which service may accept this credential? | `document-service`, then `storage-service` | issuer policy and exact resource indicator |
+| Tenant | Which isolation domain applies? | `acme` | verified identity and authoritative resource metadata |
+| Operation and resource | What precise effect is permitted? | `read` on `doc-101` | authoritative policy, narrowed at issuance and exchange |
 
-*Subject*, *Actor*, and *Delegate* are heavily overloaded terms in IAM. In this lab, we use:
-- **Principal** (End user)
-- **Delegate** (Agent/Workload acting for the user)
-- **DelegationGrant** (The bounded authority connecting them)
+An identifier such as `caller_id="document-service"` is just data. A reconstructed `AuthenticatedWorkload` with identical fields is still caller-created data. Authentication evidence must be established outside the model and before the authorization decision.
 
-## Grant Issuance Trust Boundary
+## Protocol anatomy and state of practice
 
-Delegation grants (like OAuth tokens) cannot be minted by arbitrary clients. If a caller could pass a customized `Principal` object into an issuer and receive a valid token, they could forge any authority they desire.
+RFC 8693 defines OAuth token exchange, including a subject token and an optional actor token. Its `act` claim represents the current actor and may retain prior actors as a nested history. RFC 8707 lets a client identify the protected resource and supports audience-restricted access tokens. RFC 9700 recommends audience-restricted and sender-constrained access tokens to reduce replay; RFC 8725 defines secure JWT validation practices.
 
-A secure issuer:
-1. Accepts provider-verified principal and workload contexts, not caller-supplied identity strings.
-2. Derives identifiers from those contexts and resolves authorization attributes against an **Authoritative Registry** (like Entra ID or Okta).
-3. Ensures requested authority is a valid subset of the principal's true authority.
+This lab is an instructional control model, not a complete implementation of those protocols. In particular, RFC 8693 does **not** automatically establish revocation linkage between exchanged tokens. The lab deliberately uses a stateful issuer and descendant lookup to teach one deployable containment strategy. A production design may instead use short lifetimes, token introspection, continuous access evaluation, sender constraints, or provider-specific revocation controls.
 
-> **Principal object != authenticated principal**
-> **workload ID != authenticated workload**
-> **grant object != verified delegation**
+| Standard, tool, or SDK | Relevant capability | Secure use here | Boundary or caveat |
+|---|---|---|---|
+| OAuth 2.0 Token Exchange (RFC 8693) | Exchange subject/actor credentials for a new token | Mint a separate grant for every resource-server hop | Protocol support and actor semantics vary by authorization server |
+| OAuth Resource Indicators (RFC 8707) | Name the intended protected resource | Use one exact audience per downstream grant | Multi-audience tokens increase the trust and replay surface |
+| OAuth 2.0 Security BCP (RFC 9700) | Current OAuth threat mitigations | Combine audience restriction with sender-constrained credentials | Bearer tokens remain replayable if stolen |
+| JWT BCP (RFC 8725) | Algorithm, issuer, audience, and claim validation | Use mutually exclusive validation rules for each token class | Parsing a signed JWT is not sufficient authorization |
+| Microsoft Entra OBO | Exchange a user token for a downstream API token | Map explicit downstream APIs and scopes | Never pass a middle-tier token to an unintended API |
+| Google Workload Identity Federation / STS | Exchange external workload credentials | Give workloads short-lived provider credentials | Workload federation does not convey end-user authorization by itself |
+| AWS STS `SourceIdentity` | Persist original identity attribution across role sessions | Improve CloudTrail attribution | Attribution is not a replacement for resource authorization |
+| SPIFFE Workload API | Deliver X.509/JWT workload identities after local attestation | Authenticate the calling workload independently of the user | A workload SVID proves workload identity, not user entitlement |
+| OpenAI Agents SDK | Typed runtime context and strict function tools | Keep principal and application services in `RunContextWrapper`; expose only `document_id` | The SDK owns the tool loop; application code still owns authentication and authorization |
 
-## Authentication Context Substitution
+## Secure issuance and exchange invariants
 
-A valid authentication context ID is not the same thing as a valid authentication. Because context IDs and identity claims can be copied, a secure system must verify provider-issued evidence and derive the trusted claims from it. Comparing caller-constructed values with a registry is not authentication.
+### 1. Issuance trust boundary
 
-If Bob logs in and receives `ctx-bob`, but then passes `principal_id=alice` along with his context, the system must reject it. The simulation also rejects a newly constructed `AuthenticatedPrincipal("bob", "ctx-bob")`: matching fields do not prove that trusted middleware issued that object.
-
-## Token-Claim Analogy
-
-In production, an authenticated session or signed workload token (e.g., JWTs, OIDC ID tokens, mTLS certificates, SPIFFE IDs, cloud workload credentials) binds identity claims *within* the signed credential. Applications should extract identity claims directly from the verified credential itself. 
-
-Applications must not verify a valid credential from one identity but then trust identity fields supplied independently outside the token (e.g., in a separate HTTP header or JSON payload).
-
-## Ambient Authority and the Confused Deputy
-
-When an agent authenticates to a downstream service using its own service credentials (e.g., its broad service account), it uses **ambient authority**. 
-
-If Alice asks the Research Agent to read `doc-secret`, and the Research Agent asks the Document Service using its own broad credentials, the Document Service will reply: *"Ah, the trusted Research Agent is asking for `doc-secret`. Allowed!"*
-
-This is the **Confused Deputy** vulnerability. The agent was tricked into using its higher privileges to bypass Alice's restrictions.
-
-## On-Behalf-Of Execution & No Fallback
-
-To fix this, services must distinguish between two execution modes:
-1. **Service work**: a trusted internal scheduler invokes a separate service-only entry point using infrastructure-authenticated workload identity plus a bounded, provider-issued service-job context.
-2. **Delegated work**: a request-facing entry point acts on behalf of a user and always requires a **Delegation Grant**.
-
-**CRITICAL INVARIANT:** If a delegated request fails (e.g., token is expired or unauthorized), the service must **never** fall back to using its ambient service-level privileges.
-
-The execution mode must not be a request parameter. This lab therefore exposes separate `get_document(...)` and `run_service_read(...)` methods; the delegated method has no switch that can select service authority. The service-only path verifies both the calling workload and the job context, then enforces the job's operation and resource scope.
-
-## Token Exchange and Parent-Child Delegation
-
-When the Document Service needs to call the Storage Service, it must not send the original token intended for the Document Service. That would be a replay vulnerability.
-
-Instead, the Document Service performs a **Token Exchange**:
-1. It presents the original `parent_grant` and its own `AuthenticatedWorkload`.
-2. The Issuer mints a `child_grant` specifically intended for the `storage-service`.
-
-This creates a **Parent-Child Delegation** chain, preserving the original Principal while shifting the Delegate and Audience at each hop.
-
-## Monotonic Scope Attenuation
-
-Delegated authority must never expand downstream. During Token Exchange, the issuer enforces monotonic down-scoping:
-- `child.allowed_operations ⊆ parent.allowed_operations`
-- `child.allowed_resources ⊆ parent.allowed_resources`
-
-## Monotonic Expiry
-
-Time is also a scope. A child token cannot outlive its parent.
-If a parent token has 5 minutes remaining, and a service requests a 60-minute downstream token, the issuer must either reject the request or **clamp** the expiry.
-
-In this simulation: `child_expiry = min(requested_expiry, parent_expiry)`
-
-## Audience Restriction & Tenant Binding
-
-- **Audience Restriction**: A token minted for `document-service` must be rejected if presented to `storage-service`.
-- **Tenant Binding**: Every layer must preserve the tenant. No amount of valid delegation within Tenant A (Acme) can authorize access to a resource owned by Tenant B (Globex).
-
-## Audit and Attribution
-
-An audit trail must capture *both* the principal and the delegate at every hop. 
-Never log raw access tokens, secrets, or authorization headers in the clear. Audit the *identifiers* (e.g., `grant_id` and `parent_grant_id`), the decision, and the exact lifecycle state (`forwarded`, `accessed`, `blocked`).
-
-## Architecture
-
-### Secure Delegation vs Confused Deputy
+The issuer accepts provider-verified principal and workload contexts, derives their IDs, resolves current authority from registries, and then checks:
 
 ```text
-# VULNERABLE: Ambient Authority
-Alice 
- ↓
-Agent 
- ↓ (Broad Service Credential)
-Document Service 
- ↓
-SECRET DOCUMENT Leaked!
-
-# SECURE: Identity Propagation
-Alice
- │
- ├── Principal registry resolution
- ↓
-Research Agent
- │
- ├── Authenticated workload context
- └── Delegated authority (Grant 1)
- ↓
-Document Service
- │
- ├── verify principal & delegate
- ├── Token Exchange (Grant 1 → Grant 2)
- ├── down-scope audience & expiry
- ↓
-Storage Service
- │
- ├── verify Grant 2
- ↓
-Authorized resource only
+requested operations ⊆ principal operations
+requested resources  ⊆ principal resources
+principal tenant = delegate tenant = audience tenant
+TTL > 0
 ```
 
-## Guided Lab & Exercises
+The client never submits a trusted principal ID, tenant, actor, issuer, or grant ID as independent authorization evidence.
 
-Launch the lab via the interactive notebook:
+### 2. Per-hop exchange
+
+The document service cannot replay a grant intended for itself at storage. It authenticates as the current workload, presents the parent grant to the issuer, and requests a child grant whose:
+
+```text
+principal(child) = principal(parent)
+tenant(child) = tenant(parent)
+operations(child) ⊆ operations(parent)
+resources(child)  ⊆ resources(parent)
+expires(child) ≤ expires(parent)
+depth(child) = depth(parent) + 1 ≤ configured maximum
+audience(child) = next resource server
+```
+
+### 3. Resource-server validation
+
+Before reading the object, the resource server validates:
+
+- issuer-owned authenticity or introspection result;
+- active lineage and revocation status;
+- `issued_at ≤ now < expires_at`;
+- authenticated caller equals the grant’s delegate;
+- exact expected audience;
+- resource metadata tenant equals grant tenant;
+- requested operation and resource are within scope; and
+- the request uses the delegated endpoint, with no service-mode switch or ambient fallback.
+
+For signed JWT deployments, also pin allowed algorithms, verify the correct key source, reject token-type confusion, validate issuer and audience, and apply different validation rules to token classes that are not interchangeable.
+
+### 4. Sender constraint and token handling
+
+Audience restriction limits where a credential should be accepted. Sender constraint limits who can present it. Production systems should evaluate mTLS- or DPoP-bound access tokens where supported, keep tokens out of logs and model context, use secure transport, and store only the minimum credential material for the minimum time.
+
+## Confused deputy and “no fallback”
+
+The deliberately unsafe baseline accepts a trusted service caller and reads through ambient authority. It demonstrates the leak, but is marked `DEMO-ONLY` and is not the secure application path.
+
+The secure delegated endpoint and the internal service-job endpoint are separate methods. Request data cannot select a `mode="service"`. If issuance, verification, exchange, or storage authorization fails, the delegated path ends with a denial; it never retries using service authority.
+
+## Lifecycle, revocation, and recovery
+
+The lab’s stateful token service records immutable grants plus mutable lifecycle state. `revoke_lineage(grant_id, reason)` revokes the selected grant and every issued descendant. Verification and further exchange fail after revocation.
+
+A production runbook should:
+
+1. identify the principal, current actor, root grant/session, descendants, affected resources, and time window;
+2. revoke or disable the smallest effective lineage and associated workload/session credentials;
+3. terminate in-flight work and deny retries under the old context;
+4. preserve audit evidence without preserving reusable secrets;
+5. re-authenticate the principal and workloads;
+6. re-authorize against current policy and resource state; and
+7. issue a new lineage with new identifiers—never silently resume the revoked chain.
+
+Fail closed if revocation or introspection state is unavailable. Document the resulting availability trade-off and alert on it.
+
+## Labs
+
+### Lab A — deterministic delegation controls
+
+Run the core simulation:
+
+```bash
+python3 curriculum/intermediate/01-identity-propagation/01_identity_propagation.py
+```
+
+Trace the legitimate Alice request, then inspect the denial reasons for forged contexts, audience mismatch, tenant mismatch, operation/resource expansion, expiry, missing delegation, and caller-selected service mode.
+
+### Lab B — lineage containment
+
+In the notebook, issue a parent grant, exchange it for a child, revoke the parent lineage, and assert that:
+
+- the revocation count includes both grants;
+- parent verification fails;
+- child verification fails; and
+- a revoked parent cannot be exchanged again.
+
+Then configure a depth of two and prove that a third delegation hop is rejected.
+
+### Lab C — credential-free OpenAI Agents SDK boundary
+
+```bash
+python3 curriculum/intermediate/01-identity-propagation/01_identity_propagation_sdk.py
+```
+
+The companion constructs `Agent[SDKRuntime]` and one `@function_tool(strict_mode=True)`. The generated schema exposes only a bounded `document_id`. Principal, tenant, workload, audience, grants, scopes, and correlation IDs remain in server-created runtime state. Direct dispatch exercises the real application boundary without a model call or API key.
+
+### Lab D — evaluation
+
+`evaluate_security_controls()` executes labelled allow and deny cases and returns:
+
+- `compliant_success_rate` — valid authorized work that succeeds;
+- `correct_block_rate` — labelled attacks or policy violations that are blocked;
+- `unsafe_disclosure_count` — denied cases that returned protected content;
+- `valid_work_block_count` — authorized cases incorrectly blocked; and
+- `trace_completeness_rate` — cases with attributable decision telemetry.
+
+Security and utility are both release criteria. A system that blocks everything has zero unsafe disclosures but is not production-ready.
+
+## Notebook
+
+Launch the guided lab from the repository root or from the course directory:
+
 ```bash
 jupyter notebook curriculum/intermediate/01-identity-propagation/01_identity_propagation.ipynb
 ```
 
-The lab is credential-free and uses synthetic data. The identity-provider factories simulate trusted infrastructure and application middleware. Production code must validate signed or sender-constrained credentials at the network boundary rather than using Python object identity.
+The setup cell discovers the repository root instead of assuming a notebook working directory. Cells include assertions so a failed security expectation stops execution.
 
-## Production Mapping
+## Validation
 
-While this lab uses a deterministic, in-memory `DelegationGrant` simulation, real-world systems use established protocols. 
+```bash
+pytest -q tests/test_identity_propagation.py tests/test_identity_propagation_sdk.py
+```
 
-**Note:** This simulation is a *teaching analogue*. Real token exchange protocols have additional issuer, subject-token, actor-token, trust, cryptographic signing, and policy semantics not fully modeled here.
+The focused suite covers authentication substitution, grant forgery, confused-deputy behavior, no-fallback routing, service-job isolation, monotonic exchange, exact expiry, maximum depth, lineage revocation, audit attribution, SDK schema minimization, safe dispatch, and evaluation metrics.
 
-| Teaching abstraction | Production concept |
-|---|---|
-| `PRINCIPAL_REGISTRY` | User Directory Metadata |
-| `ApplicationIdentityProvider` | Front-door IdP (Entra ID, Okta) / OIDC ID Token |
-| `InfrastructureIdentityProvider` | mTLS, SPIFFE/SPIRE, Cloud Workload Identity |
-| `DelegationGrant` | OAuth 2.0 Access Token / JWT / Macaroons |
-| Delegation Issuer | Authorization Server / Secure Token Service (STS) |
-| Audience | OAuth `aud` claim / Resource indicators |
-| Down-scoping | OAuth Scopes / Token Exchange (RFC 8693) |
-| Multi-hop delegation | On-Behalf-Of (OBO) flows / Token Exchange |
-| Resource Registry | Authoritative internal data service |
-| Audit event | SIEM / Security telemetry (Splunk, Datadog) |
+## Review checkpoint
+
+A model proposes a tool call containing `document_id`, `principal_id`, `tenant`, `audience`, and `scope`. Which fields may the tool schema accept?
+
+Only `document_id`. The trusted application must derive the principal, tenant, workload, audience, scope, delegation, and correlation ID from authenticated server-owned context and current policy.
 
 ## References
 
 - [RFC 8693 — OAuth 2.0 Token Exchange](https://www.rfc-editor.org/rfc/rfc8693.html)
 - [RFC 8707 — Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707.html)
 - [RFC 9700 — Best Current Practice for OAuth 2.0 Security](https://www.rfc-editor.org/rfc/rfc9700.html)
-- [SPIFFE overview](https://spiffe.io/docs/latest/spiffe-about/overview/)
-
-## Checkpoint
-
-An agent presents a valid token for `document-service` to `storage-service`.
-Should storage accept it? No. Storage must validate that it is the intended
-audience and require a separately issued, down-scoped grant for that hop.
+- [RFC 8725 — JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html)
+- [Microsoft identity platform authentication flows and OBO](https://learn.microsoft.com/en-us/entra/identity-platform/msal-authentication-flows)
+- [Google Cloud Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation)
+- [AWS IAM — Monitor and control actions with source identity](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_monitor.html)
+- [SPIFFE Workload API](https://spiffe.io/docs/latest/spiffe-specs/spiffe_workload_api/)
+- [OpenAI Agents SDK guide](https://developers.openai.com/api/docs/guides/agents/sdk)
 
 Previous: [Beginner 03 — Secure Research Agent](../../beginner/03-secure-research-agent/README.md).
 
 Next: [Intermediate 02 — MCP Gateway](../02-mcp-gateway/README.md).
 
-Focused continuation: [roadmap I03 — Identity and Delegated Authority](../../roadmap/intermediate/03-agent-identity-and-delegated-authority/README.md).
+Focused continuation: [Roadmap I03 — Identity and Delegated Authority](../../roadmap/intermediate/03-agent-identity-and-delegated-authority/README.md).

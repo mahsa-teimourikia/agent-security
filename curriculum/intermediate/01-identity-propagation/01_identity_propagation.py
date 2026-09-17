@@ -198,6 +198,17 @@ class DelegationGrant:
     issued_at: datetime
     expires_at: datetime
     issuer: str
+    delegation_depth: int = 1
+
+
+@dataclass
+class GrantRecord:
+    """Issuer-side lifecycle state for an otherwise immutable grant."""
+
+    grant: DelegationGrant
+    active: bool = True
+    revoked_at: Optional[datetime] = None
+    revocation_reason: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -216,6 +227,23 @@ class GrantIssueResult:
 class GrantExchangeResult:
     grant: Optional[DelegationGrant]
     reason: str
+
+
+@dataclass(frozen=True)
+class GrantRevocationResult:
+    revoked_count: int
+    reason: str
+
+
+@dataclass(frozen=True)
+class EvaluationReport:
+    """Metrics computed from labelled, executed authorization cases."""
+
+    compliant_success_rate: float
+    correct_block_rate: float
+    unsafe_disclosure_count: int
+    valid_work_block_count: int
+    trace_completeness_rate: float
 
 
 @dataclass
@@ -298,11 +326,14 @@ DOCUMENT_STORE: Dict[str, str] = {
 
 
 class DelegationService:
-    def __init__(self, clock_fn=lambda: datetime.now(timezone.utc)):
-        self._store: Dict[str, DelegationGrant] = {}
+    def __init__(self, clock_fn=lambda: datetime.now(timezone.utc), max_delegation_depth: int = 2):
+        if max_delegation_depth < 1:
+            raise ValueError("max_delegation_depth must be at least 1")
+        self._store: Dict[str, GrantRecord] = {}
         self._counter = 1
         self._clock_fn = clock_fn
         self.issuer = "acme-sts"
+        self.max_delegation_depth = max_delegation_depth
 
     def issue(
         self,
@@ -368,8 +399,9 @@ class DelegationService:
             issued_at=now,
             expires_at=now + timedelta(minutes=ttl_minutes),
             issuer=self.issuer,
+            delegation_depth=1,
         )
-        self._store[grant_id] = grant
+        self._store[grant_id] = GrantRecord(grant)
         return GrantIssueResult(grant, "success")
 
     def exchange(
@@ -399,14 +431,28 @@ class DelegationService:
             return GrantExchangeResult(None, "authenticated_workload_mismatch")
 
         # 1. Verify Parent Grant
-        if parent_grant.grant_id not in self._store or self._store[parent_grant.grant_id] != parent_grant:
+        parent_record = self._store.get(parent_grant.grant_id)
+        if not parent_record or parent_record.grant != parent_grant:
             return GrantExchangeResult(None, "unknown_parent_grant")
+
+        if not parent_record.active:
+            return GrantExchangeResult(None, "parent_revoked")
+
+        if now < parent_grant.issued_at:
+            return GrantExchangeResult(None, "parent_not_yet_valid")
 
         if now >= parent_grant.expires_at:
             return GrantExchangeResult(None, "parent_expired")
 
+        lineage = self._validate_lineage(parent_grant)
+        if not lineage.allowed:
+            return GrantExchangeResult(None, f"parent_{lineage.reason}")
+
         if parent_grant.audience != current_workload.workload_id:
             return GrantExchangeResult(None, "current_workload_not_audience")
+
+        if parent_grant.delegation_depth >= self.max_delegation_depth:
+            return GrantExchangeResult(None, "maximum_delegation_depth_exceeded")
 
         # 2. Validate Audience
         next_workload = WORKLOAD_REGISTRY.get(next_audience)
@@ -439,9 +485,66 @@ class DelegationService:
             issued_at=now,
             expires_at=child_expires_at,
             issuer=self.issuer,
+            delegation_depth=parent_grant.delegation_depth + 1,
         )
-        self._store[grant_id] = grant
+        self._store[grant_id] = GrantRecord(grant)
         return GrantExchangeResult(grant, "success")
+
+    def revoke_lineage(self, grant_id: str, reason: str) -> GrantRevocationResult:
+        """Revoke a grant and every issued descendant in this stateful teaching STS."""
+        if not reason.strip():
+            return GrantRevocationResult(0, "reason_required")
+        if grant_id not in self._store:
+            return GrantRevocationResult(0, "unknown_delegation")
+
+        now = self._clock_fn()
+        pending = [grant_id]
+        revoked = 0
+        while pending:
+            current_id = pending.pop()
+            record = self._store[current_id]
+            if record.active:
+                record.active = False
+                record.revoked_at = now
+                record.revocation_reason = reason
+                revoked += 1
+            pending.extend(
+                candidate_id
+                for candidate_id, candidate in self._store.items()
+                if candidate.grant.parent_grant_id == current_id
+            )
+        return GrantRevocationResult(revoked, "revoked")
+
+    def _validate_lineage(self, grant: DelegationGrant) -> AuthorizationDecision:
+        """Validate issuer-owned state for this grant and every ancestor."""
+        current = grant
+        seen: Set[str] = set()
+        while True:
+            if current.grant_id in seen:
+                return AuthorizationDecision(False, "lineage_cycle")
+            seen.add(current.grant_id)
+
+            record = self._store.get(current.grant_id)
+            if not record or record.grant != current:
+                return AuthorizationDecision(False, "unknown_delegation")
+            if current.issuer != self.issuer:
+                return AuthorizationDecision(False, "issuer_mismatch")
+            if not record.active:
+                return AuthorizationDecision(False, "revoked")
+            if current.parent_grant_id is None:
+                if current.delegation_depth != 1:
+                    return AuthorizationDecision(False, "invalid_delegation_depth")
+                return AuthorizationDecision(True, "active")
+
+            parent_record = self._store.get(current.parent_grant_id)
+            if not parent_record:
+                return AuthorizationDecision(False, "missing_parent")
+            parent = parent_record.grant
+            if current.delegation_depth != parent.delegation_depth + 1:
+                return AuthorizationDecision(False, "invalid_delegation_depth")
+            if current.principal_id != parent.principal_id or current.tenant != parent.tenant:
+                return AuthorizationDecision(False, "lineage_identity_mismatch")
+            current = parent
 
     def verify(
         self, grant: DelegationGrant, expected_delegate_id: str, expected_audience: str, expected_tenant: str, operation: str, resource_id: str
@@ -456,10 +559,18 @@ class DelegationService:
         now = self._clock_fn()
 
         # 1. Check authenticity
-        if grant.grant_id not in self._store or self._store[grant.grant_id] != grant:
+        record = self._store.get(grant.grant_id)
+        if not record or record.grant != grant:
             return AuthorizationDecision(False, "unknown_delegation")
 
-        # 2. Check Expiry (exact boundary)
+        lineage = self._validate_lineage(grant)
+        if not lineage.allowed:
+            return AuthorizationDecision(False, lineage.reason)
+
+        # 2. Check validity window (exact expiry boundary)
+        if now < grant.issued_at:
+            return AuthorizationDecision(False, "delegation_not_yet_valid")
+
         if now >= grant.expires_at:
             return AuthorizationDecision(False, "delegation_expired")
 
@@ -802,7 +913,7 @@ class ResearchAgent:
 
 
 class ResearchApplication:
-    """The public API Boundary"""
+    """Public delegated API boundary with server-issued request identifiers."""
 
     def __init__(
         self,
@@ -815,14 +926,28 @@ class ResearchApplication:
         self.ds = ds
         self.agent = ResearchAgent(doc_service, authenticated_agent, naive_service)
         self.audit = audit_sink or AuditSink()
+        self._request_counter = 1
 
-    def answer_naive(self, subject: str, document_id: str, correlation_id: str = "req-1") -> str:
+    def _new_correlation_id(self) -> str:
+        correlation_id = f"request-{self._request_counter}"
+        self._request_counter += 1
+        return correlation_id
+
+    def answer_naive(self, subject: Any, document_id: str, correlation_id: Optional[str] = None) -> str:
+        """DEMO-ONLY confused-deputy baseline. Never expose this path in production."""
+        correlation_id = correlation_id or self._new_correlation_id()
         res = self.agent.read_naive(document_id, correlation_id)
         if res:
             return f"Found document {document_id}: {res}"
         return "Not found."
 
-    def answer_secure(self, principal_context: AuthenticatedPrincipal, document_id: str, correlation_id: str = "req-1") -> ResearchResponse:
+    def answer_secure(
+        self,
+        principal_context: AuthenticatedPrincipal,
+        document_id: str,
+        correlation_id: Optional[str] = None,
+    ) -> ResearchResponse:
+        correlation_id = correlation_id or self._new_correlation_id()
         if not ApplicationIdentityProvider.verify(principal_context):
             pid = getattr(principal_context, "principal_id", "unknown")
             self.audit.record(
@@ -885,6 +1010,64 @@ class ResearchApplication:
         if res:
             return ResearchResponse("answered", f"Found document {document_id}: {res}", correlation_id)
         return ResearchResponse("insufficient_evidence", "I cannot answer this based on authorized available evidence.", correlation_id)
+
+
+def evaluate_security_controls() -> EvaluationReport:
+    """Execute labelled allow/deny cases and derive security and utility metrics."""
+    clock = lambda: datetime(2025, 1, 1, 12, 0, tzinfo=timezone.utc)
+    ds = DelegationService(clock_fn=clock)
+    audit = AuditSink()
+    storage = StorageService(ds, audit, InfrastructureIdentityProvider.for_storage_service())
+    documents = SecureDocumentService(
+        ds,
+        storage,
+        audit,
+        InfrastructureIdentityProvider.for_document_service(),
+    )
+    app = ResearchApplication(
+        ds,
+        documents,
+        InfrastructureIdentityProvider.for_research_agent(),
+        audit_sink=audit,
+    )
+
+    labelled_cases = (
+        ("allowed_alice_document", ApplicationIdentityProvider.for_alice(), "doc-101", True),
+        ("blocked_unowned_document", ApplicationIdentityProvider.for_alice(), "doc-secret", False),
+        ("blocked_cross_tenant", ApplicationIdentityProvider.for_mallory(), "doc-globex-01", False),
+    )
+    valid_total = blocked_total = valid_success = correct_blocks = unsafe_disclosures = 0
+    complete_traces = 0
+
+    for case_id, principal, resource_id, expected_allow in labelled_cases:
+        response = app.answer_secure(principal, resource_id, f"eval-{case_id}")
+        allowed = response.terminal_state == "answered"
+        events = [event for event in audit.events if event.correlation_id == f"eval-{case_id}"]
+        trace_complete = bool(events) and all(
+            event.correlation_id
+            and event.workload_id
+            and event.audience
+            and event.operation
+            and event.resource_id
+            and event.decision in {"ALLOW", "DENY"}
+            for event in events
+        )
+        complete_traces += int(trace_complete)
+        if expected_allow:
+            valid_total += 1
+            valid_success += int(allowed)
+        else:
+            blocked_total += 1
+            correct_blocks += int(not allowed)
+            unsafe_disclosures += int(allowed)
+
+    return EvaluationReport(
+        compliant_success_rate=valid_success / valid_total,
+        correct_block_rate=correct_blocks / blocked_total,
+        unsafe_disclosure_count=unsafe_disclosures,
+        valid_work_block_count=valid_total - valid_success,
+        trace_completeness_rate=complete_traces / len(labelled_cases),
+    )
 
 
 # ------------------------------------------------------------------------
