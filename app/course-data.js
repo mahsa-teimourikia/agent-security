@@ -24,11 +24,11 @@ export const publishedLessons = [
     correct: 1,
     explanation: "Detection and authentic provenance are risk signals, not authority. Trusted application policy must resolve current evidence and authorize the exact effect at the execution boundary.",
   }),
-  lesson("b3", "Beginner", "03", "Secure research agent", "Combine provenance, evidence ranking, narrow tools, and policy enforcement.", "Return traceable evidence while refusing unsafe capabilities and poisoned instructions.", "beginner/03-secure-research-agent", "03_secure_research_agent", {
-    prompt: "What makes a research answer auditable?",
-    options: ["A fluent explanation", "Stable evidence identifiers and policy receipts", "A larger context window"],
+  lesson("b3", "Beginner", "03", "Secure research agent", "Security-trim the corpus before ranking, then verify version-bound evidence before release.", "Return useful, traceable answers without ranking unauthorized, cross-tenant, or superseded records.", "beginner/03-secure-research-agent", "03_secure_research_agent", {
+    prompt: "When must tenant, sensitivity, and document-lifecycle policy constrain a secure retrieval query?",
+    options: ["After ranking, before generation", "Before any candidate is scored or ranked", "After the model drafts an answer"],
     correct: 1,
-    explanation: "Auditability comes from attributable evidence and observable policy decisions, not answer fluency.",
+    explanation: "Authorization before ranking prevents unauthorized records from entering model context or influencing counts, timing, facets, and ranking behavior.",
   }),
   lesson("i1", "Intermediate", "01", "Identity propagation", "Preserve user, workload, tenant, resource, operation, and delegated scope.", "Reject tenant swaps, audience confusion, and authority widening across service hops.", "intermediate/01-identity-propagation", "01_identity_propagation", {
     prompt: "A service receives both a signed principal and a tenant supplied in tool arguments. Which tenant is authoritative?",
