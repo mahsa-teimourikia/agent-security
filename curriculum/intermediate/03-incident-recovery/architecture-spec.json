@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "id": "agent-incident-recovery-lifecycle",
+  "title": "Agent incident recovery: verify every transition",
+  "purpose": "Show the trusted gates between a candidate alert, verified containment, an exact recovery proposal, single-use approval, and a reconciled external effect.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation-and-notebook",
+    "alt_text": "A candidate incident signal flows through detection admission, verified capability revocation, an exact recovery plan, a single-use approval gate, and a provider effect gate. Detection and effect decisions also feed privacy-aware audit evidence."
+  },
+  "canvas": {"width": 1600, "height": 820, "background": "#F7F9FC", "margin": 64, "grid": 8},
+  "layout": {"primary_flow": "left-to-right", "min_node_gap": 40, "min_layer_gap": 80, "node_padding": {"x": 20, "y": 16}},
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "signal": {"fill": "#E5F7F6", "stroke": "#16A3A5"},
+      "policy": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "proposal": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "action": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "audit": {"fill": "#FFFFFF", "stroke": "#52606D"}
+    }
+  },
+  "groups": [
+    {"id": "evidence", "label": "Evidence admission", "bounds": {"x": 64, "y": 168, "width": 464, "height": 360}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "control", "label": "Trusted recovery control plane", "bounds": {"x": 544, "y": 168, "width": 704, "height": 360}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "provider", "label": "External effect", "bounds": {"x": 1264, "y": 168, "width": 272, "height": 360}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "operations", "label": "Operations evidence", "bounds": {"x": 64, "y": 568, "width": 1472, "height": 168}, "fill": "#FFFFFF", "stroke": "#D7DEE8"}
+  ],
+  "nodes": [
+    {"id": "signal", "group": "evidence", "label": "Candidate alert", "subtitle": "detector · scope · evidence IDs", "type": "signal", "bounds": {"x": 88, "y": 280, "width": 200, "height": 136}, "padding": 16, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "detect", "group": "evidence", "label": "Detection gate", "subtitle": "source · tenant · severity · time", "type": "policy", "bounds": {"x": 320, "y": 280, "width": 184, "height": 136}, "padding": 16, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}, "audit": {"side": "bottom", "offset": 0.5}}},
+    {"id": "contain", "group": "control", "label": "Verified containment", "subtitle": "all revocations confirmed", "type": "action", "bounds": {"x": 568, "y": 280, "width": 200, "height": 136}, "padding": 16, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "plan", "group": "control", "label": "Exact recovery plan", "subtitle": "checkpoint · versions · capability", "type": "proposal", "bounds": {"x": 800, "y": 280, "width": 200, "height": 136}, "padding": 16, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "approve", "group": "control", "label": "Approval gate", "subtitle": "independent · bound · expiring · once", "type": "policy", "bounds": {"x": 1032, "y": 280, "width": 192, "height": 136}, "padding": 16, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "effect", "group": "provider", "label": "Effect gate", "subtitle": "reserve · execute · reconcile", "type": "action", "bounds": {"x": 1288, "y": 280, "width": 224, "height": 136}, "padding": 16, "ports": {"in": {"side": "left", "offset": 0.5}, "audit": {"side": "bottom", "offset": 0.5}}},
+    {"id": "audit", "group": "operations", "label": "Privacy-aware decision evidence", "subtitle": "run / operation IDs · phase · reason · policy version · hashes · terminal state", "type": "audit", "bounds": {"x": 440, "y": 616, "width": 720, "height": 88}, "padding": 16, "ports": {"detection": {"side": "top", "offset": 0.25}, "effect": {"side": "top", "offset": 0.75}}}
+  ],
+  "edges": [
+    {"id": "signal_to_detect", "from": {"node": "signal", "port": "out"}, "to": {"node": "detect", "port": "in"}, "label": "candidate signal", "kind": "primary", "route": [[288, 348], [320, 348]]},
+    {"id": "detect_to_contain", "from": {"node": "detect", "port": "out"}, "to": {"node": "contain", "port": "in"}, "label": "admitted evidence", "kind": "primary", "route": [[504, 348], [568, 348]]},
+    {"id": "contain_to_plan", "from": {"node": "contain", "port": "out"}, "to": {"node": "plan", "port": "in"}, "label": "revocation receipt", "kind": "primary", "route": [[768, 348], [800, 348]]},
+    {"id": "plan_to_approve", "from": {"node": "plan", "port": "out"}, "to": {"node": "approve", "port": "in"}, "label": "plan digest", "kind": "primary", "route": [[1000, 348], [1032, 348]]},
+    {"id": "approve_to_effect", "from": {"node": "approve", "port": "out"}, "to": {"node": "effect", "port": "in"}, "label": "narrow capability", "kind": "primary", "route": [[1224, 348], [1288, 348]]},
+    {"id": "detect_to_audit", "from": {"node": "detect", "port": "audit"}, "to": {"node": "audit", "port": "detection"}, "label": "decision", "kind": "audit", "route": [[412, 416], [412, 552], [620, 552], [620, 616]]},
+    {"id": "effect_to_audit", "from": {"node": "effect", "port": "audit"}, "to": {"node": "audit", "port": "effect"}, "label": "outcome", "kind": "audit", "route": [[1400, 416], [1400, 552], [980, 552], [980, 616]]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true},
+  "reproduce": "Render architecture.svg deterministically from these exact group, node, port, and orthogonal-edge coordinates."
+}
