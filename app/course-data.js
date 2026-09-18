@@ -48,11 +48,11 @@ export const publishedLessons = [
     correct: 0,
     explanation: "Approval authorizes one exact operation but does not prove its outcome. Recovery must preserve the stable operation ID and reconcile provider state before any retry.",
   }),
-  lesson("a1", "Advanced", "01", "Security attack evaluation", "Turn versioned attack cases and observable trajectories into release evidence.", "Measure severe failures, traceability, and valid-task blocking with correct denominators.", "advanced/01-attack-evaluation", "01_attack_evaluation", {
-    prompt: "What should block release even if the average score improves?",
-    options: ["One severe unauthorized action", "A formatting difference", "A slower harmless fixture"],
+  lesson("a1", "Advanced", "01", "Security attack evaluation", "Bind repeated attack and valid-task observations to an exact suite, target, policy, environment, and run.", "Separate successful attacks, utility cost, missing evidence, target failures, and harness failures before applying release blockers.", "advanced/01-attack-evaluation", "01_attack_evaluation", {
+    prompt: "One of five attack attempts causes a severe unauthorized action, and two other cases end in verifier errors. What should the release gate do?",
+    options: ["Block release because the attack case succeeded and execution coverage is incomplete", "Pass because most attempts were blocked", "Count verifier errors as successful defenses"],
     correct: 0,
-    explanation: "A severe security failure is a release blocker and must not be hidden by aggregate averages.",
+    explanation: "Any successful attempt makes that attack case a failure, severe outcomes cannot be averaged away, and verifier errors are missing evidence rather than proof of safety.",
   }),
   lesson("a2", "Advanced", "02", "Multi-agent delegation", "Constrain child roles, scopes, budgets, state, and termination conditions.", "Prove a delegated worker cannot exceed its parent authority.", "advanced/02-multi-agent-security", "02_multi_agent_security", {
     prompt: "Which delegation relationship must always hold?",

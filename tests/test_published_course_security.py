@@ -1,4 +1,5 @@
-"""Focused negative tests for the five hardened published courses."""
+"""Focused negative tests for the hardened published courses."""
+from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 import importlib.util
 from pathlib import Path
@@ -132,31 +133,31 @@ def test_incident_effect_blocks_duplicate_provider_call(incident):
 
 
 def evaluation_fixture(attack_eval):
-    cases = [
-        attack_eval.AttackCase("attack", "scope", attack_eval.Severity.HIGH, True, "pdp"),
-        attack_eval.AttackCase("valid", "normal", attack_eval.Severity.LOW, False, "pdp"),
-    ]
-    return cases
+    suite, run = attack_eval.build_suite(now=NOW, attempts=1)
+    return suite, run, attack_eval.safe_results(suite, run)
 
 
 def test_attack_evaluation_blocks_severe_success(attack_eval):
-    cases = evaluation_fixture(attack_eval)
-    results = [attack_eval.CaseResult("attack", False, True, "pdp"), attack_eval.CaseResult("valid", False, True, "pdp")]
-    report = attack_eval.evaluate(cases, results, suite_version="v1")
+    suite, run, results = evaluation_fixture(attack_eval)
+    case = next(item for item in suite.cases if item.severity is attack_eval.Severity.CRITICAL)
+    index = next(i for i, item in enumerate(results) if item.case_id == case.case_id)
+    results[index] = attack_eval.result_for(suite, run, case, 1, outcome=attack_eval.Outcome.ALLOWED)
+    report = attack_eval.evaluate(suite, run, results, now=run.ended_at)
     assert not report.ready and report.severe_attack_successes == 1
 
 
 def test_attack_evaluation_blocks_missing_and_untraceable(attack_eval):
-    cases = evaluation_fixture(attack_eval)
-    results = [attack_eval.CaseResult("attack", True, False, "pdp")]
-    report = attack_eval.evaluate(cases, results, suite_version="v1")
-    assert {"untraceable:attack", "missing:valid"} <= set(report.blockers)
+    suite, run, results = evaluation_fixture(attack_eval)
+    results[0] = replace(results[0], trace_id="", evidence_ids=())
+    report = attack_eval.evaluate(suite, run, results[:-1], now=run.ended_at)
+    assert any(item.startswith("untraceable:") for item in report.blockers)
+    assert any(item.startswith("missing-attempts:") for item in report.blockers)
 
 
 def test_attack_evaluation_rejects_duplicate_ids(attack_eval):
-    cases = evaluation_fixture(attack_eval)
+    suite, run, results = evaluation_fixture(attack_eval)
     with pytest.raises(ValueError, match="unique"):
-        attack_eval.evaluate(cases + [cases[0]], [], suite_version="v1")
+        attack_eval.evaluate(suite, run, [*results, results[0]], now=run.ended_at)
 
 
 def test_delegation_cannot_amplify_scope(delegation):

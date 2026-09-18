@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "id": "advanced-01-attack-evaluation",
+  "title": "Agent security attack-evaluation trust boundaries",
+  "purpose": "Show how versioned attack and valid-task cases become host-observed evidence, integrity-checked metrics, and a release decision.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation",
+    "alt_text": "A left-to-right evaluation architecture. Versioned suites and cases enter an isolated harness and target. A host verifier emits evidence to a binding gate, metrics, and a fail-closed release gate."
+  },
+  "canvas": {
+    "width": 1600,
+    "height": 900,
+    "background": "#F7F9FC",
+    "margin": 64,
+    "grid": 10
+  },
+  "layout": {
+    "primary_flow": "left-to-right",
+    "min_node_gap": 50,
+    "min_layer_gap": 60,
+    "node_padding": { "x": 24, "y": 16 }
+  },
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "suite": { "fill": "#E5F7F6", "stroke": "#16A3A5" },
+      "harness": { "fill": "#EAF1FF", "stroke": "#2F6BFF" },
+      "target": { "fill": "#F0EEFF", "stroke": "#7667E8" },
+      "gate": { "fill": "#FFF1DF", "stroke": "#F59E42" },
+      "operations": { "fill": "#FFFFFF", "stroke": "#D7DEE8" }
+    }
+  },
+  "groups": [
+    {
+      "id": "design",
+      "label": "Evaluation design · protected inputs",
+      "bounds": { "x": 64, "y": 150, "width": 396, "height": 660 },
+      "fill": "#FFFFFF",
+      "stroke": "#D7DEE8"
+    },
+    {
+      "id": "execution",
+      "label": "Isolated execution · untrusted target",
+      "bounds": { "x": 520, "y": 150, "width": 500, "height": 660 },
+      "fill": "#FFFFFF",
+      "stroke": "#D7DEE8"
+    },
+    {
+      "id": "decision",
+      "label": "Trusted evaluation and release",
+      "bounds": { "x": 1060, "y": 150, "width": 476, "height": 660 },
+      "fill": "#FFFFFF",
+      "stroke": "#D7DEE8"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "suite",
+      "group": "design",
+      "label": "Versioned suite manifest",
+      "subtitle": "target · policy · environment · digest",
+      "type": "suite",
+      "bounds": { "x": 104, "y": 220, "width": 316, "height": 104 },
+      "ports": {
+        "to_harness": { "side": "right", "offset": 0.48 },
+        "to_binding": { "side": "top", "offset": 0.5 }
+      }
+    },
+    {
+      "id": "attack_cases",
+      "group": "design",
+      "label": "Attack cases",
+      "subtitle": "families · severity · repeated attempts",
+      "type": "suite",
+      "bounds": { "x": 104, "y": 390, "width": 316, "height": 104 },
+      "ports": { "out": { "side": "right", "offset": 0.5 } }
+    },
+    {
+      "id": "valid_cases",
+      "group": "design",
+      "label": "Valid-task cases",
+      "subtitle": "utility and false-block population",
+      "type": "suite",
+      "bounds": { "x": 104, "y": 560, "width": 316, "height": 104 },
+      "ports": { "out": { "side": "right", "offset": 0.5 } }
+    },
+    {
+      "id": "harness",
+      "group": "execution",
+      "label": "Evaluation harness",
+      "subtitle": "Promptfoo or another runner",
+      "type": "harness",
+      "bounds": { "x": 570, "y": 300, "width": 190, "height": 130 },
+      "ports": {
+        "suite": { "side": "left", "offset": 0.2 },
+        "attacks": { "side": "left", "offset": 0.5 },
+        "valid": { "side": "left", "offset": 0.8 },
+        "target": { "side": "right", "offset": 0.5 },
+        "verifier": { "side": "bottom", "offset": 0.35 }
+      }
+    },
+    {
+      "id": "target",
+      "group": "execution",
+      "label": "Target agent",
+      "subtitle": "model · tools · application controls",
+      "type": "target",
+      "bounds": { "x": 800, "y": 300, "width": 180, "height": 130 },
+      "ports": {
+        "in": { "side": "left", "offset": 0.5 },
+        "observed": { "side": "bottom", "offset": 0.5 }
+      }
+    },
+    {
+      "id": "verifier",
+      "group": "execution",
+      "label": "Host-side verifier",
+      "subtitle": "traces · receipts · effects · errors",
+      "type": "harness",
+      "bounds": { "x": 650, "y": 550, "width": 280, "height": 120 },
+      "ports": {
+        "harness": { "side": "top", "offset": 0.22 },
+        "target": { "side": "top", "offset": 0.82 },
+        "out": { "side": "right", "offset": 0.5 }
+      }
+    },
+    {
+      "id": "binding_gate",
+      "group": "decision",
+      "label": "Binding + integrity gate",
+      "subtitle": "case · run · versions · time · evidence",
+      "type": "gate",
+      "bounds": { "x": 1110, "y": 300, "width": 340, "height": 120 },
+      "ports": {
+        "evidence": { "side": "left", "offset": 0.5 },
+        "manifest": { "side": "top", "offset": 0.5 },
+        "out": { "side": "bottom", "offset": 0.5 }
+      }
+    },
+    {
+      "id": "metrics",
+      "group": "decision",
+      "label": "Metrics + slices",
+      "subtitle": "attack · utility · coverage · errors",
+      "type": "harness",
+      "bounds": { "x": 1110, "y": 500, "width": 340, "height": 110 },
+      "ports": {
+        "in": { "side": "top", "offset": 0.5 },
+        "out": { "side": "bottom", "offset": 0.5 }
+      }
+    },
+    {
+      "id": "release_gate",
+      "group": "decision",
+      "label": "Fail-closed release gate",
+      "subtitle": "severe failures never averaged away",
+      "type": "gate",
+      "bounds": { "x": 1110, "y": 690, "width": 340, "height": 90 },
+      "ports": { "in": { "side": "top", "offset": 0.5 } }
+    }
+  ],
+  "edges": [
+    {
+      "id": "suite_to_harness",
+      "from": { "node": "suite", "port": "to_harness" },
+      "to": { "node": "harness", "port": "suite" },
+      "label": "run contract",
+      "kind": "primary",
+      "route": [[420, 270], [500, 270], [500, 326], [570, 326]]
+    },
+    {
+      "id": "attacks_to_harness",
+      "from": { "node": "attack_cases", "port": "out" },
+      "to": { "node": "harness", "port": "attacks" },
+      "label": "adversarial rows",
+      "kind": "primary",
+      "route": [[420, 442], [490, 442], [490, 365], [570, 365]]
+    },
+    {
+      "id": "valid_to_harness",
+      "from": { "node": "valid_cases", "port": "out" },
+      "to": { "node": "harness", "port": "valid" },
+      "label": "valid rows",
+      "kind": "primary",
+      "route": [[420, 612], [500, 612], [500, 404], [570, 404]]
+    },
+    {
+      "id": "harness_to_target",
+      "from": { "node": "harness", "port": "target" },
+      "to": { "node": "target", "port": "in" },
+      "kind": "primary",
+      "route": [[760, 365], [800, 365]]
+    },
+    {
+      "id": "harness_to_verifier",
+      "from": { "node": "harness", "port": "verifier" },
+      "to": { "node": "verifier", "port": "harness" },
+      "label": "runner state",
+      "kind": "secondary",
+      "route": [[637, 430], [637, 500], [712, 500], [712, 550]]
+    },
+    {
+      "id": "target_to_verifier",
+      "from": { "node": "target", "port": "observed" },
+      "to": { "node": "verifier", "port": "target" },
+      "label": "host-observed behavior",
+      "kind": "primary",
+      "route": [[890, 430], [890, 510], [880, 510], [880, 550]]
+    },
+    {
+      "id": "verifier_to_binding",
+      "from": { "node": "verifier", "port": "out" },
+      "to": { "node": "binding_gate", "port": "evidence" },
+      "label": "bounded evidence",
+      "kind": "primary",
+      "route": [[930, 610], [1030, 610], [1030, 360], [1110, 360]]
+    },
+    {
+      "id": "manifest_to_binding",
+      "from": { "node": "suite", "port": "to_binding" },
+      "to": { "node": "binding_gate", "port": "manifest" },
+      "label": "manifest digest",
+      "kind": "secondary",
+      "route": [[262, 220], [262, 205], [1280, 205], [1280, 300]]
+    },
+    {
+      "id": "binding_to_metrics",
+      "from": { "node": "binding_gate", "port": "out" },
+      "to": { "node": "metrics", "port": "in" },
+      "label": "admitted results",
+      "kind": "primary",
+      "route": [[1280, 420], [1280, 500]]
+    },
+    {
+      "id": "metrics_to_release",
+      "from": { "node": "metrics", "port": "out" },
+      "to": { "node": "release_gate", "port": "in" },
+      "label": "explicit blockers",
+      "kind": "primary",
+      "route": [[1280, 610], [1280, 690]]
+    }
+  ],
+  "validation": {
+    "no_overlaps": true,
+    "route_around_nodes": true,
+    "min_text_padding": 16,
+    "min_connector_clearance": 12,
+    "verify_port_attachment": true,
+    "verify_contrast": true
+  },
+  "reproduction": {
+    "renderer": "Deterministic SVG authored from the coordinates, ports, routes, labels, and colors in this specification.",
+    "source": "architecture-spec.json"
+  }
+}

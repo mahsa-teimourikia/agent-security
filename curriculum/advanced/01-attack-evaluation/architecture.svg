@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Agent security attack-evaluation trust boundaries</title>
+  <desc id="desc">A left-to-right evaluation architecture. Versioned suites and cases enter an isolated harness and target. A host verifier emits evidence to a binding gate, metrics, and a fail-closed release gate.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#16324F" flood-opacity="0.10"/></filter>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F6BFF"/></marker>
+    <marker id="arrow-slate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#52606D"/></marker>
+    <style>
+      .title{font:700 30px Inter,Arial,sans-serif;fill:#16324F}.subtitle{font:400 16px Inter,Arial,sans-serif;fill:#52606D}.group-label{font:700 17px Inter,Arial,sans-serif;fill:#16324F}.node-title{font:700 18px Inter,Arial,sans-serif;fill:#16324F}.node-sub{font:400 14px Inter,Arial,sans-serif;fill:#52606D}.edge-label{font:600 13px Inter,Arial,sans-serif;fill:#52606D}.edge{fill:none;stroke:#2F6BFF;stroke-width:2.3;stroke-linejoin:round;stroke-linecap:round;marker-end:url(#arrow-blue)}.edge-secondary{fill:none;stroke:#52606D;stroke-width:1.8;stroke-dasharray:7 6;stroke-linejoin:round;stroke-linecap:round;marker-end:url(#arrow-slate)}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#F7F9FC"/>
+  <text x="64" y="72" class="title">Agent security attack-evaluation trust boundaries</text>
+  <text x="64" y="104" class="subtitle">The target produces behavior. Trusted host evidence and deterministic policy decide release readiness.</text>
+
+  <g id="groups">
+    <rect x="64" y="150" width="396" height="660" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+    <text x="88" y="186" class="group-label">Evaluation design · protected inputs</text>
+    <rect x="520" y="150" width="500" height="660" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+    <text x="544" y="186" class="group-label">Isolated execution · untrusted target</text>
+    <rect x="1060" y="150" width="476" height="660" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+    <text x="1084" y="186" class="group-label">Trusted evaluation and release</text>
+  </g>
+
+  <g id="edges">
+    <path class="edge" d="M420 270 H500 V326 H570"/>
+    <rect x="438" y="251" width="92" height="22" rx="6" fill="#F7F9FC"/><text x="446" y="267" class="edge-label">run contract</text>
+    <path class="edge" d="M420 442 H490 V365 H570"/>
+    <rect x="430" y="423" width="112" height="22" rx="6" fill="#F7F9FC"/><text x="438" y="439" class="edge-label">adversarial rows</text>
+    <path class="edge" d="M420 612 H500 V404 H570"/>
+    <rect x="429" y="593" width="82" height="22" rx="6" fill="#F7F9FC"/><text x="437" y="609" class="edge-label">valid rows</text>
+    <path class="edge" d="M760 365 H800"/>
+    <path class="edge-secondary" d="M637 430 V500 H712 V550"/>
+    <rect x="643" y="477" width="91" height="22" rx="6" fill="#F7F9FC"/><text x="651" y="493" class="edge-label">runner state</text>
+    <path class="edge" d="M890 430 V510 H880 V550"/>
+    <rect x="811" y="477" width="157" height="22" rx="6" fill="#F7F9FC"/><text x="819" y="493" class="edge-label">host-observed behavior</text>
+    <path class="edge" d="M930 610 H1030 V360 H1110"/>
+    <rect x="944" y="585" width="126" height="22" rx="6" fill="#F7F9FC"/><text x="952" y="601" class="edge-label">bounded evidence</text>
+    <path class="edge-secondary" d="M262 220 V205 H1280 V300"/>
+    <rect x="860" y="194" width="120" height="22" rx="6" fill="#F7F9FC"/><text x="868" y="210" class="edge-label">manifest digest</text>
+    <path class="edge" d="M1280 420 V500"/>
+    <rect x="1291" y="449" width="123" height="22" rx="6" fill="#F7F9FC"/><text x="1299" y="465" class="edge-label">admitted results</text>
+    <path class="edge" d="M1280 610 V690"/>
+    <rect x="1291" y="639" width="117" height="22" rx="6" fill="#F7F9FC"/><text x="1299" y="655" class="edge-label">explicit blockers</text>
+  </g>
+
+  <g id="nodes" filter="url(#shadow)">
+    <g><rect x="104" y="220" width="316" height="104" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/><text x="262" y="260" text-anchor="middle" class="node-title">Versioned suite manifest</text><text x="262" y="286" text-anchor="middle" class="node-sub">target · policy · environment · digest</text></g>
+    <g><rect x="104" y="390" width="316" height="104" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/><text x="262" y="430" text-anchor="middle" class="node-title">Attack cases</text><text x="262" y="456" text-anchor="middle" class="node-sub">families · severity · repeated attempts</text></g>
+    <g><rect x="104" y="560" width="316" height="104" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/><text x="262" y="600" text-anchor="middle" class="node-title">Valid-task cases</text><text x="262" y="626" text-anchor="middle" class="node-sub">utility and false-block population</text></g>
+    <g><rect x="570" y="300" width="190" height="130" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/><text x="665" y="353" text-anchor="middle" class="node-title">Evaluation harness</text><text x="665" y="381" text-anchor="middle" class="node-sub">Promptfoo or</text><text x="665" y="402" text-anchor="middle" class="node-sub">another runner</text></g>
+    <g><rect x="800" y="300" width="180" height="130" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/><text x="890" y="353" text-anchor="middle" class="node-title">Target agent</text><text x="890" y="381" text-anchor="middle" class="node-sub">model · tools</text><text x="890" y="402" text-anchor="middle" class="node-sub">application controls</text></g>
+    <g><rect x="650" y="550" width="280" height="120" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/><text x="790" y="596" text-anchor="middle" class="node-title">Host-side verifier</text><text x="790" y="624" text-anchor="middle" class="node-sub">traces · receipts · effects · errors</text></g>
+    <g><rect x="1110" y="300" width="340" height="120" rx="14" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/><text x="1280" y="346" text-anchor="middle" class="node-title">Binding + integrity gate</text><text x="1280" y="374" text-anchor="middle" class="node-sub">case · run · versions · time · evidence</text></g>
+    <g><rect x="1110" y="500" width="340" height="110" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/><text x="1280" y="543" text-anchor="middle" class="node-title">Metrics + slices</text><text x="1280" y="571" text-anchor="middle" class="node-sub">attack · utility · coverage · errors</text></g>
+    <g><rect x="1110" y="690" width="340" height="90" rx="14" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/><text x="1280" y="727" text-anchor="middle" class="node-title">Fail-closed release gate</text><text x="1280" y="753" text-anchor="middle" class="node-sub">severe failures never averaged away</text></g>
+  </g>
+
+  <g id="legend">
+    <rect x="64" y="838" width="1472" height="38" rx="10" fill="#FFFFFF" stroke="#D7DEE8"/>
+    <circle cx="94" cy="857" r="7" fill="#16A3A5"/><text x="109" y="862" class="node-sub">protected suite</text>
+    <circle cx="256" cy="857" r="7" fill="#2F6BFF"/><text x="271" y="862" class="node-sub">trusted harness / verifier</text>
+    <circle cx="492" cy="857" r="7" fill="#7667E8"/><text x="507" y="862" class="node-sub">untrusted target behavior</text>
+    <circle cx="744" cy="857" r="7" fill="#F59E42"/><text x="759" y="862" class="node-sub">release-critical gate</text>
+    <text x="1478" y="862" text-anchor="end" class="node-sub">Dashed = integrity/control binding · Solid = runtime evidence flow</text>
+  </g>
+</svg>
