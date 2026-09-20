@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Secure multi-agent delegation boundary</title>
+  <desc id="desc">A supervisor proposes an SDK handoff. A trusted identity gateway and delegation service issue a narrow envelope to an authenticated worker. The execution boundary rechecks current policy, budget, revocation, and result provenance before admitting an artifact.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,4 L0,8 z" fill="#16324F"/>
+    </marker>
+    <style>
+      .title{font:700 30px Inter,Arial,sans-serif;fill:#16324F}.subtitle{font:400 16px Inter,Arial,sans-serif;fill:#52606D}
+      .group-label{font:700 17px Inter,Arial,sans-serif;fill:#16324F}.node-title{font:700 18px Inter,Arial,sans-serif;fill:#16324F}
+      .node-sub{font:400 14px Inter,Arial,sans-serif;fill:#52606D}.edge-label{font:600 13px Inter,Arial,sans-serif;fill:#52606D}
+      .edge{fill:none;stroke:#16324F;stroke-width:2.2;marker-end:url(#arrow)}.secondary{stroke:#7667E8;stroke-dasharray:7 5}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#F7F9FC"/>
+  <text x="64" y="55" class="title">Secure multi-agent delegation boundary</text>
+  <text x="64" y="82" class="subtitle">Routing proposes. Trusted application code authenticates, attenuates, authorizes, admits, and records.</text>
+
+  <rect x="64" y="160" width="400" height="580" rx="18" fill="#FBFAFF" stroke="#D7DEE8" stroke-width="2"/>
+  <text x="88" y="194" class="group-label">Untrusted reasoning and framework routing</text>
+  <rect x="520" y="90" width="650" height="720" rx="18" fill="#F8FBFF" stroke="#2F6BFF" stroke-width="2"/>
+  <text x="544" y="124" class="group-label">Trusted application control plane</text>
+  <rect x="1226" y="160" width="310" height="580" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+  <text x="1250" y="194" class="group-label">Authenticated child workload</text>
+
+  <g>
+    <rect x="112" y="220" width="280" height="110" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+    <text x="252" y="266" text-anchor="middle" class="node-title">Supervisor model</text>
+    <text x="252" y="294" text-anchor="middle" class="node-sub">Proposes a specialist</text>
+  </g>
+  <g>
+    <rect x="112" y="460" width="280" height="110" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+    <text x="252" y="506" text-anchor="middle" class="node-title">SDK handoff</text>
+    <text x="252" y="534" text-anchor="middle" class="node-sub">Typed reason + filtered history</text>
+  </g>
+  <g>
+    <rect x="568" y="190" width="240" height="110" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+    <text x="688" y="236" text-anchor="middle" class="node-title">Identity gateway</text>
+    <text x="688" y="264" text-anchor="middle" class="node-sub">Parent + workload context</text>
+  </g>
+  <g>
+    <rect x="872" y="190" width="250" height="130" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+    <text x="997" y="244" text-anchor="middle" class="node-title">Delegation service</text>
+    <text x="997" y="274" text-anchor="middle" class="node-sub">Attenuate · allocate · bind</text>
+  </g>
+  <g>
+    <rect x="568" y="460" width="240" height="120" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+    <text x="688" y="510" text-anchor="middle" class="node-title">Current policy + revocation</text>
+    <text x="688" y="540" text-anchor="middle" class="node-sub">Version and full lineage</text>
+  </g>
+  <g>
+    <rect x="872" y="460" width="250" height="140" rx="14" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/>
+    <text x="997" y="514" text-anchor="middle" class="node-title">Execution boundary</text>
+    <text x="997" y="544" text-anchor="middle" class="node-sub">Atomic budget · replay</text>
+    <text x="997" y="568" text-anchor="middle" class="node-sub">Result checks</text>
+  </g>
+  <g>
+    <rect x="872" y="690" width="250" height="80" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+    <text x="997" y="723" text-anchor="middle" class="node-title">Admitted artifact + receipt</text>
+    <text x="997" y="750" text-anchor="middle" class="node-sub">Bound IDs, evidence, digest</text>
+  </g>
+  <g>
+    <rect x="1260" y="250" width="240" height="110" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+    <text x="1380" y="296" text-anchor="middle" class="node-title">Researcher workload</text>
+    <text x="1380" y="324" text-anchor="middle" class="node-sub">Envelope-bound identity</text>
+  </g>
+  <g>
+    <rect x="1260" y="500" width="240" height="110" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+    <text x="1380" y="546" text-anchor="middle" class="node-title">Untrusted result candidate</text>
+    <text x="1380" y="574" text-anchor="middle" class="node-sub">Content + claimed provenance</text>
+  </g>
+
+  <path class="edge" d="M808 245 H840 V236 H872"/>
+  <rect x="807" y="207" width="132" height="22" rx="5" fill="#F7F9FC"/><text x="873" y="222" text-anchor="middle" class="edge-label">authenticated authority</text>
+  <path class="edge secondary" d="M252 330 V460"/>
+  <rect x="190" y="382" width="124" height="22" rx="5" fill="#FBFAFF"/><text x="252" y="397" text-anchor="middle" class="edge-label">route proposal</text>
+  <path class="edge secondary" d="M392 515 H488 V392 H840 V284 H872"/>
+  <rect x="570" y="365" width="136" height="22" rx="5" fill="#F7F9FC"/><text x="638" y="380" text-anchor="middle" class="edge-label">bounded metadata</text>
+  <path class="edge" d="M1122 255 H1192 V305 H1260"/>
+  <rect x="1138" y="268" width="122" height="22" rx="5" fill="#F7F9FC"/><text x="1199" y="283" text-anchor="middle" class="edge-label">narrow envelope</text>
+  <path class="edge" d="M997 320 V460"/>
+  <rect x="1008" y="376" width="104" height="22" rx="5" fill="#F7F9FC"/><text x="1060" y="391" text-anchor="middle" class="edge-label">verified grant</text>
+  <path class="edge" d="M808 520 H872"/>
+  <rect x="798" y="486" width="98" height="22" rx="5" fill="#F7F9FC"/><text x="847" y="501" text-anchor="middle" class="edge-label">current state</text>
+  <path class="edge secondary" d="M1380 360 V500"/>
+  <rect x="1392" y="418" width="112" height="22" rx="5" fill="#FFFFFF"/><text x="1448" y="433" text-anchor="middle" class="edge-label">untrusted output</text>
+  <path class="edge" d="M1260 555 H1122 V530"/>
+  <rect x="1128" y="564" width="148" height="22" rx="5" fill="#F7F9FC"/><text x="1202" y="579" text-anchor="middle" class="edge-label">validate before admission</text>
+  <path class="edge" d="M997 600 V690"/>
+  <rect x="1008" y="632" width="106" height="22" rx="5" fill="#F7F9FC"/><text x="1061" y="647" text-anchor="middle" class="edge-label">allow + receipt</text>
+
+  <g transform="translate(64 842)">
+    <rect width="1472" height="34" rx="8" fill="#FFFFFF" stroke="#D7DEE8"/>
+    <circle cx="24" cy="17" r="6" fill="#7667E8"/><text x="38" y="22" class="node-sub">model/framework</text>
+    <circle cx="190" cy="17" r="6" fill="#2F6BFF"/><text x="204" y="22" class="node-sub">trusted control</text>
+    <circle cx="348" cy="17" r="6" fill="#F59E42"/><text x="362" y="22" class="node-sub">effect boundary</text>
+    <circle cx="515" cy="17" r="6" fill="#16A3A5"/><text x="529" y="22" class="node-sub">data/artifact</text>
+    <text x="1446" y="22" text-anchor="end" class="node-sub">Envelope is a ceiling; current application policy authorizes each use.</text>
+  </g>
+</svg>

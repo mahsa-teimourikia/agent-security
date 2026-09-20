@@ -54,11 +54,11 @@ export const publishedLessons = [
     correct: 0,
     explanation: "Any successful attempt makes that attack case a failure, severe outcomes cannot be averaged away, and verifier errors are missing evidence rather than proof of safety.",
   }),
-  lesson("a2", "Advanced", "02", "Multi-agent delegation", "Constrain child roles, scopes, budgets, state, and termination conditions.", "Prove a delegated worker cannot exceed its parent authority.", "advanced/02-multi-agent-security", "02_multi_agent_security", {
-    prompt: "Which delegation relationship must always hold?",
-    options: ["Child authority contains parent authority", "Child authority is a subset of parent authority", "All agents share credentials"],
-    correct: 1,
-    explanation: "Delegation attenuates authority; it must never amplify the parent’s capabilities.",
+  lesson("a2", "Advanced", "02", "Multi-agent delegation", "Bind each handoff to authenticated identity, audience, resource, lineage, policy, budget, and a typed result contract.", "Prove framework routing cannot widen authority and that concurrent retries, revocation, and result admission fail closed.", "advanced/02-multi-agent-security", "02_multi_agent_security", {
+    prompt: "An SDK validates a handoff payload, but it requests a resource outside the parent grant and presents an envelope from an older policy version. What should the execution boundary do?",
+    options: ["Deny and require a new, current, attenuated delegation", "Trust the typed SDK payload", "Let the child remove the extra resource"],
+    correct: 0,
+    explanation: "Routing and schema validation do not grant authority. Trusted application code must enforce resource attenuation and current policy before transfer or effect.",
   }),
   lesson("a3", "Advanced", "03", "Production readiness", "Bind governance, ownership, rollback drills, and attack results into a release gate.", "Issue an evidence-based production decision with named residual-risk owners.", "advanced/03-production-gate", "03_production_gate", {
     prompt: "Which evidence is required before granting production autonomy?",
