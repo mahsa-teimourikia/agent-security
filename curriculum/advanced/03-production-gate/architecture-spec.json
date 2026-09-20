@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "id": "advanced-03-evidence-bound-release",
+  "title": "Evidence-bound production release",
+  "purpose": "Show how authenticated evidence and accountable risk acceptance become a release decision, then a separate single-use deployment authorization.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation",
+    "alt_text": "An immutable release candidate, attested evidence, and signed risk acceptance enter a trusted release control plane. The gate validates a versioned policy and emits a bound decision. An independent approver then issues a short-lived authorization that a deployment boundary consumes once."
+  },
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC", "margin": 64, "grid": 8},
+  "layout": {"primary_flow": "left-to-right then top-to-bottom", "min_node_gap": 50, "min_layer_gap": 80, "node_padding": {"x": 24, "y": 18}},
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "trusted": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "human": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "data": {"fill": "#E5F7F6", "stroke": "#16A3A5"},
+      "action": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "operations": {"fill": "#FFFFFF", "stroke": "#D7DEE8"}
+    }
+  },
+  "groups": [
+    {"id": "evidence_plane", "label": "Release inputs", "bounds": {"x": 64, "y": 150, "width": 430, "height": 600}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "control_plane", "label": "Trusted release control plane", "bounds": {"x": 544, "y": 110, "width": 600, "height": 650}, "fill": "#F8FBFF", "stroke": "#2F6BFF"},
+    {"id": "deployment_plane", "label": "Independent deployment boundary", "bounds": {"x": 1190, "y": 150, "width": 346, "height": 600}, "fill": "#FFFFFF", "stroke": "#D7DEE8"}
+  ],
+  "nodes": [
+    {"id": "candidate", "group": "evidence_plane", "label": "Immutable release candidate", "subtitle": "Digest · versions · tenant · environment", "type": "data", "bounds": {"x": 112, "y": 390, "width": 300, "height": 90}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "evidence", "group": "evidence_plane", "label": "Attested evidence dossier", "subtitle": "Typed results · producer · payload digest", "type": "data", "bounds": {"x": 112, "y": 220, "width": 300, "height": 100}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "risk", "group": "evidence_plane", "label": "Signed risk acceptance", "subtitle": "Named owner · approver · expiry", "type": "human", "bounds": {"x": 112, "y": 560, "width": 300, "height": 100}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "registry", "group": "control_plane", "label": "Evidence registry", "subtitle": "Producer identity + integrity", "type": "trusted", "bounds": {"x": 592, "y": 220, "width": 220, "height": 100}, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "bottom", "offset": 0.5}}},
+    {"id": "policy", "group": "control_plane", "label": "Versioned release policy", "subtitle": "Required kinds · freshness · thresholds", "type": "trusted", "bounds": {"x": 880, "y": 220, "width": 210, "height": 100}, "ports": {"out": {"side": "bottom", "offset": 0.5}}},
+    {"id": "gate", "group": "control_plane", "label": "Release gate", "subtitle": "Admit · bind · classify · decide", "type": "action", "bounds": {"x": 720, "y": 400, "width": 300, "height": 130}, "ports": {"candidate": {"side": "left", "offset": 0.4}, "risk": {"side": "left", "offset": 0.8}, "registry": {"side": "top", "offset": 0.25}, "policy": {"side": "top", "offset": 0.75}, "out": {"side": "bottom", "offset": 0.5}}},
+    {"id": "decision", "group": "control_plane", "label": "Signed decision receipt", "subtitle": "READY · BLOCKED · INCOMPLETE", "type": "data", "bounds": {"x": 720, "y": 620, "width": 300, "height": 90}, "ports": {"in": {"side": "top", "offset": 0.5}, "approval": {"side": "right", "offset": 0.4}, "binding": {"side": "right", "offset": 0.8}}},
+    {"id": "approver", "group": "deployment_plane", "label": "Independent approver", "subtitle": "Current role · no self-review", "type": "human", "bounds": {"x": 1230, "y": 240, "width": 260, "height": 100}, "ports": {"decision": {"side": "left", "offset": 0.5}, "out": {"side": "bottom", "offset": 0.5}}},
+    {"id": "deployment", "group": "deployment_plane", "label": "Deployment boundary", "subtitle": "Exact binding · expiry · consume once", "type": "action", "bounds": {"x": 1230, "y": 500, "width": 260, "height": 120}, "ports": {"authorization": {"side": "top", "offset": 0.5}, "decision": {"side": "left", "offset": 0.4}}}
+  ],
+  "edges": [
+    {"id": "candidate_to_gate", "from": {"node": "candidate", "port": "out"}, "to": {"node": "gate", "port": "candidate"}, "label": "exact subject", "kind": "primary", "route": [[412, 435], [560, 435], [560, 452], [720, 452]]},
+    {"id": "evidence_to_registry", "from": {"node": "evidence", "port": "out"}, "to": {"node": "registry", "port": "in"}, "label": "signed envelopes", "kind": "primary", "route": [[412, 270], [592, 270]]},
+    {"id": "registry_to_gate", "from": {"node": "registry", "port": "out"}, "to": {"node": "gate", "port": "registry"}, "label": "admitted evidence", "kind": "primary", "route": [[702, 320], [702, 360], [795, 360], [795, 400]]},
+    {"id": "risk_to_gate", "from": {"node": "risk", "port": "out"}, "to": {"node": "gate", "port": "risk"}, "label": "bounded residual risk", "kind": "secondary", "route": [[412, 610], [560, 610], [560, 504], [720, 504]]},
+    {"id": "policy_to_gate", "from": {"node": "policy", "port": "out"}, "to": {"node": "gate", "port": "policy"}, "label": "current policy", "kind": "primary", "route": [[985, 320], [985, 360], [945, 360], [945, 400]]},
+    {"id": "gate_to_decision", "from": {"node": "gate", "port": "out"}, "to": {"node": "decision", "port": "in"}, "label": "bound receipt", "kind": "primary", "route": [[870, 530], [870, 620]]},
+    {"id": "decision_to_approver", "from": {"node": "decision", "port": "approval"}, "to": {"node": "approver", "port": "decision"}, "label": "reviewable decision", "kind": "secondary", "route": [[1020, 656], [1150, 656], [1150, 290], [1230, 290]]},
+    {"id": "decision_to_deployment", "from": {"node": "decision", "port": "binding"}, "to": {"node": "deployment", "port": "decision"}, "label": "decision binding", "kind": "primary", "route": [[1020, 692], [1120, 692], [1120, 548], [1230, 548]]},
+    {"id": "approval_to_deployment", "from": {"node": "approver", "port": "out"}, "to": {"node": "deployment", "port": "authorization"}, "label": "short-lived authorization", "kind": "primary", "route": [[1360, 340], [1360, 500]]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true},
+  "rendering": {"renderer": "deterministic SVG", "source": "architecture-spec.json", "notes": "The SVG uses the exact bounds, ports, routes, labels, and semantic colors in this specification."}
+}
