@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "id": "advanced-02-secure-delegation",
+  "title": "Secure multi-agent delegation boundary",
+  "purpose": "Show that framework routing proposes a handoff while trusted application controls issue, enforce, revoke, and admit delegated work.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation",
+    "alt_text": "A supervisor proposes an SDK handoff. A trusted identity gateway and delegation service issue a narrow envelope to an authenticated worker. The execution boundary rechecks current policy, budget, revocation, and result provenance before admitting an artifact."
+  },
+  "canvas": {
+    "width": 1600,
+    "height": 900,
+    "background": "#F7F9FC",
+    "margin": 64,
+    "grid": 8
+  },
+  "layout": {
+    "primary_flow": "left-to-right then top-to-bottom",
+    "min_node_gap": 60,
+    "min_layer_gap": 80,
+    "node_padding": {"x": 24, "y": 18}
+  },
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "trusted": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "agent": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "data": {"fill": "#E5F7F6", "stroke": "#16A3A5"},
+      "action": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "operations": {"fill": "#FFFFFF", "stroke": "#D7DEE8"}
+    }
+  },
+  "groups": [
+    {
+      "id": "orchestration",
+      "label": "Untrusted reasoning and framework routing",
+      "bounds": {"x": 64, "y": 160, "width": 400, "height": 580},
+      "fill": "#FBFAFF",
+      "stroke": "#D7DEE8"
+    },
+    {
+      "id": "control_plane",
+      "label": "Trusted application control plane",
+      "bounds": {"x": 520, "y": 90, "width": 650, "height": 720},
+      "fill": "#F8FBFF",
+      "stroke": "#2F6BFF"
+    },
+    {
+      "id": "worker_zone",
+      "label": "Authenticated child workload",
+      "bounds": {"x": 1226, "y": 160, "width": 310, "height": 580},
+      "fill": "#FFFFFF",
+      "stroke": "#D7DEE8"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "supervisor",
+      "group": "orchestration",
+      "label": "Supervisor model",
+      "subtitle": "Proposes a specialist",
+      "type": "agent",
+      "bounds": {"x": 112, "y": 220, "width": 280, "height": 110},
+      "ports": {"out": {"side": "bottom", "offset": 0.5}}
+    },
+    {
+      "id": "sdk_handoff",
+      "group": "orchestration",
+      "label": "SDK handoff",
+      "subtitle": "Typed reason + filtered history",
+      "type": "agent",
+      "bounds": {"x": 112, "y": 460, "width": 280, "height": 110},
+      "ports": {
+        "in": {"side": "top", "offset": 0.5},
+        "out": {"side": "right", "offset": 0.5}
+      }
+    },
+    {
+      "id": "identity_gateway",
+      "group": "control_plane",
+      "label": "Identity gateway",
+      "subtitle": "Parent + workload context",
+      "type": "trusted",
+      "bounds": {"x": 568, "y": 190, "width": 240, "height": 110},
+      "ports": {"out": {"side": "right", "offset": 0.5}}
+    },
+    {
+      "id": "delegation_service",
+      "group": "control_plane",
+      "label": "Delegation service",
+      "subtitle": "Attenuate · allocate · bind",
+      "type": "trusted",
+      "bounds": {"x": 872, "y": 190, "width": 250, "height": 130},
+      "ports": {
+        "identity": {"side": "left", "offset": 0.35},
+        "proposal": {"side": "left", "offset": 0.72},
+        "worker": {"side": "right", "offset": 0.5},
+        "runtime": {"side": "bottom", "offset": 0.5}
+      }
+    },
+    {
+      "id": "revocation_policy",
+      "group": "control_plane",
+      "label": "Current policy + revocation",
+      "subtitle": "Version and full lineage",
+      "type": "trusted",
+      "bounds": {"x": 568, "y": 460, "width": 240, "height": 120},
+      "ports": {"out": {"side": "right", "offset": 0.5}}
+    },
+    {
+      "id": "execution_boundary",
+      "group": "control_plane",
+      "label": "Execution boundary",
+      "subtitle": "Atomic budget · replay · result checks",
+      "type": "action",
+      "bounds": {"x": 872, "y": 460, "width": 250, "height": 140},
+      "ports": {
+        "policy": {"side": "left", "offset": 0.5},
+        "envelope": {"side": "top", "offset": 0.5},
+        "candidate": {"side": "right", "offset": 0.5},
+        "artifact": {"side": "bottom", "offset": 0.5}
+      }
+    },
+    {
+      "id": "admitted_artifact",
+      "group": "control_plane",
+      "label": "Admitted artifact + receipt",
+      "subtitle": "Bound IDs, evidence, digest",
+      "type": "data",
+      "bounds": {"x": 872, "y": 690, "width": 250, "height": 80},
+      "ports": {"in": {"side": "top", "offset": 0.5}}
+    },
+    {
+      "id": "worker",
+      "group": "worker_zone",
+      "label": "Researcher workload",
+      "subtitle": "Envelope-bound identity",
+      "type": "agent",
+      "bounds": {"x": 1260, "y": 250, "width": 240, "height": 110},
+      "ports": {
+        "in": {"side": "left", "offset": 0.5},
+        "out": {"side": "bottom", "offset": 0.5}
+      }
+    },
+    {
+      "id": "candidate",
+      "group": "worker_zone",
+      "label": "Untrusted result candidate",
+      "subtitle": "Content + claimed provenance",
+      "type": "data",
+      "bounds": {"x": 1260, "y": 500, "width": 240, "height": 110},
+      "ports": {
+        "in": {"side": "top", "offset": 0.5},
+        "out": {"side": "left", "offset": 0.5}
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "identity_to_issuer",
+      "from": {"node": "identity_gateway", "port": "out"},
+      "to": {"node": "delegation_service", "port": "identity"},
+      "label": "authenticated authority",
+      "kind": "primary",
+      "route": [[808, 245], [840, 245], [840, 236], [872, 236]]
+    },
+    {
+      "id": "supervisor_to_sdk",
+      "from": {"node": "supervisor", "port": "out"},
+      "to": {"node": "sdk_handoff", "port": "in"},
+      "label": "route proposal",
+      "kind": "secondary",
+      "route": [[252, 330], [252, 460]]
+    },
+    {
+      "id": "sdk_to_issuer",
+      "from": {"node": "sdk_handoff", "port": "out"},
+      "to": {"node": "delegation_service", "port": "proposal"},
+      "label": "bounded metadata",
+      "kind": "secondary",
+      "route": [[392, 515], [488, 515], [488, 392], [840, 392], [840, 284], [872, 284]]
+    },
+    {
+      "id": "issuer_to_worker",
+      "from": {"node": "delegation_service", "port": "worker"},
+      "to": {"node": "worker", "port": "in"},
+      "label": "narrow envelope",
+      "kind": "primary",
+      "route": [[1122, 255], [1192, 255], [1192, 305], [1260, 305]]
+    },
+    {
+      "id": "issuer_to_runtime",
+      "from": {"node": "delegation_service", "port": "runtime"},
+      "to": {"node": "execution_boundary", "port": "envelope"},
+      "label": "verified grant",
+      "kind": "primary",
+      "route": [[997, 320], [997, 460]]
+    },
+    {
+      "id": "policy_to_runtime",
+      "from": {"node": "revocation_policy", "port": "out"},
+      "to": {"node": "execution_boundary", "port": "policy"},
+      "label": "current state",
+      "kind": "primary",
+      "route": [[808, 520], [872, 520]]
+    },
+    {
+      "id": "worker_to_candidate",
+      "from": {"node": "worker", "port": "out"},
+      "to": {"node": "candidate", "port": "in"},
+      "label": "untrusted output",
+      "kind": "secondary",
+      "route": [[1380, 360], [1380, 500]]
+    },
+    {
+      "id": "candidate_to_runtime",
+      "from": {"node": "candidate", "port": "out"},
+      "to": {"node": "execution_boundary", "port": "candidate"},
+      "label": "validate before admission",
+      "kind": "primary",
+      "route": [[1260, 555], [1122, 555], [1122, 530]]
+    },
+    {
+      "id": "runtime_to_artifact",
+      "from": {"node": "execution_boundary", "port": "artifact"},
+      "to": {"node": "admitted_artifact", "port": "in"},
+      "label": "allow + receipt",
+      "kind": "primary",
+      "route": [[997, 600], [997, 690]]
+    }
+  ],
+  "validation": {
+    "unique_ids": true,
+    "all_ports_exist": true,
+    "no_overlaps": true,
+    "route_around_nodes": true,
+    "min_text_padding": 16,
+    "min_connector_clearance": 12,
+    "verify_port_attachment": true,
+    "verify_contrast": true
+  },
+  "rendering": {
+    "format": "deterministic SVG 1.1",
+    "geometry_source": "This file; bounds and route coordinates map directly to SVG user-space pixels.",
+    "arrow_marker": "8 px navy triangle",
+    "corner_radius": 14
+  }
+}

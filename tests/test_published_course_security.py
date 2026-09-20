@@ -161,30 +161,27 @@ def test_attack_evaluation_rejects_duplicate_ids(attack_eval):
 
 
 def test_delegation_cannot_amplify_scope(delegation):
-    parent = delegation.ParentAuthority("supervisor", "north", frozenset({"read"}))
-    envelope = delegation.issue_delegation(
+    service, _, authority, parent, _, request = delegation.build_scenario(now=NOW)
+    decision = service.issue(
+        authority,
         parent,
-        child="worker",
-        tenant="north",
-        requested_scopes=frozenset({"read", "delete"}),
-        budget=1,
-        expires_at=NOW + timedelta(minutes=5),
+        replace(request, scopes=frozenset({"search", "delete"})),
         now=NOW,
-        artifact_types=frozenset({"summary"}),
     )
-    assert envelope is None
+    assert not decision.allowed and decision.reason == "scope"
 
 
 def test_delegation_enforces_identity_tenant_artifact_and_budget(delegation):
-    parent = delegation.ParentAuthority("supervisor", "north", frozenset({"read"}))
-    envelope = delegation.issue_delegation(parent, child="worker", tenant="north", requested_scopes=frozenset({"read"}), budget=1, expires_at=NOW + timedelta(minutes=5), now=NOW, artifact_types=frozenset({"summary"}))
-    assert envelope
-    session = delegation.WorkerSession(envelope)
-    assert session.execute(worker="other", tenant="north", operation="read", artifact_type="summary", content="x", now=NOW) is None
-    assert session.execute(worker="worker", tenant="south", operation="read", artifact_type="summary", content="x", now=NOW) is None
-    assert session.execute(worker="worker", tenant="north", operation="read", artifact_type="raw-secret", content="x", now=NOW) is None
-    assert session.execute(worker="worker", tenant="north", operation="read", artifact_type="summary", content="x", now=NOW)
-    assert session.execute(worker="worker", tenant="north", operation="read", artifact_type="summary", content="x", now=NOW) is None
+    service, registry, authority, parent, worker, request = delegation.build_scenario(now=NOW)
+    issued = service.issue(authority, parent, replace(request, budget=1), now=NOW)
+    assert issued.envelope
+    session = delegation.WorkerSession(issued.envelope, service, registry, "research-runtime")
+    operation = delegation.OperationRequest("op-1", "try-1", "search", "case:42", "evidence-list")
+    candidate = delegation.candidate_for(issued.envelope, operation)
+    assert not session.execute(replace(worker, tenant="south"), operation, candidate, now=NOW).allowed
+    assert session.execute(worker, operation, candidate, now=NOW).allowed
+    second = replace(operation, operation_id="op-2", attempt_id="try-2")
+    assert session.execute(worker, second, delegation.candidate_for(issued.envelope, second), now=NOW).reason == "budget"
 
 
 def valid_evidence(production):
