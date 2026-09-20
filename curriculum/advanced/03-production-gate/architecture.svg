@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Evidence-bound production release</title>
+  <desc id="desc">An immutable release candidate, attested evidence, and signed risk acceptance enter a trusted release control plane. The gate validates a versioned policy and emits a bound decision. An independent approver then issues a short-lived authorization that a deployment boundary consumes once.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,4 L0,8 z" fill="#16324F"/></marker>
+    <style>
+      .title{font:700 30px Inter,Arial,sans-serif;fill:#16324F}.subtitle{font:400 16px Inter,Arial,sans-serif;fill:#52606D}
+      .group-label{font:700 17px Inter,Arial,sans-serif;fill:#16324F}.node-title{font:700 18px Inter,Arial,sans-serif;fill:#16324F}
+      .node-sub{font:400 14px Inter,Arial,sans-serif;fill:#52606D}.edge-label{font:600 13px Inter,Arial,sans-serif;fill:#52606D}
+      .edge{fill:none;stroke:#16324F;stroke-width:2.2;marker-end:url(#arrow)}.secondary{stroke:#7667E8;stroke-dasharray:7 5}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#F7F9FC"/>
+  <text x="64" y="55" class="title">Evidence-bound production release</text>
+  <text x="64" y="82" class="subtitle">A release decision is evidence, not deployment authority. Every boundary rechecks exact bindings and current policy.</text>
+
+  <rect x="64" y="150" width="430" height="600" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+  <text x="88" y="184" class="group-label">Release inputs</text>
+  <rect x="544" y="110" width="600" height="650" rx="18" fill="#F8FBFF" stroke="#2F6BFF" stroke-width="2"/>
+  <text x="568" y="144" class="group-label">Trusted release control plane</text>
+  <rect x="1190" y="150" width="346" height="600" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+  <text x="1214" y="184" class="group-label">Independent deployment boundary</text>
+
+  <g><rect x="112" y="390" width="300" height="90" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/><text x="262" y="427" text-anchor="middle" class="node-title">Immutable release candidate</text><text x="262" y="454" text-anchor="middle" class="node-sub">Digest · versions · tenant · environment</text></g>
+  <g><rect x="112" y="220" width="300" height="100" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/><text x="262" y="262" text-anchor="middle" class="node-title">Attested evidence dossier</text><text x="262" y="290" text-anchor="middle" class="node-sub">Typed results · producer · payload digest</text></g>
+  <g><rect x="112" y="560" width="300" height="100" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/><text x="262" y="602" text-anchor="middle" class="node-title">Signed risk acceptance</text><text x="262" y="630" text-anchor="middle" class="node-sub">Named owner · approver · expiry</text></g>
+  <g><rect x="592" y="220" width="220" height="100" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/><text x="702" y="262" text-anchor="middle" class="node-title">Evidence registry</text><text x="702" y="290" text-anchor="middle" class="node-sub">Producer identity + integrity</text></g>
+  <g><rect x="880" y="220" width="210" height="100" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/><text x="985" y="262" text-anchor="middle" class="node-title">Versioned release policy</text><text x="985" y="290" text-anchor="middle" class="node-sub">Kinds · freshness · thresholds</text></g>
+  <g><rect x="720" y="400" width="300" height="130" rx="14" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/><text x="870" y="451" text-anchor="middle" class="node-title">Release gate</text><text x="870" y="481" text-anchor="middle" class="node-sub">Admit · bind · classify · decide</text><text x="870" y="505" text-anchor="middle" class="node-sub">No model or filename grants authority</text></g>
+  <g><rect x="720" y="620" width="300" height="90" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/><text x="870" y="657" text-anchor="middle" class="node-title">Signed decision receipt</text><text x="870" y="685" text-anchor="middle" class="node-sub">READY · BLOCKED · INCOMPLETE</text></g>
+  <g><rect x="1230" y="240" width="260" height="100" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/><text x="1360" y="282" text-anchor="middle" class="node-title">Independent approver</text><text x="1360" y="310" text-anchor="middle" class="node-sub">Current role · no self-review</text></g>
+  <g><rect x="1230" y="500" width="260" height="120" rx="14" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/><text x="1360" y="548" text-anchor="middle" class="node-title">Deployment boundary</text><text x="1360" y="578" text-anchor="middle" class="node-sub">Exact binding · expiry</text><text x="1360" y="602" text-anchor="middle" class="node-sub">Atomic single use</text></g>
+
+  <path class="edge" d="M412 435 H560 V452 H720"/><rect x="500" y="404" width="106" height="22" rx="5" fill="#F7F9FC"/><text x="553" y="419" text-anchor="middle" class="edge-label">exact subject</text>
+  <path class="edge" d="M412 270 H592"/><rect x="438" y="236" width="120" height="22" rx="5" fill="#F7F9FC"/><text x="498" y="251" text-anchor="middle" class="edge-label">signed envelopes</text>
+  <path class="edge" d="M702 320 V360 H795 V400"/><rect x="708" y="333" width="130" height="22" rx="5" fill="#F7F9FC"/><text x="773" y="348" text-anchor="middle" class="edge-label">admitted evidence</text>
+  <path class="edge secondary" d="M412 610 H560 V504 H720"/><rect x="475" y="572" width="148" height="22" rx="5" fill="#F7F9FC"/><text x="549" y="587" text-anchor="middle" class="edge-label">bounded residual risk</text>
+  <path class="edge" d="M985 320 V360 H945 V400"/><rect x="959" y="333" width="106" height="22" rx="5" fill="#F7F9FC"/><text x="1012" y="348" text-anchor="middle" class="edge-label">current policy</text>
+  <path class="edge" d="M870 530 V620"/><rect x="882" y="561" width="100" height="22" rx="5" fill="#F7F9FC"/><text x="932" y="576" text-anchor="middle" class="edge-label">bound receipt</text>
+  <path class="edge secondary" d="M1020 656 H1150 V290 H1230"/><rect x="1080" y="455" width="136" height="22" rx="5" fill="#F7F9FC"/><text x="1148" y="470" text-anchor="middle" class="edge-label">reviewable decision</text>
+  <path class="edge" d="M1020 692 H1120 V548 H1230"/><rect x="1050" y="656" width="126" height="22" rx="5" fill="#F7F9FC"/><text x="1113" y="671" text-anchor="middle" class="edge-label">decision binding</text>
+  <path class="edge" d="M1360 340 V500"/><rect x="1372" y="409" width="148" height="22" rx="5" fill="#FFFFFF"/><text x="1446" y="424" text-anchor="middle" class="edge-label">short-lived authorization</text>
+
+  <g transform="translate(64 820)"><rect width="1472" height="44" rx="8" fill="#FFFFFF" stroke="#D7DEE8"/><circle cx="24" cy="22" r="6" fill="#16A3A5"/><text x="38" y="27" class="node-sub">bound data</text><circle cx="154" cy="22" r="6" fill="#2F6BFF"/><text x="168" y="27" class="node-sub">trusted control</text><circle cx="310" cy="22" r="6" fill="#7667E8"/><text x="324" y="27" class="node-sub">human accountability</text><circle cx="515" cy="22" r="6" fill="#F59E42"/><text x="529" y="27" class="node-sub">effect boundary</text><text x="1446" y="27" text-anchor="end" class="node-sub">Presence is not proof; a READY receipt is not reusable deployment authority.</text></g>
+</svg>

@@ -184,28 +184,26 @@ def test_delegation_enforces_identity_tenant_artifact_and_budget(delegation):
     assert session.execute(worker, second, delegation.candidate_for(issued.envelope, second), now=NOW).reason == "budget"
 
 
-def valid_evidence(production):
-    return [production.Evidence(kind, f"artifact:{kind}", "v7", "team:security", NOW, True) for kind in production.REQUIRED_EVIDENCE]
+def test_production_gate_rejects_unattested_evidence(production):
+    gate, candidate, evidence, risks, _ = production.build_scenario(now=NOW)
+    evidence[0] = replace(evidence[0], integrity_tag="forged")
+    decision = gate.evaluate(candidate, evidence, risks, now=NOW)
+    assert decision.state is production.DecisionState.INCOMPLETE
+    assert any(item.startswith("incomplete:invalid-attestation:") for item in decision.blockers)
 
 
-@pytest.mark.parametrize("failure", ["empty", "stale", "failed", "severe", "expired-risk"])
-def test_production_gate_rejects_invalid_evidence(production, failure):
-    evidence = valid_evidence(production)
-    severe = 0
-    risks = [production.RiskAcceptance("R-1", "owner:a", "bounded pilot risk", NOW + timedelta(days=1))]
-    if failure in {"empty", "stale", "failed"}:
-        item = evidence[0]
-        evidence[0] = production.Evidence(
-            item.kind,
-            "" if failure == "empty" else item.value,
-            item.version,
-            item.owner,
-            NOW - timedelta(days=31) if failure == "stale" else item.observed_at,
-            failure != "failed",
-        )
-    elif failure == "severe":
-        severe = 1
-    else:
-        risks = [production.RiskAcceptance("R-1", "owner:a", "bounded pilot risk", NOW)]
-    decision = production.evaluate_release(evidence, severe_attack_successes=severe, residual_risks=risks, now=NOW)
-    assert not decision.ready and decision.blockers
+def test_production_gate_blocks_severe_attack_without_averaging(production):
+    gate, candidate, evidence, risks, _ = production.build_scenario(now=NOW)
+    index = next(
+        index
+        for index, envelope in enumerate(evidence)
+        if production.artifact_for(envelope.payload).kind == "attack-evaluation"
+    )
+    payload = replace(evidence[index].payload, severe_attack_successes=1)
+    evidence[index] = production.attest_evidence(
+        payload,
+        production.DEMO_PRODUCER_KEYS[payload.artifact.producer],
+    )
+    decision = gate.evaluate(candidate, evidence, risks, now=NOW)
+    assert decision.state is production.DecisionState.BLOCKED
+    assert "blocked:severe-attack-successes:1" in decision.blockers

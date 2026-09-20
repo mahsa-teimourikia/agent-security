@@ -60,11 +60,11 @@ export const publishedLessons = [
     correct: 0,
     explanation: "Routing and schema validation do not grant authority. Trusted application code must enforce resource attenuation and current policy before transfer or effect.",
   }),
-  lesson("a3", "Advanced", "03", "Production readiness", "Bind governance, ownership, rollback drills, and attack results into a release gate.", "Issue an evidence-based production decision with named residual-risk owners.", "advanced/03-production-gate", "03_production_gate", {
-    prompt: "Which evidence is required before granting production autonomy?",
-    options: ["A successful demo", "A rollback drill and named control owners", "A model self-assessment"],
+  lesson("a3", "Advanced", "03", "Production readiness", "Admit authenticated evidence for one immutable candidate and classify readiness without averaging away severe failures.", "Turn a signed READY receipt into an independent, exact, expiring, single-use deployment authorization.", "advanced/03-production-gate", "03_production_gate", {
+    prompt: "A signed attack report covers 23 of 24 required attempts with zero severe successes. The deployment requester also holds an approver role. What should the system do?",
+    options: ["Mark READY and allow self-approval", "Mark INCOMPLETE and require an independent current approver after evidence is complete", "Mark BLOCKED because a missing attempt proves the control failed"],
     correct: 1,
-    explanation: "Production authority requires independently verified controls, recovery readiness, and accountable ownership.",
+    explanation: "Missing execution is not proof of safety or proof of failure. Preserve INCOMPLETE, rerun the missing evidence, and enforce separation of duties at deployment.",
   }),
 ];
 
