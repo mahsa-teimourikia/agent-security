@@ -4,9 +4,9 @@ The roadmap is managed as an evidence backlog rather than a list of pages.
 
 ## Current release
 
-Ten published lessons form the runnable path:
+Eleven published lessons form the runnable path:
 
-- one foundation course on architecture and trust boundaries;
+- two foundation courses on architecture, trust boundaries, and threat modeling;
 - three beginner courses on tool policy, prompt injection, and secure research;
 - three intermediate courses on identity, MCP gateways, and incident recovery;
 - three advanced courses on attack evaluation, delegation, and production

@@ -18,6 +18,12 @@ export const publishedLessons = [
     correct: 1,
     explanation: "Text and model output are untrusted proposals. Only authenticated application context may establish subject and tenant before deterministic resource and operation authorization.",
   }),
+  lesson("f2", "Foundation", "02", "Threat modeling agentic systems", "Bind a versioned agent architecture to reviewed threats, attack paths, controls, tests, telemetry, owners, and residual-risk decisions.", "Build an evidence-bound threat model, reject model self-review and stale architecture, compute attack-tree cut sets, and exercise a real OWASP pytm DFD.", "roadmap/beginner/02-threat-modeling-agentic-systems", "lab", {
+    prompt: "A model suggests a plausible threat, names a control, and assigns a low residual-risk score. What must happen before the threat record is accepted?",
+    options: ["Accept it because the schema and score look reasonable", "Bind it to the current architecture and require authenticated review, ownership, tested controls, and telemetry", "Ask the same model to review its reasoning"],
+    correct: 1,
+    explanation: "Model output and ordinal scores can support discovery and prioritization, but they do not grant review authority or prove a control. The accepted record needs current architecture bindings and deterministic assurance evidence.",
+  }),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -75,7 +81,7 @@ export const publishedLessons = [
 ];
 
 export const roadmapTracks = [
-  { level: "Foundation", range: "01–07", status: "1 published · 6 reading", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
+  { level: "Foundation", range: "01–07", status: "2 published · 5 reading", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "Pilot labs", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "Pilot labs", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
@@ -85,7 +91,7 @@ const road = (code, number, level, title, folder, status, evidence) => ({ code, 
 
 export const roadmapCourses = [
   road("F01", "01", "Foundation", "Architecture and trust boundaries", "roadmap/beginner/01-agent-security-architecture-and-trust-boundaries", "Published", "README · lab · OpenTelemetry adapter · notebook · tests · checkpoint"),
-  road("F02", "02", "Foundation", "Threat modeling agentic systems", "roadmap/beginner/02-threat-modeling-agentic-systems", "Reading", "README · needs lab, notebook, tests"),
+  road("F02", "02", "Foundation", "Threat modeling agentic systems", "roadmap/beginner/02-threat-modeling-agentic-systems", "Published", "README · lab · pytm adapter · notebook · tests · checkpoint"),
   road("F03", "03", "Foundation", "Security invariants and blast radius", "roadmap/beginner/03-security-invariants-and-blast-radius", "Reading", "README · needs lab, notebook, tests"),
   road("F04", "04", "Foundation", "Secure tool and action interfaces", "roadmap/beginner/04-secure-tool-and-action-interface-design", "Reading", "README · needs focused lab, notebook, tests"),
   road("F05", "05", "Foundation", "Authorization, approval, and least privilege", "roadmap/beginner/05-authorization-approval-and-least-privilege", "Reading", "README · needs focused lab, notebook, tests"),
