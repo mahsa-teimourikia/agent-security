@@ -9,6 +9,7 @@ ROOT = Path(__file__).parents[1]
 LABS = [
     "curriculum/shared/foundation_lab.py",
     "curriculum/shared/runtime_security_lab.py",
+    "curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.py",
     "curriculum/roadmap/intermediate/01-agent-memory-security/lab.py",
     "curriculum/roadmap/intermediate/04-secrets-and-credential-security/lab.py",
     "curriculum/roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/lab.py",

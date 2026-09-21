@@ -4,7 +4,14 @@ Canonical map of every track and module in the Agent Security curriculum.
 
 This file lists published lessons. The separately labelled
 [36-course expansion roadmap](curriculum/README.md) contains reading sequences,
-pilot labs, and planned topics that have not yet passed the publication gate.
+pilot labs, and planned topics. A roadmap course is also listed below when it
+passes the complete publication gate.
+
+## Foundation
+
+| # | Module | Theory | Lab | Notebook |
+|---|---|---|---|---|
+| 01 | Agent Security Architecture and Trust Boundaries | [README](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/README.md) | [lab.py](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.ipynb) |
 
 ## Beginner
 

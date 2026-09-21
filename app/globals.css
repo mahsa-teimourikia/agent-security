@@ -87,6 +87,7 @@ main { max-width: 1440px; margin: auto; }
 .roadmap-list a > span:nth-child(2) { display: grid; gap: 4px; }
 .roadmap-list small { color: var(--muted); line-height: 1.35; }
 .roadmap-list em { padding: 6px 8px; font-size: 10px; font-style: normal; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.status-published { color: #fff; background: var(--green); }
 .status-pilot { color: var(--green); background: var(--sage); }
 .status-reading { color: #6f4d00; background: #f5e9bf; }
 .status-planned { color: var(--muted); background: var(--mist); }

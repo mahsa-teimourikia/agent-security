@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1720 980" role="img" aria-labelledby="title desc">
+  <title id="title">Research-and-support agent trust boundaries</title>
+  <desc id="desc">Nine numbered trust boundaries separate untrusted requests, the trusted application control plane, the model, enterprise systems, telemetry, and operator controls.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F6BFF"/></marker>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#52606D"/></marker>
+    <style>
+      text{font-family:Inter,Arial,sans-serif;fill:#16324F}.title{font-size:30px;font-weight:700}.subtitle{font-size:15px;fill:#52606D}.group{font-size:17px;font-weight:700}.node{font-size:17px;font-weight:700}.edge{font-size:14px;font-weight:700;paint-order:stroke;stroke:#F7F9FC;stroke-width:6px;stroke-linejoin:round}.primary{fill:none;stroke:#2F6BFF;stroke-width:2.5;marker-end:url(#arrow)}.secondary{fill:none;stroke:#52606D;stroke-width:2;marker-end:url(#arrow2)}
+    </style>
+  </defs>
+  <rect width="1720" height="980" fill="#F7F9FC"/>
+  <text class="title" x="60" y="66">Research-and-support agent trust boundaries</text>
+  <text class="subtitle" x="60" y="94">The model proposes. Deterministic controls authorize each crossing and emit bounded evidence.</text>
+
+  <g fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"><rect x="60" y="170" width="210" height="520" rx="18"/></g>
+  <g fill="#FFFFFF" stroke="#2F6BFF" stroke-width="2"><rect x="310" y="140" width="590" height="580" rx="18"/></g>
+  <g fill="#F8F6FF" stroke="#7667E8" stroke-width="2"><rect x="950" y="180" width="220" height="310" rx="18"/></g>
+  <g fill="#FFFFFF" stroke="#16A3A5" stroke-width="2"><rect x="1220" y="140" width="440" height="580" rx="18"/></g>
+  <g fill="#FFFFFF" stroke="#52606D" stroke-width="2"><rect x="310" y="780" width="860" height="150" rx="18"/></g>
+  <text class="group" x="82" y="202">External / untrusted</text><text class="group" x="332" y="172">Trusted application control plane</text><text class="group" x="972" y="212">Probabilistic agent</text><text class="group" x="1242" y="172">Data and enterprise systems</text><text class="group" x="332" y="812">Operations plane</text>
+
+  <g><rect x="90" y="370" width="150" height="100" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/><text class="node" x="165" y="410" text-anchor="middle">User / attacker</text><text class="subtitle" x="165" y="438" text-anchor="middle">Requests and content</text></g>
+  <g><rect x="350" y="370" width="160" height="100" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/><text class="node" x="430" y="410" text-anchor="middle">API gateway</text><text class="subtitle" x="430" y="438" text-anchor="middle">Authenticate</text></g>
+  <g><rect x="570" y="210" width="180" height="100" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/><text class="node" x="660" y="250" text-anchor="middle">Context gateway</text><text class="subtitle" x="660" y="278" text-anchor="middle">Admit evidence</text></g>
+  <g><rect x="560" y="470" width="180" height="110" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/><text class="node" x="650" y="514" text-anchor="middle">Agent runtime</text><text class="subtitle" x="650" y="542" text-anchor="middle">Bind trusted context</text></g>
+  <g><rect x="770" y="500" width="100" height="110" rx="14" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/><text class="node" x="820" y="540" text-anchor="middle"><tspan x="820">Tool policy</tspan><tspan x="820" dy="21">gateway</tspan></text><text class="subtitle" x="820" y="592" text-anchor="middle">Authorize</text></g>
+  <g><rect x="980" y="280" width="160" height="120" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/><text class="node" x="1060" y="328" text-anchor="middle">Model + planner</text><text class="subtitle" x="1060" y="356" text-anchor="middle"><tspan x="1060">Propose, never</tspan><tspan x="1060" dy="20">authorize</tspan></text></g>
+  <g><rect x="1260" y="190" width="170" height="100" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/><text class="node" x="1345" y="230" text-anchor="middle">Evidence APIs</text><text class="subtitle" x="1345" y="258" text-anchor="middle">Provenance + ACLs</text></g>
+  <g><rect x="1260" y="440" width="170" height="100" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/><text class="node" x="1345" y="480" text-anchor="middle">Memory store</text><text class="subtitle" x="1345" y="508" text-anchor="middle">Tenant-scoped</text></g>
+  <g><rect x="1470" y="440" width="160" height="100" rx="14" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/><text class="node" x="1550" y="480" text-anchor="middle">Ticket / refund API</text><text class="subtitle" x="1550" y="508" text-anchor="middle">Real-world effect</text></g>
+  <g><rect x="420" y="820" width="220" height="80" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/><text class="node" x="530" y="853" text-anchor="middle">Security telemetry</text><text class="subtitle" x="530" y="880" text-anchor="middle">Bounded decision evidence</text></g>
+  <g><rect x="820" y="820" width="220" height="80" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/><text class="node" x="930" y="853" text-anchor="middle">Kill switch + recovery</text><text class="subtitle" x="930" y="880" text-anchor="middle">Operator authority</text></g>
+
+  <path class="primary" d="M240 420 H350"/><text class="edge" x="295" y="405" text-anchor="middle">B1 request</text>
+  <path class="secondary" d="M660 210 V100 H1345 V190"/><text class="edge" x="1000" y="90" text-anchor="middle">B2 evidence query + result</text>
+  <path class="primary" d="M750 260 H900 V322 H980"/><text class="edge" x="855" y="247" text-anchor="middle">B3 bounded context</text>
+  <path class="secondary" d="M980 370 H920 V503 H740"/><text class="edge" x="852" y="488" text-anchor="middle">B4 untrusted proposal</text>
+  <path class="primary" d="M740 549 H755 V555 H770"/><text class="edge" x="755" y="535" text-anchor="middle">B5</text>
+  <path class="primary" d="M870 555 H1180 V620 H1450 V490 H1470"/><text class="edge" x="1320" y="608" text-anchor="middle">B6 authorized effect</text>
+  <path class="secondary" d="M623 580 V670 H1345 V540"/><text class="edge" x="1020" y="657" text-anchor="middle">B7 memory read</text>
+  <path class="secondary" d="M677 580 V740 H530 V820"/><text class="edge" x="605" y="727" text-anchor="middle">B8 decision evidence</text>
+  <path class="secondary" d="M930 820 V720 H704 V580"/><text class="edge" x="815" y="706" text-anchor="middle">B9 revoke / recover</text>
+
+  <g transform="translate(60 945)"><circle cx="8" cy="-5" r="7" fill="#2F6BFF"/><text class="subtitle" x="22" y="0">Primary request/effect path</text><circle cx="240" cy="-5" r="7" fill="#52606D"/><text class="subtitle" x="254" y="0">Evidence/control path</text><circle cx="455" cy="-5" r="7" fill="#7667E8"/><text class="subtitle" x="469" y="0">Probabilistic component — never the policy authority</text></g>
+</svg>
