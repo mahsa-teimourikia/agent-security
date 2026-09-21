@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "agentic-threat-modeling-assurance",
+  "title": "Agentic threat modeling: architecture to assurance",
+  "purpose": "Show how a versioned architecture, structured threat discovery, authenticated review, and evidence binding become a continuously refreshed threat model.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "A left-to-right threat-modeling workflow. A versioned system model enters STRIDE and abuse analysis. Attack trees and untrusted model suggestions feed an authenticated review gate. Reviewed threats are bound to controls, tests, telemetry, owners, and residual risk, producing an engineering backlog. Architecture changes and assurance metrics trigger refresh, and model suggestions never bypass review."
+  },
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC", "margin": 60, "grid": 10},
+  "layout": {"primary_flow": "left-to-right", "min_node_gap": 40, "min_layer_gap": 50, "node_padding": {"x": 22, "y": 16}},
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "system": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "analysis": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "model": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "assurance": {"fill": "#E5F7F6", "stroke": "#16A3A5"},
+      "operations": {"fill": "#FFFFFF", "stroke": "#52606D"}
+    }
+  },
+  "groups": [
+    {"id": "system", "label": "1. What are we working on?", "bounds": {"x": 60, "y": 160, "width": 300, "height": 500}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "analysis", "label": "2. What can go wrong?", "bounds": {"x": 410, "y": 160, "width": 420, "height": 500}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "assurance", "label": "3. What will we do about it?", "bounds": {"x": 880, "y": 160, "width": 660, "height": 500}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "continuous", "label": "4. Did we do a good enough job?", "bounds": {"x": 410, "y": 710, "width": 1130, "height": 130}, "fill": "#FFFFFF", "stroke": "#D7DEE8"}
+  ],
+  "nodes": [
+    {"id": "architecture", "group": "system", "label": "Versioned system model", "subtitle": "assets · actors · F1–F7 · B1–B7", "type": "system", "bounds": {"x": 100, "y": 240, "width": 220, "height": 120}, "ports": {"out": {"side": "right", "offset": 0.5}, "refresh": {"side": "left", "offset": 0.8}}},
+    {"id": "change", "group": "system", "label": "Refresh triggers", "subtitle": "tools · identity · model · memory · effects", "type": "operations", "bounds": {"x": 100, "y": 460, "width": 220, "height": 110}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "stride", "group": "analysis", "label": "Structured discovery", "subtitle": "STRIDE · misuse cases · privacy", "type": "analysis", "bounds": {"x": 450, "y": 230, "width": 160, "height": 140}, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "model_suggestion", "group": "analysis", "label": "Model suggestion", "subtitle": "untrusted candidate", "type": "model", "bounds": {"x": 630, "y": 400, "width": 160, "height": 110}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "attack_tree", "group": "analysis", "label": "Attack tree", "subtitle": "ANY / ALL paths and preconditions", "type": "analysis", "bounds": {"x": 450, "y": 520, "width": 200, "height": 120}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "review", "group": "assurance", "label": "Authenticated review gate", "subtitle": "validate IDs · assumptions · risk · scope", "type": "operations", "bounds": {"x": 930, "y": 260, "width": 210, "height": 130}, "ports": {"architecture": {"side": "left", "offset": 0.3}, "model": {"side": "left", "offset": 0.55}, "attack": {"side": "left", "offset": 0.8}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "bindings", "group": "assurance", "label": "Evidence-bound threat record", "subtitle": "control · test · telemetry · owner · residual risk", "type": "assurance", "bounds": {"x": 1210, "y": 240, "width": 270, "height": 170}, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "bottom", "offset": 0.7}}},
+    {"id": "outcome", "group": "assurance", "label": "Engineering and risk backlog", "subtitle": "design changes · test cases · accepted risk", "type": "assurance", "bounds": {"x": 1210, "y": 500, "width": 270, "height": 110}, "ports": {"in": {"side": "top", "offset": 0.7}, "metrics": {"side": "bottom", "offset": 0.5}}},
+    {"id": "refresh", "group": "continuous", "label": "Refresh decision", "subtitle": "re-model changed scope", "type": "operations", "bounds": {"x": 600, "y": 755, "width": 300, "height": 70}, "ports": {"trigger": {"side": "left", "offset": 0.5}, "metrics": {"side": "right", "offset": 0.5}, "feedback": {"side": "left", "offset": 0.7}}},
+    {"id": "metrics", "group": "continuous", "label": "Assurance evidence", "subtitle": "coverage · tests · drift · owners", "type": "assurance", "bounds": {"x": 1040, "y": 755, "width": 400, "height": 70}, "ports": {"in": {"side": "top", "offset": 0.76}, "out": {"side": "left", "offset": 0.5}}}
+  ],
+  "edges": [
+    {"id": "architecture_to_discovery", "from": {"node": "architecture", "port": "out"}, "to": {"node": "stride", "port": "in"}, "label": "scoped DFD", "label_at": [385, 280], "kind": "primary", "route": [[320, 300], [450, 300]]},
+    {"id": "discovery_to_review", "from": {"node": "stride", "port": "out"}, "to": {"node": "review", "port": "architecture"}, "label": "candidate threats", "label_at": [750, 278], "kind": "primary", "route": [[610, 300], [850, 300], [850, 299], [930, 299]]},
+    {"id": "model_to_review", "from": {"node": "model_suggestion", "port": "out"}, "to": {"node": "review", "port": "model"}, "label": "suggest only", "label_at": [852, 445], "kind": "untrusted", "route": [[790, 455], [850, 455], [850, 331.5], [930, 331.5]]},
+    {"id": "tree_to_review", "from": {"node": "attack_tree", "port": "out"}, "to": {"node": "review", "port": "attack"}, "label": "paths + preconditions", "label_at": [745, 565], "kind": "secondary", "route": [[650, 580], [820, 580], [820, 364], [930, 364]]},
+    {"id": "review_to_bindings", "from": {"node": "review", "port": "out"}, "to": {"node": "bindings", "port": "in"}, "label": "admit", "label_at": [1175, 310], "kind": "primary", "route": [[1140, 325], [1210, 325]]},
+    {"id": "bindings_to_outcome", "from": {"node": "bindings", "port": "out"}, "to": {"node": "outcome", "port": "in"}, "label": "prioritize", "label_at": [1425, 455], "kind": "primary", "route": [[1399, 410], [1399, 500]]},
+    {"id": "outcome_to_metrics", "from": {"node": "outcome", "port": "metrics"}, "to": {"node": "metrics", "port": "in"}, "label": "verify", "label_at": [1365, 680], "kind": "secondary", "route": [[1345, 610], [1345, 700], [1344, 700], [1344, 755]]},
+    {"id": "change_to_refresh", "from": {"node": "change", "port": "out"}, "to": {"node": "refresh", "port": "trigger"}, "label": "configuration drift", "label_at": [445, 690], "kind": "secondary", "route": [[320, 515], [385, 515], [385, 790], [600, 790]]},
+    {"id": "metrics_to_refresh", "from": {"node": "metrics", "port": "out"}, "to": {"node": "refresh", "port": "metrics"}, "label": "gaps or stale scope", "label_at": [970, 775], "kind": "secondary", "route": [[1040, 790], [900, 790]]},
+    {"id": "refresh_to_architecture", "from": {"node": "refresh", "port": "feedback"}, "to": {"node": "architecture", "port": "refresh"}, "label": "continuous refinement", "label_at": [260, 830], "kind": "feedback", "route": [[600, 804], [75, 804], [75, 336], [100, 336]]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true},
+  "source": {"renderer": "render_architecture.py", "reproduce": "python3 render_architecture.py"}
+}

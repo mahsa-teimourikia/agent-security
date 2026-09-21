@@ -12,6 +12,7 @@ passes the complete publication gate.
 | # | Module | Theory | Lab | Notebook |
 |---|---|---|---|---|
 | 01 | Agent Security Architecture and Trust Boundaries | [README](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/README.md) | [lab.py](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.ipynb) |
+| 02 | Threat Modeling Agentic Systems | [README](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/README.md) | [lab.py](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/lab.ipynb) |
 
 ## Beginner
 

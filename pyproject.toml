@@ -11,7 +11,8 @@ learner = [
     "mcp>=2.2,<3",
     "opentelemetry-sdk>=1.44,<2",
     "openai-agents>=0.22.2,<0.23",
-    "pydantic>=2.11,<3"
+    "pydantic>=2.11,<3",
+    "pytm>=1.4,<2"
 ]
 contributor = [
     "agent-security[learner]",

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Agentic threat modeling: architecture to assurance</title>
+<desc id="desc">A left-to-right threat-modeling workflow. A versioned system model enters STRIDE and abuse analysis. Attack trees and untrusted model suggestions feed an authenticated review gate. Reviewed threats are bound to controls, tests, telemetry, owners, and residual risk, producing an engineering backlog. Architecture changes and assurance metrics trigger refresh, and model suggestions never bypass review.</desc>
+<defs><marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2F6BFF"/></marker><marker id="arrow-slate" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#52606D"/></marker><marker id="arrow-purple" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#7667E8"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="60" y="72" font-family="Inter,Arial,sans-serif" font-size="32" font-weight="700" fill="#16324F">Agentic threat modeling: architecture to assurance</text>
+<text x="60" y="108" font-family="Inter,Arial,sans-serif" font-size="17" fill="#52606D">Suggestions help discovery. Authenticated review and deterministic evidence decide what enters the model.</text>
+<rect x="60" y="160" width="300" height="500" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="82" y="196" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">1. What are we working on?</text>
+<rect x="410" y="160" width="420" height="500" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="432" y="196" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">2. What can go wrong?</text>
+<rect x="880" y="160" width="660" height="500" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="902" y="196" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">3. What will we do about it?</text>
+<rect x="410" y="710" width="1130" height="130" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="432" y="746" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">4. Did we do a good enough job?</text>
+<polyline points="320,300 450,300" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="385" y="280" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">scoped DFD</text>
+<polyline points="610,300 850,300 850,299 930,299" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="750" y="278" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">candidate threats</text>
+<polyline points="790,455 850,455 850,331.5 930,331.5" fill="none" stroke="#7667E8" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-purple)" stroke-dasharray="7 5"/>
+<text x="852" y="445" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#7667E8">suggest only</text>
+<polyline points="650,580 820,580 820,364 930,364" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="745" y="565" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">paths + preconditions</text>
+<polyline points="1140,325 1210,325" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1175" y="310" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">admit</text>
+<polyline points="1399,410 1399,500" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1425" y="455" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">prioritize</text>
+<polyline points="1345,610 1345,700 1344,700 1344,755" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="1365" y="680" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">verify</text>
+<polyline points="320,515 385,515 385,790 600,790" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="445" y="690" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">configuration drift</text>
+<polyline points="1040,790 900,790" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="970" y="775" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">gaps or stale scope</text>
+<polyline points="600,804 75,804 75,336 100,336" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)" stroke-dasharray="6 5"/>
+<text x="260" y="830" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">continuous refinement</text>
+<rect x="100" y="240" width="220" height="120" rx="16" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="210.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Versioned system</text>
+<text x="210.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">model</text>
+<text x="210.0" y="325" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">assets · actors ·</text>
+<text x="210.0" y="343" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">F1–F7 · B1–B7</text>
+<rect x="100" y="460" width="220" height="110" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="210.0" y="495" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Refresh triggers</text>
+<text x="210.0" y="524" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">tools · identity</text>
+<text x="210.0" y="542" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">· model · memory</text>
+<text x="210.0" y="560" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">· effects</text>
+<rect x="450" y="230" width="160" height="140" rx="16" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/>
+<text x="530.0" y="265" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Structured</text>
+<text x="530.0" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">discovery</text>
+<text x="530.0" y="315" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">STRIDE ·</text>
+<text x="530.0" y="333" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">misuse cases</text>
+<text x="530.0" y="351" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">· privacy</text>
+<rect x="630" y="400" width="160" height="110" rx="16" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="710.0" y="435" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Model</text>
+<text x="710.0" y="456" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">suggestion</text>
+<text x="710.0" y="485" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">untrusted</text>
+<text x="710.0" y="503" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">candidate</text>
+<rect x="450" y="520" width="200" height="120" rx="16" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/>
+<text x="550.0" y="555" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Attack tree</text>
+<text x="550.0" y="584" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">ANY / ALL paths</text>
+<text x="550.0" y="602" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">and</text>
+<text x="550.0" y="620" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">preconditions</text>
+<rect x="930" y="260" width="210" height="130" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1035.0" y="295" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Authenticated</text>
+<text x="1035.0" y="316" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">review gate</text>
+<text x="1035.0" y="345" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">validate IDs ·</text>
+<text x="1035.0" y="363" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">assumptions ·</text>
+<text x="1035.0" y="381" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">risk · scope</text>
+<rect x="1210" y="240" width="270" height="170" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1345.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Evidence-bound threat</text>
+<text x="1345.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">record</text>
+<text x="1345.0" y="325" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">control · test ·</text>
+<text x="1345.0" y="343" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">telemetry · owner ·</text>
+<text x="1345.0" y="361" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">residual risk</text>
+<rect x="1210" y="500" width="270" height="110" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1345.0" y="535" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Engineering and risk</text>
+<text x="1345.0" y="556" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">backlog</text>
+<text x="1345.0" y="585" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">design changes · test</text>
+<text x="1345.0" y="603" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">cases · accepted risk</text>
+<rect x="600" y="755" width="300" height="70" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="750.0" y="790" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Refresh decision</text>
+<text x="750.0" y="819" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">re-model changed scope</text>
+<rect x="1040" y="755" width="400" height="70" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1240.0" y="790" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Assurance evidence</text>
+<text x="1240.0" y="819" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">coverage · tests · drift · owners</text>
+<g font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D"><circle cx="70" cy="870" r="6" fill="#2F6BFF"/><text x="84" y="875">primary evidence flow</text><circle cx="260" cy="870" r="6" fill="#7667E8"/><text x="274" y="875">untrusted suggestion</text><circle cx="470" cy="870" r="6" fill="#16A3A5"/><text x="484" y="875">reviewed assurance artifact</text></g>
+</svg>
