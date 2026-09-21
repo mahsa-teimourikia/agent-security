@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "id": "security-invariants-blast-radius",
+  "title": "Security invariants: proposal to bounded effect",
+  "purpose": "Show how trusted state and trajectory-wide invariants constrain an untrusted agent proposal and produce attributable evidence.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation-and-notebook",
+    "alt_text": "Security objectives define invariants and a multidimensional blast-radius ceiling. An untrusted model proposal enters a trusted application gate alongside authenticated identity, a bounded capability, current policy, budgets, and a kill switch. Only a valid transition reaches the effect ledger; decisions and effects feed evidence and safety-plus-utility evaluation."
+  },
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC", "margin": 60, "grid": 10},
+  "layout": {"primary_flow": "left-to-right", "min_node_gap": 40, "min_layer_gap": 60},
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "semantic_colors": {
+      "objective": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "untrusted": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "control": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "evidence": {"fill": "#E5F7F6", "stroke": "#16A3A5"},
+      "operations": {"fill": "#FFFFFF", "stroke": "#52606D"}
+    }
+  },
+  "groups": [
+    {"id": "define", "label": "1. Define what must always hold", "bounds": {"x": 60, "y": 150, "width": 300, "height": 600}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "enforce", "label": "2. Enforce every consequential transition", "bounds": {"x": 410, "y": 150, "width": 760, "height": 600}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "verify", "label": "3. Verify trajectories and utility", "bounds": {"x": 1220, "y": 150, "width": 320, "height": 600}, "fill": "#FFFFFF", "stroke": "#D7DEE8"}
+  ],
+  "nodes": [
+    {"id": "objectives", "group": "define", "label": "Security objectives", "subtitle": "assets · harms · tolerances", "type": "objective", "bounds": {"x": 100, "y": 240, "width": 220, "height": 110}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "ceiling", "group": "define", "label": "Blast-radius ceiling", "subtitle": "tenants · resources · value · writes · egress · time", "type": "objective", "bounds": {"x": 100, "y": 510, "width": 220, "height": 140}, "ports": {"in": {"side": "right", "offset": 0.5}}},
+    {"id": "proposal", "group": "enforce", "label": "Model proposal", "subtitle": "untrusted operation and arguments", "type": "untrusted", "bounds": {"x": 450, "y": 230, "width": 200, "height": 110}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "identity", "group": "enforce", "label": "Authenticated context", "subtitle": "subject · tenant · scope", "type": "operations", "bounds": {"x": 450, "y": 470, "width": 200, "height": 110}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "capability", "group": "enforce", "label": "Bounded capability", "subtitle": "resources · limits · expiry", "type": "operations", "bounds": {"x": 720, "y": 230, "width": 210, "height": 110}, "ports": {"out": {"side": "bottom", "offset": 0.5}}},
+    {"id": "gate", "group": "enforce", "label": "Invariant gate", "subtitle": "state · transition · temporal checks", "type": "control", "bounds": {"x": 700, "y": 430, "width": 250, "height": 140}, "ports": {"objective": {"side": "left", "offset": 0.5}, "proposal": {"side": "left", "offset": 0.3}, "identity": {"side": "left", "offset": 0.7}, "capability": {"side": "top", "offset": 0.5}, "effect": {"side": "right", "offset": 0.5}, "kill": {"side": "right", "offset": 0.75}, "ceiling": {"side": "bottom", "offset": 0.3}, "evidence": {"side": "bottom", "offset": 0.7}}},
+    {"id": "effect", "group": "enforce", "label": "Effect ledger", "subtitle": "idempotent receipt", "type": "evidence", "bounds": {"x": 990, "y": 230, "width": 140, "height": 110}, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "kill", "group": "enforce", "label": "Kill switch", "subtitle": "current effect state", "type": "operations", "bounds": {"x": 990, "y": 520, "width": 140, "height": 110}, "ports": {"out": {"side": "left", "offset": 0.5}}},
+    {"id": "evidence", "group": "verify", "label": "Attributable evidence", "subtitle": "decision · reason · versions · digests", "type": "evidence", "bounds": {"x": 1260, "y": 240, "width": 240, "height": 140}, "ports": {"effect": {"side": "left", "offset": 0.35}, "out": {"side": "bottom", "offset": 0.5}}},
+    {"id": "evaluation", "group": "verify", "label": "Safety + utility evaluation", "subtitle": "attack effects · valid success · drift", "type": "evidence", "bounds": {"x": 1260, "y": 510, "width": 240, "height": 140}, "ports": {"decision": {"side": "left", "offset": 0.5}, "evidence": {"side": "top", "offset": 0.5}}}
+  ],
+  "edges": [
+    {"id": "objective_to_gate", "from": {"node": "objectives", "port": "out"}, "to": {"node": "gate", "port": "objective"}, "label": "invariants", "kind": "primary", "route": [[320, 295], [380, 295], [380, 400], [680, 400], [680, 500], [700, 500]], "label_at": [530, 390]},
+    {"id": "proposal_to_gate", "from": {"node": "proposal", "port": "out"}, "to": {"node": "gate", "port": "proposal"}, "label": "propose", "kind": "untrusted", "route": [[650, 285], [675, 285], [675, 472], [700, 472]], "label_at": [655, 390]},
+    {"id": "identity_to_gate", "from": {"node": "identity", "port": "out"}, "to": {"node": "gate", "port": "identity"}, "label": "trusted context", "kind": "secondary", "route": [[650, 525], [675, 525], [675, 528], [700, 528]], "label_at": [670, 605]},
+    {"id": "capability_to_gate", "from": {"node": "capability", "port": "out"}, "to": {"node": "gate", "port": "capability"}, "label": "maximum authority", "kind": "secondary", "route": [[825, 340], [825, 430]], "label_at": [895, 390]},
+    {"id": "kill_to_gate", "from": {"node": "kill", "port": "out"}, "to": {"node": "gate", "port": "kill"}, "label": "recheck", "kind": "feedback", "route": [[990, 575], [970, 575], [970, 535], [950, 535]], "label_at": [1000, 510]},
+    {"id": "gate_to_effect", "from": {"node": "gate", "port": "effect"}, "to": {"node": "effect", "port": "in"}, "label": "valid transition", "kind": "primary", "route": [[950, 500], [970, 500], [970, 285], [990, 285]], "label_at": [1015, 470]},
+    {"id": "effect_to_evidence", "from": {"node": "effect", "port": "out"}, "to": {"node": "evidence", "port": "effect"}, "label": "effect receipt", "kind": "primary", "route": [[1130, 285], [1185, 285], [1185, 289], [1260, 289]], "label_at": [1195, 270]},
+    {"id": "gate_to_evaluation", "from": {"node": "gate", "port": "evidence"}, "to": {"node": "evaluation", "port": "decision"}, "label": "all decisions", "kind": "secondary", "route": [[875, 570], [875, 690], [1190, 690], [1190, 580], [1260, 580]], "label_at": [1050, 710]},
+    {"id": "evidence_to_evaluation", "from": {"node": "evidence", "port": "out"}, "to": {"node": "evaluation", "port": "evidence"}, "label": "trajectory", "kind": "primary", "route": [[1380, 380], [1380, 510]], "label_at": [1425, 450]},
+    {"id": "gate_to_ceiling", "from": {"node": "gate", "port": "ceiling"}, "to": {"node": "ceiling", "port": "in"}, "label": "enforced ceiling", "kind": "feedback", "route": [[775, 570], [775, 680], [380, 680], [380, 580], [320, 580]], "label_at": [560, 700]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "verify_port_attachment": true, "verify_contrast": true}
+}

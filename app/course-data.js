@@ -24,6 +24,12 @@ export const publishedLessons = [
     correct: 1,
     explanation: "Model output and ordinal scores can support discovery and prioritization, but they do not grant review authority or prove a control. The accepted record needs current architecture bindings and deterministic assurance evidence.",
   }),
+  lesson("f3", "Foundation", "03", "Security invariants and blast radius", "Translate security objectives into state, transition, and temporal properties enforced at trusted boundaries.", "Enforce tenant, capability, approval, budget, idempotency, kill-switch, and attribution invariants while measuring safety, utility, and a multidimensional blast-radius ceiling.", "roadmap/beginner/03-security-invariants-and-blast-radius", "lab", {
+    prompt: "A deny-all policy produces zero forbidden effects in every attack case. What additional evidence is required before calling the design successful?",
+    options: ["Nothing; zero attack effects proves success", "Valid-task success and blocked-valid-task rates, plus explicit coverage and failure-state evidence", "A single combined blast-radius score"],
+    correct: 1,
+    explanation: "Safety evidence must be paired with utility and execution coverage. Deny-all can block every attack while making the system unusable, and one scalar can hide expansion in a different harm dimension.",
+  }),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -81,7 +87,7 @@ export const publishedLessons = [
 ];
 
 export const roadmapTracks = [
-  { level: "Foundation", range: "01–07", status: "2 published · 5 reading", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
+  { level: "Foundation", range: "01–07", status: "3 published · 4 reading", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "Pilot labs", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "Pilot labs", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
@@ -92,7 +98,7 @@ const road = (code, number, level, title, folder, status, evidence) => ({ code, 
 export const roadmapCourses = [
   road("F01", "01", "Foundation", "Architecture and trust boundaries", "roadmap/beginner/01-agent-security-architecture-and-trust-boundaries", "Published", "README · lab · OpenTelemetry adapter · notebook · tests · checkpoint"),
   road("F02", "02", "Foundation", "Threat modeling agentic systems", "roadmap/beginner/02-threat-modeling-agentic-systems", "Published", "README · lab · pytm adapter · notebook · tests · checkpoint"),
-  road("F03", "03", "Foundation", "Security invariants and blast radius", "roadmap/beginner/03-security-invariants-and-blast-radius", "Reading", "README · needs lab, notebook, tests"),
+  road("F03", "03", "Foundation", "Security invariants and blast radius", "roadmap/beginner/03-security-invariants-and-blast-radius", "Published", "README · lab · Hypothesis adapter · notebook · tests · checkpoint"),
   road("F04", "04", "Foundation", "Secure tool and action interfaces", "roadmap/beginner/04-secure-tool-and-action-interface-design", "Reading", "README · needs focused lab, notebook, tests"),
   road("F05", "05", "Foundation", "Authorization, approval, and least privilege", "roadmap/beginner/05-authorization-approval-and-least-privilege", "Reading", "README · needs focused lab, notebook, tests"),
   road("F06", "06", "Foundation", "Prompt injection and untrusted content", "roadmap/beginner/06-prompt-injection-and-untrusted-content", "Reading", "README · needs focused lab, notebook, tests"),
