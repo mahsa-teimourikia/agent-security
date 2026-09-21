@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Secure tool interfaces: proposal to admitted result</title>
+<desc id="desc">An untrusted model proposal and tool metadata enter a trusted contract gateway. The gateway combines an exact active contract with authenticated context, business state, and an execution grant. An allowlisted adapter reaches a provider. Results are validated before model exposure, while unknown outcomes go through reconciliation and bounded traces support evaluation.</desc>
+<defs><marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2F6BFF"/></marker><marker id="arrow-slate" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#52606D"/></marker><marker id="arrow-purple" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#7667E8"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="60" y="72" font-family="Inter,Arial,sans-serif" font-size="32" font-weight="700" fill="#16324F">Secure tool interfaces: proposal to admitted result</text>
+<text x="60" y="108" font-family="Inter,Arial,sans-serif" font-size="17" fill="#52606D">Schemas constrain shape. Trusted context, current policy, business state, and recovery govern effects.</text>
+<rect x="60" y="150" width="300" height="620" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="82" y="186" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">1. Propose, never authorize</text>
+<rect x="410" y="150" width="760" height="620" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="432" y="186" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">2. Resolve, validate, authorize, dispatch</text>
+<rect x="1220" y="150" width="320" height="620" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="1242" y="186" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">3. Admit results and evidence</text>
+<polyline points="320,295 390,295 390,380 670,380 670,448 700,448" fill="none" stroke="#7667E8" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-purple)" stroke-dasharray="7 5"/>
+<text x="520" y="370" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#7667E8">untrusted request</text>
+<polyline points="650,295 680,295 680,432 700,432" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="720" y="370" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">exact contract</text>
+<polyline points="320,575 390,575 390,690 675,690 675,512 700,512" fill="none" stroke="#7667E8" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-purple)" stroke-dasharray="7 5"/>
+<text x="520" y="710" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#7667E8">hints only</text>
+<polyline points="650,595 685,595 685,528 700,528" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="760" y="625" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">authority and state</text>
+<polyline points="950,448 970,448 970,295 990,295" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1025" y="425" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">allowlisted call</text>
+<polyline points="1130,295 1185,295 1185,289 1260,289" fill="none" stroke="#7667E8" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-purple)" stroke-dasharray="7 5"/>
+<text x="1195" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#7667E8">untrusted output</text>
+<polyline points="1060,350 1060,540" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)" stroke-dasharray="6 5"/>
+<text x="1120" y="455" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">unknown outcome</text>
+<polyline points="990,595 970,595 970,528 950,528" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)" stroke-dasharray="6 5"/>
+<text x="1015" y="675" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">reconcile</text>
+<polyline points="875,560 875,710 1190,710 1190,590 1260,590" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="1040" y="730" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">every decision</text>
+<polyline points="1380,380 1380,520" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1440" y="455" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">admitted digest</text>
+<rect x="100" y="240" width="220" height="110" rx="16" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="210.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Model tool</text>
+<text x="210.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">proposal</text>
+<text x="210.0" y="325" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">name · version ·</text>
+<text x="210.0" y="343" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">arguments ·</text>
+<text x="210.0" y="361" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">operation ID</text>
+<rect x="100" y="520" width="220" height="110" rx="16" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="210.0" y="555" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Descriptions and</text>
+<text x="210.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">annotations</text>
+<text x="210.0" y="605" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">discovery hints,</text>
+<text x="210.0" y="623" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">not authority</text>
+<rect x="450" y="240" width="200" height="110" rx="16" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="550.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Versioned</text>
+<text x="550.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">registry</text>
+<text x="550.0" y="325" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">exact active</text>
+<text x="550.0" y="343" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">input and</text>
+<text x="550.0" y="361" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">output contract</text>
+<rect x="450" y="540" width="200" height="110" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="550.0" y="575" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Trusted current</text>
+<text x="550.0" y="596" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">state</text>
+<text x="550.0" y="625" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">actor · tenant</text>
+<text x="550.0" y="643" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">· resource ·</text>
+<text x="550.0" y="661" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">grant · policy</text>
+<rect x="700" y="400" width="250" height="160" rx="16" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/>
+<text x="825.0" y="435" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Contract gateway</text>
+<text x="825.0" y="464" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">strict shape ·</text>
+<text x="825.0" y="482" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">semantics ·</text>
+<text x="825.0" y="500" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">authority ·</text>
+<text x="825.0" y="518" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">idempotency</text>
+<rect x="990" y="240" width="140" height="110" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1060.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Narrow</text>
+<text x="1060.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">adapter</text>
+<text x="1060.0" y="325" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">bounded</text>
+<text x="1060.0" y="343" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">provider</text>
+<text x="1060.0" y="361" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">call</text>
+<rect x="990" y="540" width="140" height="110" rx="16" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/>
+<text x="1060.0" y="575" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Reconciliation</text>
+<text x="1060.0" y="604" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">lookup</text>
+<text x="1060.0" y="622" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">before retry</text>
+<rect x="1260" y="240" width="240" height="140" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1380.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Validated result</text>
+<text x="1380.0" y="304" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">output schema</text>
+<text x="1380.0" y="322" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">before model</text>
+<text x="1380.0" y="340" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">exposure</text>
+<rect x="1260" y="520" width="240" height="140" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1380.0" y="555" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Bounded decision</text>
+<text x="1380.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">evidence</text>
+<text x="1380.0" y="605" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">versions · digests</text>
+<text x="1380.0" y="623" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">· reason · outcome</text>
+<g font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D"><circle cx="70" cy="850" r="6" fill="#2F6BFF"/><text x="84" y="855">enforced flow</text><circle cx="220" cy="850" r="6" fill="#7667E8"/><text x="234" y="855">untrusted proposal or result</text><circle cx="460" cy="850" r="6" fill="#52606D"/><text x="474" y="855">trusted state or recovery</text><circle cx="690" cy="850" r="6" fill="#16A3A5"/><text x="704" y="855">admitted evidence</text></g>
+</svg>
