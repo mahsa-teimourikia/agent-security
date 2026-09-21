@@ -6,6 +6,7 @@ dependencies = []
 
 [project.optional-dependencies]
 learner = [
+    "hypothesis>=6.168,<7",
     "jupyter",
     "ipykernel",
     "mcp>=2.2,<3",

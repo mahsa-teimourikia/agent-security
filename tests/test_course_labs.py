@@ -11,6 +11,7 @@ LABS = [
     "curriculum/shared/runtime_security_lab.py",
     "curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.py",
     "curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/lab.py",
+    "curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/lab.py",
     "curriculum/roadmap/intermediate/01-agent-memory-security/lab.py",
     "curriculum/roadmap/intermediate/04-secrets-and-credential-security/lab.py",
     "curriculum/roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/lab.py",

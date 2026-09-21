@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Security invariants: proposal to bounded effect</title>
+<desc id="desc">Security objectives define invariants and a multidimensional blast-radius ceiling. An untrusted model proposal enters a trusted application gate alongside authenticated identity, a bounded capability, current policy, budgets, and a kill switch. Only a valid transition reaches the effect ledger; decisions and effects feed evidence and safety-plus-utility evaluation.</desc>
+<defs><marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2F6BFF"/></marker><marker id="arrow-slate" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#52606D"/></marker><marker id="arrow-purple" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#7667E8"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="60" y="72" font-family="Inter,Arial,sans-serif" font-size="32" font-weight="700" fill="#16324F">Security invariants: proposal to bounded effect</text>
+<text x="60" y="108" font-family="Inter,Arial,sans-serif" font-size="17" fill="#52606D">Models propose. Current trusted state enforces the ceiling. Trajectory evidence tests safety and utility.</text>
+<rect x="60" y="150" width="300" height="600" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="82" y="186" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">1. Define what must always hold</text>
+<rect x="410" y="150" width="760" height="600" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="432" y="186" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">2. Enforce every consequential transition</text>
+<rect x="1220" y="150" width="320" height="600" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="1242" y="186" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#16324F">3. Verify trajectories and utility</text>
+<polyline points="320,295 380,295 380,400 680,400 680,500 700,500" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="530" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">invariants</text>
+<polyline points="650,285 675,285 675,472 700,472" fill="none" stroke="#7667E8" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-purple)" stroke-dasharray="7 5"/>
+<text x="655" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#7667E8">propose</text>
+<polyline points="650,525 675,525 675,528 700,528" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="670" y="605" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">trusted context</text>
+<polyline points="825,340 825,430" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="895" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">maximum authority</text>
+<polyline points="990,575 970,575 970,535 950,535" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)" stroke-dasharray="6 5"/>
+<text x="1000" y="510" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">recheck</text>
+<polyline points="950,500 970,500 970,285 990,285" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1015" y="470" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">valid transition</text>
+<polyline points="1130,285 1185,285 1185,289 1260,289" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1195" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">effect receipt</text>
+<polyline points="875,570 875,690 1190,690 1190,580 1260,580" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="1050" y="710" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">all decisions</text>
+<polyline points="1380,380 1380,510" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1425" y="450" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">trajectory</text>
+<polyline points="775,570 775,680 380,680 380,580 320,580" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)" stroke-dasharray="6 5"/>
+<text x="560" y="700" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">enforced ceiling</text>
+<rect x="100" y="240" width="220" height="110" rx="16" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="210.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Security</text>
+<text x="210.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">objectives</text>
+<text x="210.0" y="325" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">assets · harms ·</text>
+<text x="210.0" y="343" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">tolerances</text>
+<rect x="100" y="510" width="220" height="140" rx="16" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="210.0" y="545" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Blast-radius</text>
+<text x="210.0" y="566" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">ceiling</text>
+<text x="210.0" y="595" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">tenants ·</text>
+<text x="210.0" y="613" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">resources · value</text>
+<text x="210.0" y="631" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">· writes · egress</text>
+<text x="210.0" y="649" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">· time</text>
+<rect x="450" y="230" width="200" height="110" rx="16" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="550.0" y="265" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Model proposal</text>
+<text x="550.0" y="294" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">untrusted</text>
+<text x="550.0" y="312" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">operation and</text>
+<text x="550.0" y="330" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">arguments</text>
+<rect x="450" y="470" width="200" height="110" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="550.0" y="505" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Authenticated</text>
+<text x="550.0" y="526" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">context</text>
+<text x="550.0" y="555" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">subject ·</text>
+<text x="550.0" y="573" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">tenant · scope</text>
+<rect x="720" y="230" width="210" height="110" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="825.0" y="265" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Bounded</text>
+<text x="825.0" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">capability</text>
+<text x="825.0" y="315" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">resources ·</text>
+<text x="825.0" y="333" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">limits · expiry</text>
+<rect x="700" y="430" width="250" height="140" rx="16" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/>
+<text x="825.0" y="465" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Invariant gate</text>
+<text x="825.0" y="494" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">state · transition ·</text>
+<text x="825.0" y="512" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">temporal checks</text>
+<rect x="990" y="230" width="140" height="110" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1060.0" y="265" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Effect</text>
+<text x="1060.0" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">ledger</text>
+<text x="1060.0" y="315" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">idempotent</text>
+<text x="1060.0" y="333" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">receipt</text>
+<rect x="990" y="520" width="140" height="110" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1060.0" y="555" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Kill switch</text>
+<text x="1060.0" y="584" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">current</text>
+<text x="1060.0" y="602" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">effect state</text>
+<rect x="1260" y="240" width="240" height="140" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1380.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Attributable</text>
+<text x="1380.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">evidence</text>
+<text x="1380.0" y="325" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">decision · reason ·</text>
+<text x="1380.0" y="343" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">versions · digests</text>
+<rect x="1260" y="510" width="240" height="140" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1380.0" y="545" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">Safety + utility</text>
+<text x="1380.0" y="566" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#16324F">evaluation</text>
+<text x="1380.0" y="595" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">attack effects ·</text>
+<text x="1380.0" y="613" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">valid success ·</text>
+<text x="1380.0" y="631" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D">drift</text>
+<g font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D"><circle cx="70" cy="850" r="6" fill="#2F6BFF"/><text x="84" y="855">enforced flow</text><circle cx="220" cy="850" r="6" fill="#7667E8"/><text x="234" y="855">untrusted proposal</text><circle cx="410" cy="850" r="6" fill="#52606D"/><text x="424" y="855">current trusted state</text><circle cx="610" cy="850" r="6" fill="#16A3A5"/><text x="624" y="855">attributable evidence</text></g>
+</svg>

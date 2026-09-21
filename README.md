@@ -20,6 +20,7 @@ Ready to test your understanding? Take the interactive [Agent Security Knowledge
 |---|---|---|---|
 | 01 | [Agent Security Architecture and Trust Boundaries](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/README.md) | [lab.py](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.ipynb) |
 | 02 | [Threat Modeling Agentic Systems](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/README.md) | [lab.py](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/lab.ipynb) |
+| 03 | [Security Invariants and Blast Radius](curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/README.md) | [lab.py](curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/lab.ipynb) |
 
 ### Beginner
 
