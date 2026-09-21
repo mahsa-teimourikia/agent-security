@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "id": "secure-tool-interface",
+  "title": "Secure tool interfaces: proposal to admitted result",
+  "subtitle": "Schemas constrain shape. Trusted context, current policy, business state, and recovery govern effects.",
+  "purpose": "Show an untrusted tool proposal crossing a versioned application-owned contract gateway before a narrow provider effect and result admission.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation-and-notebook",
+    "alt_text": "An untrusted model proposal and tool metadata enter a trusted contract gateway. The gateway combines an exact active contract with authenticated context, business state, and an execution grant. An allowlisted adapter reaches a provider. Results are validated before model exposure, while unknown outcomes go through reconciliation and bounded traces support evaluation."
+  },
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC", "margin": 60, "grid": 10},
+  "layout": {"primary_flow": "left-to-right", "min_node_gap": 40, "min_layer_gap": 60},
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "semantic_colors": {
+      "untrusted": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "contract": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "control": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "effect": {"fill": "#FFFFFF", "stroke": "#52606D"},
+      "evidence": {"fill": "#E5F7F6", "stroke": "#16A3A5"}
+    }
+  },
+  "groups": [
+    {"id": "propose", "label": "1. Propose, never authorize", "bounds": {"x": 60, "y": 150, "width": 300, "height": 620}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "enforce", "label": "2. Resolve, validate, authorize, dispatch", "bounds": {"x": 410, "y": 150, "width": 760, "height": 620}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "admit", "label": "3. Admit results and evidence", "bounds": {"x": 1220, "y": 150, "width": 320, "height": 620}, "fill": "#FFFFFF", "stroke": "#D7DEE8"}
+  ],
+  "nodes": [
+    {"id": "proposal", "group": "propose", "label": "Model tool proposal", "subtitle": "name · version · arguments · operation ID", "type": "untrusted", "bounds": {"x": 100, "y": 240, "width": 220, "height": 110}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "metadata", "group": "propose", "label": "Descriptions and annotations", "subtitle": "discovery hints, not authority", "type": "untrusted", "bounds": {"x": 100, "y": 520, "width": 220, "height": 110}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "registry", "group": "enforce", "label": "Versioned registry", "subtitle": "exact active input and output contract", "type": "contract", "bounds": {"x": 450, "y": 240, "width": 200, "height": 110}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "context", "group": "enforce", "label": "Trusted current state", "subtitle": "actor · tenant · resource · grant · policy", "type": "effect", "bounds": {"x": 450, "y": 540, "width": 200, "height": 110}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "gateway", "group": "enforce", "label": "Contract gateway", "subtitle": "strict shape · semantics · authority · idempotency", "type": "control", "bounds": {"x": 700, "y": 400, "width": 250, "height": 160}, "ports": {"proposal": {"side": "left", "offset": 0.3}, "registry": {"side": "left", "offset": 0.2}, "metadata": {"side": "left", "offset": 0.7}, "context": {"side": "left", "offset": 0.8}, "effect": {"side": "right", "offset": 0.3}, "recovery": {"side": "right", "offset": 0.8}, "evidence": {"side": "bottom", "offset": 0.7}}},
+    {"id": "provider", "group": "enforce", "label": "Narrow adapter", "subtitle": "bounded provider call", "type": "effect", "bounds": {"x": 990, "y": 240, "width": 140, "height": 110}, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}, "recovery": {"side": "bottom", "offset": 0.5}}},
+    {"id": "recovery", "group": "enforce", "label": "Reconciliation", "subtitle": "lookup before retry", "type": "control", "bounds": {"x": 990, "y": 540, "width": 140, "height": 110}, "ports": {"in": {"side": "top", "offset": 0.5}, "out": {"side": "left", "offset": 0.5}}},
+    {"id": "result", "group": "admit", "label": "Validated result", "subtitle": "output schema before model exposure", "type": "evidence", "bounds": {"x": 1260, "y": 240, "width": 240, "height": 140}, "ports": {"in": {"side": "left", "offset": 0.35}, "out": {"side": "bottom", "offset": 0.5}}},
+    {"id": "traces", "group": "admit", "label": "Bounded decision evidence", "subtitle": "versions · digests · reason · outcome", "type": "evidence", "bounds": {"x": 1260, "y": 520, "width": 240, "height": 140}, "ports": {"decision": {"side": "left", "offset": 0.5}, "result": {"side": "top", "offset": 0.5}}}
+  ],
+  "edges": [
+    {"id": "proposal_gateway", "from": {"node": "proposal", "port": "out"}, "to": {"node": "gateway", "port": "proposal"}, "label": "untrusted request", "kind": "untrusted", "route": [[320, 295], [390, 295], [390, 380], [670, 380], [670, 448], [700, 448]], "label_at": [520, 370]},
+    {"id": "registry_gateway", "from": {"node": "registry", "port": "out"}, "to": {"node": "gateway", "port": "registry"}, "label": "exact contract", "kind": "primary", "route": [[650, 295], [680, 295], [680, 432], [700, 432]], "label_at": [720, 370]},
+    {"id": "metadata_gateway", "from": {"node": "metadata", "port": "out"}, "to": {"node": "gateway", "port": "metadata"}, "label": "hints only", "kind": "untrusted", "route": [[320, 575], [390, 575], [390, 690], [675, 690], [675, 512], [700, 512]], "label_at": [520, 710]},
+    {"id": "context_gateway", "from": {"node": "context", "port": "out"}, "to": {"node": "gateway", "port": "context"}, "label": "authority and state", "kind": "secondary", "route": [[650, 595], [685, 595], [685, 528], [700, 528]], "label_at": [760, 625]},
+    {"id": "gateway_provider", "from": {"node": "gateway", "port": "effect"}, "to": {"node": "provider", "port": "in"}, "label": "allowlisted call", "kind": "primary", "route": [[950, 448], [970, 448], [970, 295], [990, 295]], "label_at": [1025, 425]},
+    {"id": "provider_result", "from": {"node": "provider", "port": "out"}, "to": {"node": "result", "port": "in"}, "label": "untrusted output", "kind": "untrusted", "route": [[1130, 295], [1185, 295], [1185, 289], [1260, 289]], "label_at": [1195, 275]},
+    {"id": "provider_recovery", "from": {"node": "provider", "port": "recovery"}, "to": {"node": "recovery", "port": "in"}, "label": "unknown outcome", "kind": "feedback", "route": [[1060, 350], [1060, 540]], "label_at": [1120, 455]},
+    {"id": "recovery_gateway", "from": {"node": "recovery", "port": "out"}, "to": {"node": "gateway", "port": "recovery"}, "label": "reconcile", "kind": "feedback", "route": [[990, 595], [970, 595], [970, 528], [950, 528]], "label_at": [1015, 675]},
+    {"id": "gateway_traces", "from": {"node": "gateway", "port": "evidence"}, "to": {"node": "traces", "port": "decision"}, "label": "every decision", "kind": "secondary", "route": [[875, 560], [875, 710], [1190, 710], [1190, 590], [1260, 590]], "label_at": [1040, 730]},
+    {"id": "result_traces", "from": {"node": "result", "port": "out"}, "to": {"node": "traces", "port": "result"}, "label": "admitted digest", "kind": "primary", "route": [[1380, 380], [1380, 520]], "label_at": [1440, 455]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "verify_port_attachment": true, "verify_contrast": true}
+}

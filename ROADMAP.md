@@ -4,10 +4,10 @@ The roadmap is managed as an evidence backlog rather than a list of pages.
 
 ## Current release
 
-Twelve published lessons form the runnable path:
+Thirteen published lessons form the runnable path:
 
-- three foundation courses on architecture, threat modeling, security invariants,
-  and blast-radius control;
+- four foundation courses on architecture, threat modeling, security invariants,
+  blast-radius control, and secure tool interfaces;
 - three beginner courses on tool policy, prompt injection, and secure research;
 - three intermediate courses on identity, MCP gateways, and incident recovery;
 - three advanced courses on attack evaluation, delegation, and production
