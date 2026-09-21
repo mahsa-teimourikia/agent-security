@@ -6,13 +6,19 @@ A comprehensive, source-linked curriculum for securing AI agents, agentic workfl
 
 **[Open the Agent Security Learning Hub →](https://mahsa-teimourikia.github.io/agent-security/)**
 
-The Hub is organized into Beginner, Intermediate, and Advanced published paths. Each published lesson follows **Learn → Lab → Checkpoint**, links to a credential-free notebook and reusable Python lab, uses a focused checkpoint, and records completion locally in the browser. Roadmap material is shown separately and cannot be marked complete before its runnable artifacts and evaluation are ready.
+The Hub is organized into Foundation, Beginner, Intermediate, and Advanced published paths. Each published lesson follows **Learn → Lab → Checkpoint**, links to a credential-free notebook and reusable Python lab, uses a focused checkpoint, and records completion locally in the browser. Roadmap material is shown separately and cannot be marked complete before its runnable artifacts and evaluation are ready.
 
 ### Knowledge check
 
 Ready to test your understanding? Take the interactive [Agent Security Knowledge Check](https://mahsa-teimourikia.github.io/agent-security/quiz/) after completing the lessons. It includes multi-select questions, explanations, scoring, and retry support.
 
 ## Published curriculum
+
+### Foundation
+
+| # | Title | Lab | Notebook |
+|---|---|---|---|
+| 01 | [Agent Security Architecture and Trust Boundaries](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/README.md) | [lab.py](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.ipynb) |
 
 ### Beginner
 

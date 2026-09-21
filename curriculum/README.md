@@ -2,19 +2,19 @@
 
 This map defines the next 36-course learning path. Course numbers restart at
 `01` within each level; the Learning Hub prefixes them with `F`, `I`, `A`, or
-`E` when a globally unique label is useful. The currently published nine-course
-path remains listed in the repository root and Learning Hub while these topics
-pass their delivery gates. The expansion follows one
+`E` when a globally unique label is useful. The currently published ten-course
+path remains listed in the repository root and Learning Hub while the remaining
+topics pass their delivery gates. The expansion follows one
 enterprise research-and-support scenario: an apparently helpful agent gains
 RAG, memory, tool access, a specialist, MCP, durable state, and eventually
 production authority. Each stage adds a trust boundary and an attack that must
 be traced, contained, tested, and operationally owned.
 
-## Foundation sequence (reading sequence)
+## Foundation sequence (one published, six reading)
 
 | Course | Focus | Practical artifact |
 | --- | --- | --- |
-| [01](roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/) | architecture and boundaries | observable boundary inventory |
+| [01](roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/) **Published** | architecture and boundaries | observable boundary inventory, executable controls, OpenTelemetry adapter, notebook, and tests |
 | [02](roadmap/beginner/02-threat-modeling-agentic-systems/) | STRIDE, attack trees, abuse paths | threat record |
 | [03](roadmap/beginner/03-security-invariants-and-blast-radius/) | measurable safety properties | invariant suite |
 | [04](roadmap/beginner/04-secure-tool-and-action-interface-design/) | narrow typed tools | tool contract |
@@ -22,9 +22,10 @@ be traced, contained, tested, and operationally owned.
 | [06](roadmap/beginner/06-prompt-injection-and-untrusted-content/) | injection containment | attack matrix |
 | [07](roadmap/beginner/07-context-and-evidence-security/) | provenance-aware context | context admission trace |
 
-These chapters establish the conceptual sequence. They are not labelled as
-published Hub lessons until each owns or deliberately shares a reusable lab,
-adds a top-to-bottom executable notebook, and receives a focused checkpoint.
+These chapters establish the conceptual sequence. Foundation 01 has passed the
+publication gate. The remaining chapters are not labelled as published Hub
+lessons until each owns or deliberately shares a reusable lab, adds a
+top-to-bottom executable notebook, and receives a focused checkpoint.
 
 ## Intermediate sequence (pilot labs and planned topics)
 

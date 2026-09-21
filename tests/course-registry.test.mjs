@@ -36,7 +36,7 @@ test("published lessons have runnable, course-specific artifacts", () => {
   }
 });
 
-test("roadmap is clearly separate from published lessons", () => {
+test("roadmap status and promotion evidence remain explicit", () => {
   assert.deepEqual(roadmapTracks.map(({ range }) => range), ["01–07", "01–10", "01–10", "01–09"]);
   assert.ok(roadmapTracks.every(({ status }) => status !== "Published"));
   assert.equal(roadmapCourses.length, 36);
@@ -55,12 +55,22 @@ test("roadmap is clearly separate from published lessons", () => {
     );
   }
   assert.equal(new Set(roadmapCourses.map(({ folder }) => folder)).size, 36);
+  const publishedRoadmapFolders = new Set(
+    publishedLessons
+      .map(({ material }) => material.match(/^curriculum\/(roadmap\/.+)\/README\.md$/)?.[1])
+      .filter(Boolean),
+  );
   for (const course of roadmapCourses) {
     assert.match(course.code, /^[FIAE]\d{2}$/);
     assert.ok(course.folder.startsWith("roadmap/"), `${course.code}: roadmap pages must remain separate from published lessons`);
-    assert.notEqual(course.status, "Published", `${course.code}: roadmap course was promoted without its gate`);
     assert.ok(fs.existsSync(`curriculum/${course.folder}/README.md`), `${course.code}: missing roadmap page`);
-    assert.ok(course.evidence.includes("needs"), `${course.code}: remaining evidence must be explicit`);
+    if (course.status === "Published") {
+      assert.ok(publishedRoadmapFolders.has(course.folder), `${course.code}: promoted course is absent from published lessons`);
+      assert.ok(!course.evidence.includes("needs"), `${course.code}: published evidence still advertises a gap`);
+    } else {
+      assert.ok(!publishedRoadmapFolders.has(course.folder), `${course.code}: unpublished roadmap course leaked into published lessons`);
+      assert.ok(course.evidence.includes("needs"), `${course.code}: remaining evidence must be explicit`);
+    }
     const roadmapPage = fs.readFileSync(`curriculum/${course.folder}/README.md`, "utf8");
     assert.ok(roadmapPage.includes(`Roadmap status: ${course.status}`), `${course.code}: page and registry status disagree`);
   }

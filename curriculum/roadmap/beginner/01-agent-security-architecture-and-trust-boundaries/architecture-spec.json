@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "id": "foundation-01-agent-trust-boundaries",
+  "title": "Research-and-support agent trust boundaries",
+  "purpose": "Show where data, proposals, effects, telemetry, and revocation cross independently enforced zones.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "A research-and-support agent architecture with nine numbered trust boundaries. The model proposes work inside an agent zone; application gateways enforce context, tools, memory, telemetry, and operations before data or authority crosses into enterprise systems."
+  },
+  "canvas": {"width": 1720, "height": 980, "background": "#F7F9FC", "margin": 60, "grid": 10},
+  "layout": {"primary_flow": "left-to-right", "min_node_gap": 40, "min_layer_gap": 60, "node_padding": {"x": 20, "y": 14}},
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "title_color": "#16324F",
+    "semantic_colors": {
+      "external": {"fill": "#FFFFFF", "stroke": "#52606D"},
+      "service": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "agent": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "data": {"fill": "#E5F7F6", "stroke": "#16A3A5"},
+      "action": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "operations": {"fill": "#FFFFFF", "stroke": "#52606D"}
+    }
+  },
+  "groups": [
+    {"id": "external", "label": "External / untrusted", "bounds": {"x": 60, "y": 170, "width": 210, "height": 520}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "application", "label": "Trusted application control plane", "bounds": {"x": 310, "y": 140, "width": 590, "height": 580}, "fill": "#FFFFFF", "stroke": "#2F6BFF"},
+    {"id": "agent", "label": "Probabilistic agent", "bounds": {"x": 950, "y": 180, "width": 220, "height": 310}, "fill": "#F8F6FF", "stroke": "#7667E8"},
+    {"id": "systems", "label": "Data and enterprise systems", "bounds": {"x": 1220, "y": 140, "width": 440, "height": 580}, "fill": "#FFFFFF", "stroke": "#16A3A5"},
+    {"id": "operations", "label": "Operations plane", "bounds": {"x": 310, "y": 780, "width": 860, "height": 150}, "fill": "#FFFFFF", "stroke": "#52606D"}
+  ],
+  "nodes": [
+    {"id": "user", "group": "external", "label": "User / attacker", "subtitle": "Requests and content", "type": "external", "bounds": {"x": 90, "y": 370, "width": 150, "height": 100}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "gateway", "group": "application", "label": "API gateway", "subtitle": "Authenticate", "type": "service", "bounds": {"x": 350, "y": 370, "width": 160, "height": 100}, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "context", "group": "application", "label": "Context gateway", "subtitle": "Admit evidence", "type": "service", "bounds": {"x": 570, "y": 210, "width": 180, "height": 100}, "ports": {"model": {"side": "right", "offset": 0.5}, "data": {"side": "top", "offset": 0.5}}},
+    {"id": "runtime", "group": "application", "label": "Agent runtime", "subtitle": "Bind trusted context", "type": "service", "bounds": {"x": 560, "y": 470, "width": 180, "height": 110}, "ports": {"model": {"side": "right", "offset": 0.3}, "tool": {"side": "right", "offset": 0.72}, "memory": {"side": "bottom", "offset": 0.35}, "telemetry": {"side": "bottom", "offset": 0.65}, "control": {"side": "bottom", "offset": 0.8}}},
+    {"id": "tool_gateway", "group": "application", "label": "Tool policy gateway", "subtitle": "Authorize effects", "type": "action", "bounds": {"x": 770, "y": 500, "width": 100, "height": 110}, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "model", "group": "agent", "label": "Model + planner", "subtitle": "Propose, never authorize", "type": "agent", "bounds": {"x": 980, "y": 280, "width": 160, "height": 120}, "ports": {"context": {"side": "left", "offset": 0.35}, "proposal": {"side": "left", "offset": 0.75}}},
+    {"id": "evidence", "group": "systems", "label": "Evidence APIs", "subtitle": "Provenance + ACLs", "type": "data", "bounds": {"x": 1260, "y": 190, "width": 170, "height": 100}, "ports": {"in": {"side": "top", "offset": 0.5}}},
+    {"id": "memory", "group": "systems", "label": "Memory store", "subtitle": "Tenant-scoped", "type": "data", "bounds": {"x": 1260, "y": 440, "width": 170, "height": 100}, "ports": {"in": {"side": "bottom", "offset": 0.5}}},
+    {"id": "enterprise", "group": "systems", "label": "Ticket / refund API", "subtitle": "Real-world effect", "type": "action", "bounds": {"x": 1470, "y": 440, "width": 160, "height": 100}, "ports": {"in": {"side": "left", "offset": 0.5}}},
+    {"id": "telemetry", "group": "operations", "label": "Security telemetry", "subtitle": "Bounded decision evidence", "type": "operations", "bounds": {"x": 420, "y": 820, "width": 220, "height": 80}, "ports": {"in": {"side": "top", "offset": 0.5}}},
+    {"id": "control", "group": "operations", "label": "Kill switch + recovery", "subtitle": "Operator authority", "type": "operations", "bounds": {"x": 820, "y": 820, "width": 220, "height": 80}, "ports": {"out": {"side": "top", "offset": 0.5}}}
+  ],
+  "edges": [
+    {"id": "B1", "from": {"node": "user", "port": "out"}, "to": {"node": "gateway", "port": "in"}, "label": "B1 request", "kind": "primary", "route": [[240, 420], [350, 420]]},
+    {"id": "B2", "from": {"node": "context", "port": "data"}, "to": {"node": "evidence", "port": "in"}, "label": "B2 evidence query + result", "kind": "secondary", "route": [[660, 210], [660, 100], [1345, 100], [1345, 190]]},
+    {"id": "B3", "from": {"node": "context", "port": "model"}, "to": {"node": "model", "port": "context"}, "label": "B3 bounded context", "kind": "primary", "route": [[750, 260], [900, 260], [900, 322], [980, 322]]},
+    {"id": "B4", "from": {"node": "model", "port": "proposal"}, "to": {"node": "runtime", "port": "model"}, "label": "B4 untrusted proposal", "kind": "secondary", "route": [[980, 370], [920, 370], [920, 503], [740, 503]]},
+    {"id": "B5", "from": {"node": "runtime", "port": "tool"}, "to": {"node": "tool_gateway", "port": "in"}, "label": "B5 tool request", "kind": "primary", "route": [[740, 549], [755, 549], [755, 555], [770, 555]]},
+    {"id": "B6", "from": {"node": "tool_gateway", "port": "out"}, "to": {"node": "enterprise", "port": "in"}, "label": "B6 authorized effect", "kind": "primary", "route": [[870, 555], [1180, 555], [1180, 620], [1450, 620], [1450, 490], [1470, 490]]},
+    {"id": "B7", "from": {"node": "runtime", "port": "memory"}, "to": {"node": "memory", "port": "in"}, "label": "B7 memory read", "kind": "secondary", "route": [[623, 580], [623, 670], [1345, 670], [1345, 540]]},
+    {"id": "B8", "from": {"node": "runtime", "port": "telemetry"}, "to": {"node": "telemetry", "port": "in"}, "label": "B8 decision evidence", "kind": "secondary", "route": [[677, 580], [677, 740], [530, 740], [530, 820]]},
+    {"id": "B9", "from": {"node": "control", "port": "out"}, "to": {"node": "runtime", "port": "control"}, "label": "B9 revoke / recover", "kind": "secondary", "route": [[930, 820], [930, 720], [704, 720], [704, 580]]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 14, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true},
+  "rendering": {"renderer": "deterministic SVG", "source": "architecture-spec.json", "notes": "The SVG uses the exact group, node, port, route, label, and semantic-color geometry declared here."}
+}

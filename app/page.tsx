@@ -70,7 +70,7 @@ export default function App() {
             <p className="progress">{completed.length} / {publishedLessons.length} completed</p>
           </div>
           <div className="filters" aria-label="Filter lessons by level">
-            {["All", "Beginner", "Intermediate", "Advanced"].map((item) => (
+            {["All", "Foundation", "Beginner", "Intermediate", "Advanced"].map((item) => (
               <button className={level === item ? "active" : ""} key={item} onClick={() => setLevel(item)}>{item}</button>
             ))}
           </div>
