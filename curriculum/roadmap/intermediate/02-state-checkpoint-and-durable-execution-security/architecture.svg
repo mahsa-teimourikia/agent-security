@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Secure Durable Pause and Resume</title>
+<desc id="desc">An authenticated resume request supplies only an opaque checkpoint identifier. Trusted application code loads a server-owned checkpoint, verifies its complete signature and parent chain, rechecks current identity, policy, tool, and exact approval, applies a deterministic migration, and atomically acquires one lease. The effect boundary dispatches one stable operation to the provider. Known receipts or explicitly unknown outcomes produce a signed child checkpoint; unknown outcomes loop through reconciliation without blind redispatch. Current registries, a transactional store, bounded audit evidence, and explicit terminal outcomes support the flow.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Secure Durable Pause and Resume</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">A checkpoint is integrity-bound evidence; current policy and one exclusive lease authorize progress</text>
+<rect x="45" y="130" width="245" height="455" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="61" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">RESUME REQUEST</text>
+<rect x="325" y="130" width="585" height="455" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="341" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED RESUME BOUNDARY</text>
+<rect x="945" y="130" width="610" height="455" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="961" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">EFFECT + COMMIT</text>
+<rect x="325" y="625" width="1230" height="225" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="341" y="657" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">CURRENT REGISTRIES + DURABLE EVIDENCE</text>
+<polyline points="265,245 310,245 310,465 355,465" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="263.5" y="337" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="315" y="350" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">fresh identity</text>
+<polyline points="265,460 305,460 305,247 355,247" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="265.25" y="322" width="83.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="307" y="335" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">lookup only</text>
+<polyline points="590,247 635,247" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="550.75" y="224" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="612" y="237" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">complete envelope</text>
+<polyline points="752,310 752,360 472,360 472,405" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="580.0" y="337" width="64.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="612" y="350" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">verified</text>
+<polyline points="590,467 635,467" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="573.5" y="444" width="77.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="612" y="457" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">authorized</text>
+<polyline points="870,467 920,467 920,247 975,247" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="854.25" y="342" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="922" y="355" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">fenced continuation</text>
+<polyline points="1215,247 1275,247" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1196.75" y="224" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1245" y="237" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">dispatch once</text>
+<polyline points="1395,310 1395,405" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1386.75" y="345" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1435" y="358" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">known receipt</text>
+<polyline points="1275,285 1240,285 1240,467 1215,467" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1211.25" y="357" width="57.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1240" y="370" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">timeout</text>
+<polyline points="1095,405 1095,350 1395,350 1395,310" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1164.25" y="327" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1245" y="340" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">reconcile; do not retry</text>
+<polyline points="1215,500 1275,500" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1174.0" y="477" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1245" y="490" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">preserve uncertainty</text>
+<polyline points="507,690 507,610 430,610 430,530" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="419.75" y="587" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="468" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">current facts</text>
+<polyline points="852,690 852,610 330,610 330,247 355,247" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="545.0" y="587" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="590" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">server-owned</text>
+<polyline points="752,530 752,610 852,610 852,690" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="757.0" y="587" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="802" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">atomic claim</text>
+<polyline points="1395,530 1395,610 900,610 900,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1073.75" y="587" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1148" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">head compare-and-swap</text>
+<polyline points="1095,310 1095,650 1175,650 1175,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1080.25" y="627" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1135" y="640" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">bounded receipt</text>
+<polyline points="1290,742 1355,742" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1283.5" y="719" width="77.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1322" y="732" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">observable</text>
+<rect x="70" y="190" width="195" height="110" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="167.5" y="221" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Authenticated request</text>
+<text x="167.5" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">principal • tenant •</text>
+<text x="167.5" y="261" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">scope • request ID</text>
+<rect x="70" y="405" width="195" height="110" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="167.5" y="436" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Opaque checkpoint ID</text>
+<text x="167.5" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">no editable snapshot</text>
+<text x="167.5" y="476" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">in callback</text>
+<rect x="355" y="185" width="235" height="125" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="472.5" y="216" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Server-owned checkpoint</text>
+<text x="472.5" y="240" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">state • versions •</text>
+<text x="472.5" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">approval • budget • expiry</text>
+<rect x="635" y="185" width="235" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="752.5" y="216" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Integrity + chain gate</text>
+<text x="752.5" y="240" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signature • digest •</text>
+<text x="752.5" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">parents • current head</text>
+<rect x="355" y="405" width="235" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="472.5" y="436" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Current-state gate</text>
+<text x="472.5" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identity • policy • tool •</text>
+<text x="472.5" y="476" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact approval</text>
+<rect x="635" y="405" width="235" height="125" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="752.5" y="436" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Migration + lease</text>
+<text x="752.5" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">deterministic upgrade •</text>
+<text x="752.5" y="476" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">one exclusive claim</text>
+<rect x="975" y="185" width="240" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1095.0" y="216" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Effect boundary</text>
+<text x="1095.0" y="240" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">lease • versions • approval</text>
+<text x="1095.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• provider preflight</text>
+<rect x="1275" y="185" width="240" height="125" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1395.0" y="216" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">External provider</text>
+<text x="1395.0" y="240" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stable operation ID •</text>
+<text x="1395.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">durable receipt</text>
+<rect x="975" y="405" width="240" height="125" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1095.0" y="436" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Outcome unknown</text>
+<text x="1095.0" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">timeout after possible</text>
+<text x="1095.0" y="476" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">commit</text>
+<rect x="1275" y="405" width="240" height="125" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1395.0" y="436" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Signed child checkpoint</text>
+<text x="1395.0" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">completed • paused •</text>
+<text x="1395.0" y="476" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">outcome-unknown</text>
+<rect x="370" y="690" width="275" height="105" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="507.5" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Current registries</text>
+<text x="507.5" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identity • policy • workflow •</text>
+<text x="507.5" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tool • approval</text>
+<rect x="715" y="690" width="275" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="852.5" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Transactional durable store</text>
+<text x="852.5" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">head CAS • leases • resume</text>
+<text x="852.5" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">ledger • chain</text>
+<rect x="1060" y="690" width="230" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1175.0" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Bounded evidence</text>
+<text x="1175.0" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">IDs • digests • versions</text>
+<text x="1175.0" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• status • reason</text>
+<rect x="1355" y="690" width="170" height="105" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1440.0" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Explicit outcomes</text>
+<text x="1440.0" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">ready • paused •</text>
+<text x="1440.0" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">conflict • deny •</text>
+<text x="1440.0" y="777" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">error</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
