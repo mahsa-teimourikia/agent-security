@@ -22,6 +22,7 @@ Ready to test your understanding? Take the interactive [Agent Security Knowledge
 | 02 | [Threat Modeling Agentic Systems](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/README.md) | [lab.py](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/lab.ipynb) |
 | 03 | [Security Invariants and Blast Radius](curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/README.md) | [lab.py](curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/lab.ipynb) |
 | 04 | [Secure Tool and Action Interface Design](curriculum/roadmap/beginner/04-secure-tool-and-action-interface-design/README.md) | [lab.py](curriculum/roadmap/beginner/04-secure-tool-and-action-interface-design/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/04-secure-tool-and-action-interface-design/lab.ipynb) |
+| 05 | [Authorization, Approval, and Least Privilege](curriculum/roadmap/beginner/05-authorization-approval-and-least-privilege/README.md) | [lab.py](curriculum/roadmap/beginner/05-authorization-approval-and-least-privilege/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/05-authorization-approval-and-least-privilege/lab.ipynb) |
 
 ### Beginner
 

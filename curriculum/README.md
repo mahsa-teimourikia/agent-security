@@ -2,7 +2,7 @@
 
 This map defines the next 36-course learning path. Course numbers restart at
 `01` within each level; the Learning Hub prefixes them with `F`, `I`, `A`, or
-`E` when a globally unique label is useful. The currently published thirteen-course
+`E` when a globally unique label is useful. The currently published fourteen-course
 path remains listed in the repository root and Learning Hub while the remaining
 topics pass their delivery gates. The expansion follows one
 enterprise research-and-support scenario: an apparently helpful agent gains
@@ -10,7 +10,7 @@ RAG, memory, tool access, a specialist, MCP, durable state, and eventually
 production authority. Each stage adds a trust boundary and an attack that must
 be traced, contained, tested, and operationally owned.
 
-## Foundation sequence (four published, three reading)
+## Foundation sequence (five published, two reading)
 
 | Course | Focus | Practical artifact |
 | --- | --- | --- |
@@ -18,11 +18,11 @@ be traced, contained, tested, and operationally owned.
 | [02](roadmap/beginner/02-threat-modeling-agentic-systems/) **Published** | STRIDE, attack trees, abuse paths | evidence-bound threat records, pytm adapter, notebook, and tests |
 | [03](roadmap/beginner/03-security-invariants-and-blast-radius/) **Published** | measurable safety properties | invariant engine, Hypothesis properties, notebook, and tests |
 | [04](roadmap/beginner/04-secure-tool-and-action-interface-design/) **Published** | narrow typed tools | versioned gateway, SDK adapter, recovery lab, notebook, and tests |
-| [05](roadmap/beginner/05-authorization-approval-and-least-privilege/) | deterministic authorization | bound approval receipt |
+| [05](roadmap/beginner/05-authorization-approval-and-least-privilege/) **Published** | deterministic authorization | PDP/PEP, least-privilege derivation, exact approval, SDK adapter, notebook, and tests |
 | [06](roadmap/beginner/06-prompt-injection-and-untrusted-content/) | injection containment | attack matrix |
 | [07](roadmap/beginner/07-context-and-evidence-security/) | provenance-aware context | context admission trace |
 
-These chapters establish the conceptual sequence. Foundation 01–04 have passed
+These chapters establish the conceptual sequence. Foundation 01–05 have passed
 the publication gate. The remaining chapters are not labelled as published Hub
 lessons until each owns or deliberately shares a reusable lab, adds a
 top-to-bottom executable notebook, and receives a focused checkpoint.
