@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "id": "prompt-injection-untrusted-content",
+  "title": "Keep untrusted content in the data plane",
+  "subtitle": "Detection adds a signal; trusted boundaries govern sources, control flow, authority, destinations, and egress.",
+  "purpose": "Show several untrusted channels becoming bounded facts and proposals while source admission, policy, and egress controls prevent control-flow and data-flow abuse.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation-and-notebook",
+    "alt_text": "Untrusted user, document, web, tool-result, and memory content enters source admission and optional detection. A bounded extractor feeds a model proposal into a typed policy gateway. Trusted identity, resource state, and policy authorize the proposal. The egress gateway resolves fixed destinations and allowed fields before a bounded effect and trace."
+  },
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "content", "label": "1. Untrusted content", "x": 50, "y": 155, "w": 280, "h": 600},
+    {"id": "reduce", "label": "2. Admit and reduce", "x": 375, "y": 155, "w": 350, "h": 600},
+    {"id": "decide", "label": "3. Propose and decide", "x": 770, "y": 155, "w": 380, "h": 600},
+    {"id": "release", "label": "4. Constrain release", "x": 1195, "y": 155, "w": 355, "h": 600}
+  ],
+  "nodes": [
+    {"id": "channels", "group": "content", "label": "User · file · web · tool result · memory", "detail": "natural language remains untrusted", "type": "untrusted", "x": 85, "y": 260, "w": 210, "h": 130},
+    {"id": "attack", "group": "content", "label": "Injected instruction", "detail": "direct · indirect · encoded · persistent", "type": "untrusted", "x": 85, "y": 520, "w": 210, "h": 125},
+    {"id": "admission", "group": "reduce", "label": "Source admission", "detail": "tenant · channel · source ID · digest", "type": "control", "x": 415, "y": 225, "w": 270, "h": 110},
+    {"id": "detector", "group": "reduce", "label": "Detector signal", "detail": "versioned · fallible · observable", "type": "signal", "x": 415, "y": 405, "w": 270, "h": 105},
+    {"id": "extract", "group": "reduce", "label": "Bounded extraction", "detail": "fixed enums and IDs · no raw control fields", "type": "control", "x": 415, "y": 580, "w": 270, "h": 115},
+    {"id": "proposal", "group": "decide", "label": "Model proposal", "detail": "operation and typed arguments remain untrusted", "type": "untrusted", "x": 810, "y": 225, "w": 300, "h": 110},
+    {"id": "trusted", "group": "decide", "label": "Trusted application context", "detail": "actor · tenant · resource · scopes · policy", "type": "state", "x": 810, "y": 405, "w": 300, "h": 105},
+    {"id": "gateway", "group": "decide", "label": "Typed policy gateway", "detail": "ALLOW · DENY · ERROR", "type": "decision", "x": 810, "y": 580, "w": 300, "h": 115},
+    {"id": "egress", "group": "release", "label": "Egress boundary", "detail": "fixed destination · fields · host · data class", "type": "enforcement", "x": 1235, "y": 280, "w": 275, "h": 125},
+    {"id": "effect", "group": "release", "label": "Bounded effect", "detail": "note · template · public status read", "type": "state", "x": 1235, "y": 520, "w": 130, "h": 125},
+    {"id": "trace", "group": "release", "label": "Bounded trace", "detail": "source · detector · policy · digest", "type": "enforcement", "x": 1380, "y": 520, "w": 130, "h": 125}
+  ],
+  "edges": [
+    {"from": "channels", "to": "admission", "label": "content envelope", "kind": "untrusted", "label_at": [354, 275]},
+    {"from": "attack", "to": "admission", "label": "same path", "kind": "untrusted", "label_at": [354, 482]},
+    {"from": "admission", "to": "detector", "label": "admitted bytes", "kind": "secondary", "label_at": [550, 371]},
+    {"from": "detector", "to": "extract", "label": "signal, not authority", "kind": "signal", "label_at": [550, 552]},
+    {"from": "extract", "to": "proposal", "label": "bounded facts", "kind": "primary", "label_at": [748, 620]},
+    {"from": "proposal", "to": "gateway", "label": "untrusted proposal", "kind": "untrusted", "label_at": [960, 371]},
+    {"from": "trusted", "to": "gateway", "label": "current authority", "kind": "secondary", "label_at": [960, 552]},
+    {"from": "gateway", "to": "egress", "label": "exact allow", "kind": "primary", "label_at": [1172, 492]},
+    {"from": "egress", "to": "effect", "label": "release", "kind": "primary", "label_at": [1300, 470]},
+    {"from": "egress", "to": "trace", "label": "record", "kind": "secondary", "label_at": [1445, 470]},
+    {"from": "detector", "to": "gateway", "label": "misses still contained", "kind": "feedback", "label_at": [748, 495]}
+  ],
+  "validation": {"no_node_overlaps": true, "nodes_inside_groups": true, "all_edges_resolve": true, "minimum_text_padding": 14}
+}
