@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "authorization-approval-least-privilege",
+  "title": "Authorize now, approve exactly, enforce atomically",
+  "subtitle": "The model proposes. Trusted identity, current state, policy, and an independent approver govern one bounded effect.",
+  "purpose": "Show an untrusted action proposal entering a PDP, independent exact approval, and a PEP that reauthorizes and atomically consumes the receipt before one effect.",
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation-and-notebook",
+    "alt_text": "An agent proposal and trusted identity and resource state feed a policy information point and policy decision point. A high-risk decision pauses for an independent approver and a server-owned receipt store. The policy enforcement point reauthorizes current state, validates and atomically consumes the receipt, creates one narrow effect, and records bounded evidence."
+  },
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC", "margin": 60, "grid": 10},
+  "layout": {"primary_flow": "left-to-right", "min_node_gap": 32, "min_layer_gap": 50},
+  "style": {
+    "font_family": "Inter, Arial, sans-serif",
+    "semantic_colors": {
+      "untrusted": {"fill": "#F0EEFF", "stroke": "#7667E8"},
+      "state": {"fill": "#FFFFFF", "stroke": "#52606D"},
+      "decision": {"fill": "#EAF1FF", "stroke": "#2F6BFF"},
+      "approval": {"fill": "#FFF1DF", "stroke": "#F59E42"},
+      "enforcement": {"fill": "#E5F7F6", "stroke": "#16A3A5"}
+    }
+  },
+  "groups": [
+    {"id": "inputs", "label": "1. Propose and resolve", "bounds": {"x": 60, "y": 150, "width": 300, "height": 620}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "decision", "label": "2. Decide under current policy", "bounds": {"x": 410, "y": 150, "width": 420, "height": 620}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "approval", "label": "3. Review exact high-risk action", "bounds": {"x": 880, "y": 150, "width": 300, "height": 620}, "fill": "#FFFFFF", "stroke": "#D7DEE8"},
+    {"id": "enforce", "label": "4. Reauthorize and commit once", "bounds": {"x": 1230, "y": 150, "width": 310, "height": 620}, "fill": "#FFFFFF", "stroke": "#D7DEE8"}
+  ],
+  "nodes": [
+    {"id": "proposal", "group": "inputs", "label": "Agent action proposal", "subtitle": "operation · resource · arguments · operation ID", "type": "untrusted", "bounds": {"x": 100, "y": 240, "width": 220, "height": 120}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "trusted", "group": "inputs", "label": "Trusted application context", "subtitle": "subject · workload · tenant · session · case", "type": "state", "bounds": {"x": 100, "y": 530, "width": 220, "height": 120}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "pip", "group": "decision", "label": "PIP", "subtitle": "current identity, relationship, resource, risk", "type": "state", "bounds": {"x": 450, "y": 230, "width": 150, "height": 130}, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "pap", "group": "decision", "label": "PAP", "subtitle": "reviewed versioned policy", "type": "state", "bounds": {"x": 450, "y": 550, "width": 150, "height": 100}, "ports": {"out": {"side": "right", "offset": 0.5}}},
+    {"id": "pdp", "group": "decision", "label": "Policy decision point", "subtitle": "ALLOW · PAUSE · DENY · ERROR", "type": "decision", "bounds": {"x": 640, "y": 370, "width": 150, "height": 150}, "ports": {"proposal": {"side": "left", "offset": 0.25}, "pip": {"side": "left", "offset": 0.1}, "pap": {"side": "left", "offset": 0.85}, "pause": {"side": "right", "offset": 0.25}, "allow": {"side": "right", "offset": 0.55}, "reauth": {"side": "right", "offset": 0.9}}},
+    {"id": "approver", "group": "approval", "label": "Independent approver", "subtitle": "eligible · same tenant · not requester", "type": "approval", "bounds": {"x": 920, "y": 240, "width": 220, "height": 130}, "ports": {"in": {"side": "left", "offset": 0.5}, "out": {"side": "bottom", "offset": 0.5}}},
+    {"id": "store", "group": "approval", "label": "Server-owned receipt store", "subtitle": "exact binding · expiry · revocation · single use", "type": "approval", "bounds": {"x": 920, "y": 510, "width": 220, "height": 130}, "ports": {"in": {"side": "top", "offset": 0.5}, "out": {"side": "right", "offset": 0.5}}},
+    {"id": "pep", "group": "enforce", "label": "Policy enforcement point", "subtitle": "current decision + exact receipt + atomic consume", "type": "enforcement", "bounds": {"x": 1270, "y": 270, "width": 230, "height": 160}, "ports": {"decision": {"side": "left", "offset": 0.25}, "approval": {"side": "left", "offset": 0.75}, "reauth": {"side": "left", "offset": 0.95}, "effect": {"side": "bottom", "offset": 0.3}, "evidence": {"side": "bottom", "offset": 0.78}}},
+    {"id": "effect", "group": "enforce", "label": "One refund effect", "subtitle": "stable operation ID", "type": "state", "bounds": {"x": 1255, "y": 560, "width": 125, "height": 100}, "ports": {"in": {"side": "top", "offset": 0.5}}},
+    {"id": "trace", "group": "enforce", "label": "Bounded evidence", "subtitle": "decision · receipt · outcome", "type": "enforcement", "bounds": {"x": 1400, "y": 560, "width": 125, "height": 100}, "ports": {"in": {"side": "top", "offset": 0.5}}}
+  ],
+  "edges": [
+    {"id": "proposal_pdp", "from": {"node": "proposal", "port": "out"}, "to": {"node": "pdp", "port": "proposal"}, "label": "untrusted proposal", "kind": "untrusted", "route": [[320, 300], [380, 300], [380, 407.5], [640, 407.5]], "label_at": [500, 392]},
+    {"id": "trusted_pip", "from": {"node": "trusted", "port": "out"}, "to": {"node": "pip", "port": "in"}, "label": "resolve current state", "kind": "secondary", "route": [[320, 590], [390, 590], [390, 295], [450, 295]], "label_at": [390, 470]},
+    {"id": "pip_pdp", "from": {"node": "pip", "port": "out"}, "to": {"node": "pdp", "port": "pip"}, "label": "trusted attributes", "kind": "secondary", "route": [[600, 295], [620, 295], [620, 385], [640, 385]], "label_at": [650, 325]},
+    {"id": "pap_pdp", "from": {"node": "pap", "port": "out"}, "to": {"node": "pdp", "port": "pap"}, "label": "policy version", "kind": "secondary", "route": [[600, 600], [620, 600], [620, 497.5], [640, 497.5]], "label_at": [680, 585]},
+    {"id": "pdp_approver", "from": {"node": "pdp", "port": "pause"}, "to": {"node": "approver", "port": "in"}, "label": "PAUSE · exact binding", "kind": "approval", "route": [[790, 407.5], [850, 407.5], [850, 305], [920, 305]], "label_at": [850, 292]},
+    {"id": "approver_store", "from": {"node": "approver", "port": "out"}, "to": {"node": "store", "port": "in"}, "label": "issue or reject", "kind": "approval", "route": [[1030, 370], [1030, 510]], "label_at": [1090, 420]},
+    {"id": "pdp_pep", "from": {"node": "pdp", "port": "allow"}, "to": {"node": "pep", "port": "decision"}, "label": "current decision", "kind": "primary", "route": [[790, 452.5], [1200, 452.5], [1200, 310], [1270, 310]], "label_at": [1090, 480]},
+    {"id": "store_pep", "from": {"node": "store", "port": "out"}, "to": {"node": "pep", "port": "approval"}, "label": "stored receipt state", "kind": "approval", "route": [[1140, 575], [1210, 575], [1210, 390], [1270, 390]], "label_at": [1215, 550]},
+    {"id": "pep_pdp", "from": {"node": "pep", "port": "reauth"}, "to": {"node": "pdp", "port": "reauth"}, "label": "reauthorize before effect", "kind": "feedback", "route": [[1270, 422], [1220, 422], [1220, 720], [815, 720], [815, 505], [790, 505]], "label_at": [1010, 705]},
+    {"id": "pep_effect", "from": {"node": "pep", "port": "effect"}, "to": {"node": "effect", "port": "in"}, "label": "commit once", "kind": "primary", "route": [[1339, 430], [1339, 510], [1317.5, 510], [1317.5, 560]], "label_at": [1295, 500]},
+    {"id": "pep_trace", "from": {"node": "pep", "port": "evidence"}, "to": {"node": "trace", "port": "in"}, "label": "record outcome", "kind": "primary", "route": [[1449.4, 430], [1449.4, 510], [1462.5, 510], [1462.5, 560]], "label_at": [1490, 500]}
+  ],
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "verify_port_attachment": true, "verify_contrast": true}
+}

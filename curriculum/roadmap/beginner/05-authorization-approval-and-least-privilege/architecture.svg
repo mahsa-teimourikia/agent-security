@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Authorize now, approve exactly, enforce atomically</title>
+<desc id="desc">An agent proposal and trusted identity and resource state feed a policy information point and policy decision point. A high-risk decision pauses for an independent approver and a server-owned receipt store. The policy enforcement point reauthorizes current state, validates and atomically consumes the receipt, creates one narrow effect, and records bounded evidence.</desc>
+<defs><marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2F6BFF"/></marker><marker id="arrow-slate" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#52606D"/></marker><marker id="arrow-purple" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#7667E8"/></marker><marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#F59E42"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="60" y="72" font-family="Inter,Arial,sans-serif" font-size="32" font-weight="700" fill="#16324F">Authorize now, approve exactly, enforce atomically</text>
+<text x="60" y="108" font-family="Inter,Arial,sans-serif" font-size="17" fill="#52606D">The model proposes. Trusted identity, current state, policy, and an independent approver govern one bounded effect.</text>
+<rect x="60" y="150" width="300" height="620" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="80" y="186" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" fill="#16324F">1. Propose and resolve</text>
+<rect x="410" y="150" width="420" height="620" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="430" y="186" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" fill="#16324F">2. Decide under current policy</text>
+<rect x="880" y="150" width="300" height="620" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="900" y="186" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" fill="#16324F">3. Review exact high-risk action</text>
+<rect x="1230" y="150" width="310" height="620" rx="20" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="1250" y="186" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" fill="#16324F">4. Reauthorize and commit once</text>
+<polyline points="320,300 380,300 380,407.5 640,407.5" fill="none" stroke="#7667E8" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-purple)" stroke-dasharray="7 5"/>
+<text x="500" y="392" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#7667E8">untrusted proposal</text>
+<polyline points="320,590 390,590 390,295 450,295" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="390" y="470" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">resolve current state</text>
+<polyline points="600,295 620,295 620,385 640,385" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="650" y="325" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">trusted attributes</text>
+<polyline points="600,600 620,600 620,497.5 640,497.5" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)"/>
+<text x="680" y="585" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">policy version</text>
+<polyline points="790,407.5 850,407.5 850,305 920,305" fill="none" stroke="#F59E42" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+<text x="850" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#F59E42">PAUSE · exact binding</text>
+<polyline points="1030,370 1030,510" fill="none" stroke="#F59E42" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+<text x="1090" y="420" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#F59E42">issue or reject</text>
+<polyline points="790,452.5 1200,452.5 1200,310 1270,310" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1090" y="480" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">current decision</text>
+<polyline points="1140,575 1210,575 1210,390 1270,390" fill="none" stroke="#F59E42" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-orange)"/>
+<text x="1215" y="550" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#F59E42">stored receipt state</text>
+<polyline points="1270,422 1220,422 1220,720 815,720 815,505 790,505" fill="none" stroke="#52606D" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-slate)" stroke-dasharray="6 5"/>
+<text x="1010" y="705" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#52606D">reauthorize before effect</text>
+<polyline points="1339,430 1339,510 1317.5,510 1317.5,560" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1295" y="500" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">commit once</text>
+<polyline points="1449.4,430 1449.4,510 1462.5,510 1462.5,560" fill="none" stroke="#2F6BFF" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-blue)"/>
+<text x="1490" y="500" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="650" fill="#2F6BFF">record outcome</text>
+<rect x="100" y="240" width="220" height="120" rx="16" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="210.0" y="272" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Agent action</text>
+<text x="210.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">proposal</text>
+<text x="210.0" y="319" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">operation · resource</text>
+<text x="210.0" y="336" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">· arguments ·</text>
+<text x="210.0" y="353" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">operation ID</text>
+<rect x="100" y="530" width="220" height="120" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="210.0" y="562" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trusted application</text>
+<text x="210.0" y="582" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">context</text>
+<text x="210.0" y="609" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">subject · workload ·</text>
+<text x="210.0" y="626" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant · session ·</text>
+<text x="210.0" y="643" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">case</text>
+<rect x="450" y="230" width="150" height="130" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="525.0" y="262" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">PIP</text>
+<text x="525.0" y="289" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">current</text>
+<text x="525.0" y="306" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identity,</text>
+<text x="525.0" y="323" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">relationship,</text>
+<text x="525.0" y="340" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">resource,</text>
+<text x="525.0" y="357" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">risk</text>
+<rect x="450" y="550" width="150" height="100" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="525.0" y="582" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">PAP</text>
+<text x="525.0" y="609" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">reviewed</text>
+<text x="525.0" y="626" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">versioned</text>
+<text x="525.0" y="643" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">policy</text>
+<rect x="640" y="370" width="150" height="150" rx="16" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="715.0" y="402" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Policy</text>
+<text x="715.0" y="422" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">decision</text>
+<text x="715.0" y="442" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">point</text>
+<text x="715.0" y="469" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">ALLOW · PAUSE</text>
+<text x="715.0" y="486" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">· DENY ·</text>
+<text x="715.0" y="503" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">ERROR</text>
+<rect x="920" y="240" width="220" height="130" rx="16" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/>
+<text x="1030.0" y="272" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Independent</text>
+<text x="1030.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">approver</text>
+<text x="1030.0" y="319" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">eligible · same</text>
+<text x="1030.0" y="336" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant · not</text>
+<text x="1030.0" y="353" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">requester</text>
+<rect x="920" y="510" width="220" height="130" rx="16" fill="#FFF1DF" stroke="#F59E42" stroke-width="2"/>
+<text x="1030.0" y="542" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Server-owned</text>
+<text x="1030.0" y="562" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">receipt store</text>
+<text x="1030.0" y="589" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact binding ·</text>
+<text x="1030.0" y="606" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">expiry · revocation</text>
+<text x="1030.0" y="623" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">· single use</text>
+<rect x="1270" y="270" width="230" height="160" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1385.0" y="302" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Policy enforcement</text>
+<text x="1385.0" y="322" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">point</text>
+<text x="1385.0" y="349" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">current decision +</text>
+<text x="1385.0" y="366" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact receipt +</text>
+<text x="1385.0" y="383" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">atomic consume</text>
+<rect x="1255" y="560" width="125" height="100" rx="16" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1317.5" y="592" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">One refund</text>
+<text x="1317.5" y="612" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">effect</text>
+<text x="1317.5" y="639" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stable</text>
+<text x="1317.5" y="656" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">operation</text>
+<text x="1317.5" y="673" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">ID</text>
+<rect x="1400" y="560" width="125" height="100" rx="16" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1462.5" y="592" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Bounded</text>
+<text x="1462.5" y="612" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">evidence</text>
+<text x="1462.5" y="639" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">decision ·</text>
+<text x="1462.5" y="656" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">receipt ·</text>
+<text x="1462.5" y="673" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">outcome</text>
+<g font-family="Inter,Arial,sans-serif" font-size="13" fill="#52606D"><circle cx="70" cy="850" r="6" fill="#2F6BFF"/><text x="84" y="855">authorization and effect flow</text><circle cx="300" cy="850" r="6" fill="#7667E8"/><text x="314" y="855">untrusted proposal</text><circle cx="485" cy="850" r="6" fill="#F59E42"/><text x="499" y="855">independent approval</text><circle cx="685" cy="850" r="6" fill="#52606D"/><text x="699" y="855">trusted state or reauthorization</text></g>
+</svg>
