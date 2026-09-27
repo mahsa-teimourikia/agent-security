@@ -1,0 +1,52 @@
+{
+  "id": "intermediate-02-durable-execution-security",
+  "version": "1.0",
+  "title": "Secure Durable Pause and Resume",
+  "subtitle": "A checkpoint is integrity-bound evidence; current policy and one exclusive lease authorize progress",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "request", "label": "RESUME REQUEST", "x": 45, "y": 130, "w": 245, "h": 455},
+    {"id": "verify", "label": "TRUSTED RESUME BOUNDARY", "x": 325, "y": 130, "w": 585, "h": 455},
+    {"id": "effect", "label": "EFFECT + COMMIT", "x": 945, "y": 130, "w": 610, "h": 455},
+    {"id": "evidence", "label": "CURRENT REGISTRIES + DURABLE EVIDENCE", "x": 325, "y": 625, "w": 1230, "h": 225}
+  ],
+  "nodes": [
+    {"id": "actor", "group": "request", "type": "control", "label": "Authenticated request", "detail": "principal • tenant • scope • request ID", "x": 70, "y": 190, "w": 195, "h": 110},
+    {"id": "opaque", "group": "request", "type": "untrusted", "label": "Opaque checkpoint ID", "detail": "no editable snapshot in callback", "x": 70, "y": 405, "w": 195, "h": 110},
+    {"id": "snapshot", "group": "verify", "type": "state", "label": "Server-owned checkpoint", "detail": "state • versions • approval • budget • expiry", "x": 355, "y": 185, "w": 235, "h": 125},
+    {"id": "integrity", "group": "verify", "type": "enforcement", "label": "Integrity + chain gate", "detail": "signature • digest • parents • current head", "x": 635, "y": 185, "w": 235, "h": 125},
+    {"id": "current", "group": "verify", "type": "enforcement", "label": "Current-state gate", "detail": "identity • policy • tool • exact approval", "x": 355, "y": 405, "w": 235, "h": 125},
+    {"id": "lease", "group": "verify", "type": "decision", "label": "Migration + lease", "detail": "deterministic upgrade • one exclusive claim", "x": 635, "y": 405, "w": 235, "h": 125},
+    {"id": "boundary", "group": "effect", "type": "enforcement", "label": "Effect boundary", "detail": "lease • versions • approval • provider preflight", "x": 975, "y": 185, "w": 240, "h": 125},
+    {"id": "provider", "group": "effect", "type": "state", "label": "External provider", "detail": "stable operation ID • durable receipt", "x": 1275, "y": 185, "w": 240, "h": 125},
+    {"id": "unknown", "group": "effect", "type": "decision", "label": "Outcome unknown", "detail": "timeout after possible commit", "x": 975, "y": 405, "w": 240, "h": 125},
+    {"id": "child", "group": "effect", "type": "state", "label": "Signed child checkpoint", "detail": "completed • paused • outcome-unknown", "x": 1275, "y": 405, "w": 240, "h": 125},
+    {"id": "registries", "group": "evidence", "type": "control", "label": "Current registries", "detail": "identity • policy • workflow • tool • approval", "x": 370, "y": 690, "w": 275, "h": 105},
+    {"id": "store", "group": "evidence", "type": "state", "label": "Transactional durable store", "detail": "head CAS • leases • resume ledger • chain", "x": 715, "y": 690, "w": 275, "h": 105},
+    {"id": "audit", "group": "evidence", "type": "state", "label": "Bounded evidence", "detail": "IDs • digests • versions • status • reason", "x": 1060, "y": 690, "w": 230, "h": 105},
+    {"id": "terminal", "group": "evidence", "type": "decision", "label": "Explicit outcomes", "detail": "ready • paused • conflict • deny • error", "x": 1355, "y": 690, "w": 170, "h": 105}
+  ],
+  "edges": [
+    {"from": "actor", "to": "current", "kind": "control", "label": "fresh identity", "points": [[265, 245], [310, 245], [310, 465], [355, 465]], "label_at": [315, 350]},
+    {"from": "opaque", "to": "snapshot", "kind": "untrusted", "label": "lookup only", "points": [[265, 460], [305, 460], [305, 247], [355, 247]], "label_at": [307, 335]},
+    {"from": "snapshot", "to": "integrity", "kind": "control", "label": "complete envelope", "points": [[590, 247], [635, 247]], "label_at": [612, 237]},
+    {"from": "integrity", "to": "current", "kind": "enforcement", "label": "verified", "points": [[752, 310], [752, 360], [472, 360], [472, 405]], "label_at": [612, 350]},
+    {"from": "current", "to": "lease", "kind": "enforcement", "label": "authorized", "points": [[590, 467], [635, 467]], "label_at": [612, 457]},
+    {"from": "lease", "to": "boundary", "kind": "enforcement", "label": "fenced continuation", "points": [[870, 467], [920, 467], [920, 247], [975, 247]], "label_at": [922, 355]},
+    {"from": "boundary", "to": "provider", "kind": "enforcement", "label": "dispatch once", "points": [[1215, 247], [1275, 247]], "label_at": [1245, 237]},
+    {"from": "provider", "to": "child", "kind": "evidence", "label": "known receipt", "points": [[1395, 310], [1395, 405]], "label_at": [1435, 358]},
+    {"from": "provider", "to": "unknown", "kind": "untrusted", "label": "timeout", "points": [[1275, 285], [1240, 285], [1240, 467], [1215, 467]], "label_at": [1240, 370]},
+    {"from": "unknown", "to": "provider", "kind": "control", "label": "reconcile; do not retry", "points": [[1095, 405], [1095, 350], [1395, 350], [1395, 310]], "label_at": [1245, 340]},
+    {"from": "unknown", "to": "child", "kind": "evidence", "label": "preserve uncertainty", "points": [[1215, 500], [1275, 500]], "label_at": [1245, 490]},
+    {"from": "registries", "to": "current", "kind": "control", "label": "current facts", "points": [[507, 690], [507, 610], [430, 610], [430, 530]], "label_at": [468, 600]},
+    {"from": "store", "to": "snapshot", "kind": "control", "label": "server-owned", "points": [[852, 690], [852, 610], [330, 610], [330, 247], [355, 247]], "label_at": [590, 600]},
+    {"from": "lease", "to": "store", "kind": "enforcement", "label": "atomic claim", "points": [[752, 530], [752, 610], [852, 610], [852, 690]], "label_at": [802, 600]},
+    {"from": "child", "to": "store", "kind": "evidence", "label": "head compare-and-swap", "points": [[1395, 530], [1395, 610], [900, 610], [900, 690]], "label_at": [1148, 600]},
+    {"from": "boundary", "to": "audit", "kind": "evidence", "label": "bounded receipt", "points": [[1095, 310], [1095, 650], [1175, 650], [1175, 690]], "label_at": [1135, 640]},
+    {"from": "audit", "to": "terminal", "kind": "evidence", "label": "observable", "points": [[1290, 742], [1355, 742]], "label_at": [1322, 732]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "alt_text": "An authenticated resume request supplies only an opaque checkpoint identifier. Trusted application code loads a server-owned checkpoint, verifies its complete signature and parent chain, rechecks current identity, policy, tool, and exact approval, applies a deterministic migration, and atomically acquires one lease. The effect boundary dispatches one stable operation to the provider. Known receipts or explicitly unknown outcomes produce a signed child checkpoint; unknown outcomes loop through reconciliation without blind redispatch. Current registries, a transactional store, bounded audit evidence, and explicit terminal outcomes support the flow."
+  }
+}
