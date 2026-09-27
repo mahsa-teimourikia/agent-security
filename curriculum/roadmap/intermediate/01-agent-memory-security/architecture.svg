@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Secure Long-Term Memory Lifecycle</title>
+<desc id="desc">An authenticated actor and untrusted typed memory candidate enter a trusted write boundary. Exact source, consent, type, classification, retention, replay, and version checks precede a versioned scoped memory store. An authorized read is checked before lookup against lifecycle, deletion epoch, expiry, and consent. The output is a bounded untrusted memory view that never grants tool authority. Deletion, registries, minimized receipts, and explicit terminal outcomes complete the lifecycle.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Secure Long-Term Memory Lifecycle</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Model proposals cross trusted write and read gates; lifecycle state never becomes authority</text>
+<rect x="45" y="130" width="270" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="61" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">UNTRUSTED PROPOSAL</text>
+<rect x="350" y="130" width="430" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="366" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED WRITE BOUNDARY</text>
+<rect x="815" y="130" width="280" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="831" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">SCOPED LIFECYCLE STORE</text>
+<rect x="1130" y="130" width="425" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="1146" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED READ BOUNDARY</text>
+<rect x="350" y="620" width="1205" height="230" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="366" y="652" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">LIFECYCLE + DECISION EVIDENCE</text>
+<polyline points="290,242 375,242" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="309.75" y="219" width="44.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="332" y="232" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">scope</text>
+<polyline points="290,437 330,437 330,340 665,340 665,305" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="421.75" y="317" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="470" y="330" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">proposal only</text>
+<polyline points="555,247 575,247" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<polyline points="665,305 665,350 465,350 465,410" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="533.0" y="327" width="64.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="565" y="340" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">admitted</text>
+<polyline points="555,467 575,467" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<polyline points="755,467 795,467 795,337 840,337" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="745.5" y="442" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="797" y="455" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">active version</text>
+<polyline points="1330,247 1350,247" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<polyline points="1070,337 1110,337 1110,330 1440,330 1440,305" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1206.75" y="307" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1255" y="320" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">security-trim</text>
+<polyline points="1440,305 1440,365 1360,365 1360,410" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1355.0" y="342" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1400" y="355" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">bounded data</text>
+<polyline points="515,685 515,600 955,600 955,420" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="673.75" y="577" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="735" y="590" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">tombstone + epoch</text>
+<polyline points="830,685 830,610 740,610 740,305" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="728.5" y="587" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="780" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">current policy</text>
+<polyline points="955,737 1100,737 1100,610 1510,610 1510,305" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1238.75" y="587" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1300" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">current lifecycle</text>
+<polyline points="665,525 665,600 1145,600 1145,685" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="851.75" y="577" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="900" y="590" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">write receipt</text>
+<polyline points="1530,270 1570,270 1570,600 1190,600 1190,685" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1345.0" y="577" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1390" y="590" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">read receipt</text>
+<polyline points="1270,737 1335,737" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1263.5" y="714" width="77.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1302" y="727" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">observable</text>
+<rect x="70" y="190" width="220" height="105" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="180.0" y="221" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Authenticated actor</text>
+<text x="180.0" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant • subject •</text>
+<text x="180.0" y="261" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">purpose • deletion epoch</text>
+<rect x="70" y="385" width="220" height="105" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="180.0" y="416" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Memory candidate</text>
+<text x="180.0" y="440" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">typed kind • key • value</text>
+<rect x="375" y="190" width="180" height="115" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="465.0" y="221" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Source + consent</text>
+<text x="465.0" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact ref • scope •</text>
+<text x="465.0" y="261" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authority •</text>
+<text x="465.0" y="277" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">freshness</text>
+<rect x="575" y="190" width="180" height="115" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="665.0" y="221" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Admission policy</text>
+<text x="665.0" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">type • schema •</text>
+<text x="665.0" y="261" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">class • TTL</text>
+<rect x="375" y="410" width="180" height="115" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="465.0" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Replay + version</text>
+<text x="465.0" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">gate</text>
+<text x="465.0" y="484" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">proposal digest •</text>
+<text x="465.0" y="500" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">compare-and-swap</text>
+<rect x="575" y="410" width="180" height="115" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="665.0" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Write decision</text>
+<text x="665.0" y="465" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">create • update •</text>
+<text x="665.0" y="481" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">deny • conflict •</text>
+<text x="665.0" y="497" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">error</text>
+<rect x="840" y="255" width="230" height="165" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="955.0" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Versioned memory</text>
+<text x="955.0" y="310" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant/subject key •</text>
+<text x="955.0" y="326" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">source • consent • TTL •</text>
+<text x="955.0" y="342" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">lifecycle • epoch</text>
+<rect x="1155" y="190" width="175" height="115" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="1242.5" y="221" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Authorized read</text>
+<text x="1242.5" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">scope + purpose</text>
+<text x="1242.5" y="261" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">before lookup</text>
+<rect x="1350" y="190" width="180" height="115" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1440.0" y="221" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Lifecycle gate</text>
+<text x="1440.0" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">active • epoch •</text>
+<text x="1440.0" y="261" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">expiry • current</text>
+<text x="1440.0" y="277" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">consent</text>
+<rect x="1250" y="410" width="220" height="115" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="1360.0" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Bounded memory view</text>
+<text x="1360.0" y="465" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">untrusted data • never</text>
+<text x="1360.0" y="481" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tool authority</text>
+<rect x="390" y="685" width="250" height="105" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="515.0" y="716" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Deletion + retention</text>
+<text x="515.0" y="740" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">erase • tombstone •</text>
+<text x="515.0" y="756" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">increment epoch • sweep</text>
+<rect x="705" y="685" width="250" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="830.0" y="716" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Current registries</text>
+<text x="830.0" y="740" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">source • consent • policy</text>
+<text x="830.0" y="756" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">versions</text>
+<rect x="1020" y="685" width="250" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1145.0" y="716" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Minimized receipt</text>
+<text x="1145.0" y="740" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">IDs • digests • versions •</text>
+<text x="1145.0" y="756" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">reason; no raw value</text>
+<rect x="1335" y="685" width="185" height="105" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1427.5" y="716" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Explicit outcomes</text>
+<text x="1427.5" y="740" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">ready/empty • deny •</text>
+<text x="1427.5" y="756" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">conflict • error</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>

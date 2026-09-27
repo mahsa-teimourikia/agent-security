@@ -26,11 +26,11 @@ These chapters establish the conceptual sequence. Foundation 01–07 have passed
 the publication gate: each owns a reusable lab, top-to-bottom executable
 notebook, focused tests, and a Learning Hub checkpoint.
 
-## Intermediate sequence (pilot labs and planned topics)
+## Intermediate sequence (one published, pilot labs, and planned topics)
 
 | Course | Focus |
 | --- | --- |
-| [01](roadmap/intermediate/01-agent-memory-security/) | agent memory security |
+| [01](roadmap/intermediate/01-agent-memory-security/) **Published** | secure long-term memory lifecycle, consent, versioning, deletion, SDK adapter, notebook, and tests |
 | [02](roadmap/intermediate/02-state-checkpoint-and-durable-execution-security/) | durable state and checkpoints |
 | [03](roadmap/intermediate/03-agent-identity-and-delegated-authority/) | identity and delegated authority |
 | [04](roadmap/intermediate/04-secrets-and-credential-security/) | secrets and credentials |

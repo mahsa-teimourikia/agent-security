@@ -1,0 +1,51 @@
+{
+  "id": "intermediate-01-agent-memory-security",
+  "version": "1.0",
+  "title": "Secure Long-Term Memory Lifecycle",
+  "subtitle": "Model proposals cross trusted write and read gates; lifecycle state never becomes authority",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "proposal", "label": "UNTRUSTED PROPOSAL", "x": 45, "y": 130, "w": 270, "h": 450},
+    {"id": "write", "label": "TRUSTED WRITE BOUNDARY", "x": 350, "y": 130, "w": 430, "h": 450},
+    {"id": "store", "label": "SCOPED LIFECYCLE STORE", "x": 815, "y": 130, "w": 280, "h": 450},
+    {"id": "read", "label": "TRUSTED READ BOUNDARY", "x": 1130, "y": 130, "w": 425, "h": 450},
+    {"id": "lifecycle", "label": "LIFECYCLE + DECISION EVIDENCE", "x": 350, "y": 620, "w": 1205, "h": 230}
+  ],
+  "nodes": [
+    {"id": "actor", "group": "proposal", "type": "control", "label": "Authenticated actor", "detail": "tenant • subject • purpose • deletion epoch", "x": 70, "y": 190, "w": 220, "h": 105},
+    {"id": "candidate", "group": "proposal", "type": "untrusted", "label": "Memory candidate", "detail": "typed kind • key • value", "x": 70, "y": 385, "w": 220, "h": 105},
+    {"id": "source", "group": "write", "type": "control", "label": "Source + consent", "detail": "exact ref • scope • authority • freshness", "x": 375, "y": 190, "w": 180, "h": 115},
+    {"id": "write_policy", "group": "write", "type": "enforcement", "label": "Admission policy", "detail": "type • schema • class • TTL", "x": 575, "y": 190, "w": 180, "h": 115},
+    {"id": "replay", "group": "write", "type": "control", "label": "Replay + version gate", "detail": "proposal digest • compare-and-swap", "x": 375, "y": 410, "w": 180, "h": 115},
+    {"id": "write_result", "group": "write", "type": "decision", "label": "Write decision", "detail": "create • update • deny • conflict • error", "x": 575, "y": 410, "w": 180, "h": 115},
+    {"id": "memory", "group": "store", "type": "state", "label": "Versioned memory", "detail": "tenant/subject key • source • consent • TTL • lifecycle • epoch", "x": 840, "y": 255, "w": 230, "h": 165},
+    {"id": "read_request", "group": "read", "type": "control", "label": "Authorized read", "detail": "scope + purpose before lookup", "x": 1155, "y": 190, "w": 175, "h": 115},
+    {"id": "read_policy", "group": "read", "type": "enforcement", "label": "Lifecycle gate", "detail": "active • epoch • expiry • current consent", "x": 1350, "y": 190, "w": 180, "h": 115},
+    {"id": "view", "group": "read", "type": "untrusted", "label": "Bounded memory view", "detail": "untrusted data • never tool authority", "x": 1250, "y": 410, "w": 220, "h": 115},
+    {"id": "deletion", "group": "lifecycle", "type": "enforcement", "label": "Deletion + retention", "detail": "erase • tombstone • increment epoch • sweep", "x": 390, "y": 685, "w": 250, "h": 105},
+    {"id": "registry", "group": "lifecycle", "type": "state", "label": "Current registries", "detail": "source • consent • policy versions", "x": 705, "y": 685, "w": 250, "h": 105},
+    {"id": "audit", "group": "lifecycle", "type": "state", "label": "Minimized receipt", "detail": "IDs • digests • versions • reason; no raw value", "x": 1020, "y": 685, "w": 250, "h": 105},
+    {"id": "terminal", "group": "lifecycle", "type": "decision", "label": "Explicit outcomes", "detail": "ready/empty • deny • conflict • error", "x": 1335, "y": 685, "w": 185, "h": 105}
+  ],
+  "edges": [
+    {"from": "actor", "to": "source", "kind": "control", "label": "scope", "points": [[290, 242], [375, 242]], "label_at": [332, 232]},
+    {"from": "candidate", "to": "write_policy", "kind": "untrusted", "label": "proposal only", "points": [[290, 437], [330, 437], [330, 340], [665, 340], [665, 305]], "label_at": [470, 330]},
+    {"from": "source", "to": "write_policy", "kind": "control", "label": "", "points": [[555, 247], [575, 247]]},
+    {"from": "write_policy", "to": "replay", "kind": "control", "label": "admitted", "points": [[665, 305], [665, 350], [465, 350], [465, 410]], "label_at": [565, 340]},
+    {"from": "replay", "to": "write_result", "kind": "enforcement", "label": "", "points": [[555, 467], [575, 467]]},
+    {"from": "write_result", "to": "memory", "kind": "enforcement", "label": "active version", "points": [[755, 467], [795, 467], [795, 337], [840, 337]], "label_at": [797, 455]},
+    {"from": "read_request", "to": "read_policy", "kind": "control", "label": "", "points": [[1330, 247], [1350, 247]]},
+    {"from": "memory", "to": "read_policy", "kind": "control", "label": "security-trim", "points": [[1070, 337], [1110, 337], [1110, 330], [1440, 330], [1440, 305]], "label_at": [1255, 320]},
+    {"from": "read_policy", "to": "view", "kind": "untrusted", "label": "bounded data", "points": [[1440, 305], [1440, 365], [1360, 365], [1360, 410]], "label_at": [1400, 355]},
+    {"from": "deletion", "to": "memory", "kind": "enforcement", "label": "tombstone + epoch", "points": [[515, 685], [515, 600], [955, 600], [955, 420]], "label_at": [735, 590]},
+    {"from": "registry", "to": "write_policy", "kind": "control", "label": "current policy", "points": [[830, 685], [830, 610], [740, 610], [740, 305]], "label_at": [780, 600]},
+    {"from": "registry", "to": "read_policy", "kind": "control", "label": "current lifecycle", "points": [[955, 737], [1100, 737], [1100, 610], [1510, 610], [1510, 305]], "label_at": [1300, 600]},
+    {"from": "write_result", "to": "audit", "kind": "evidence", "label": "write receipt", "points": [[665, 525], [665, 600], [1145, 600], [1145, 685]], "label_at": [900, 590]},
+    {"from": "read_policy", "to": "audit", "kind": "evidence", "label": "read receipt", "points": [[1530, 270], [1570, 270], [1570, 600], [1190, 600], [1190, 685]], "label_at": [1390, 590]},
+    {"from": "audit", "to": "terminal", "kind": "evidence", "label": "observable", "points": [[1270, 737], [1335, 737]], "label_at": [1302, 727]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "alt_text": "An authenticated actor and untrusted typed memory candidate enter a trusted write boundary. Exact source, consent, type, classification, retention, replay, and version checks precede a versioned scoped memory store. An authorized read is checked before lookup against lifecycle, deletion epoch, expiry, and consent. The output is a bounded untrusted memory view that never grants tool authority. Deletion, registries, minimized receipts, and explicit terminal outcomes complete the lifecycle."
+  }
+}
