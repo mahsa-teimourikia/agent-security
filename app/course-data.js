@@ -48,6 +48,12 @@ export const publishedLessons = [
     correct: 0,
     explanation: "Detection is a fallible signal, not authority. The application must resolve destinations from trusted state and enforce a narrow operation, fields, source lineage, authorization, and egress policy before any effect.",
   }),
+  lesson("f7", "Foundation", "07", "Context and evidence security", "Compile exact authorized and current evidence into a bounded manifest before generation.", "Surface insufficient or conflicting evidence and verify every drafted claim against an exact admitted source before release.", "roadmap/beginner/07-context-and-evidence-security", "lab", {
+    prompt: "An authentic memory summary conflicts with a current policy record. Both fit in context. Which value may the agent release?",
+    options: ["The memory value because it is closer to the current conversation", "The current policy value with its exact admitted reference, after deterministic authority and support checks", "Whichever value the model cites most confidently"],
+    correct: 1,
+    explanation: "Authenticity establishes source binding, not claim authority. The application must resolve the current higher-authority policy, preserve the conflict evidence, and verify the released claim against the exact admitted manifest.",
+  }),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -105,7 +111,7 @@ export const publishedLessons = [
 ];
 
 export const roadmapTracks = [
-  { level: "Foundation", range: "01–07", status: "6 published · 1 reading", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
+  { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "Pilot labs", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "Pilot labs", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
@@ -120,7 +126,7 @@ export const roadmapCourses = [
   road("F04", "04", "Foundation", "Secure tool and action interfaces", "roadmap/beginner/04-secure-tool-and-action-interface-design", "Published", "README · lab · OpenAI Agents SDK adapter · notebook · tests · checkpoint"),
   road("F05", "05", "Foundation", "Authorization, approval, and least privilege", "roadmap/beginner/05-authorization-approval-and-least-privilege", "Published", "README · lab · OpenAI Agents SDK adapter · notebook · tests · checkpoint"),
   road("F06", "06", "Foundation", "Prompt injection and untrusted content", "roadmap/beginner/06-prompt-injection-and-untrusted-content", "Published", "README · lab · OpenAI Agents SDK adapter · notebook · tests · checkpoint"),
-  road("F07", "07", "Foundation", "Context and evidence security", "roadmap/beginner/07-context-and-evidence-security", "Reading", "README · needs lab, notebook, tests"),
+  road("F07", "07", "Foundation", "Context and evidence security", "roadmap/beginner/07-context-and-evidence-security", "Published", "README · lab · OpenAI Agents SDK adapter · notebook · tests · checkpoint"),
   road("I01", "01", "State & execution", "Agent memory security", "roadmap/intermediate/01-agent-memory-security", "Pilot", "README · lab · notebook · needs deeper tests"),
   road("I02", "02", "State & execution", "Checkpoint and durable execution security", "roadmap/intermediate/02-state-checkpoint-and-durable-execution-security", "Pilot", "README · notebook · needs course adapter and tests"),
   road("I03", "03", "State & execution", "Agent identity and delegated authority", "roadmap/intermediate/03-agent-identity-and-delegated-authority", "Planned", "Release contract · needs lab, notebook, tests"),

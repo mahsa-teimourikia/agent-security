@@ -15,6 +15,7 @@ LABS = [
     "curriculum/roadmap/beginner/04-secure-tool-and-action-interface-design/lab.py",
     "curriculum/roadmap/beginner/05-authorization-approval-and-least-privilege/lab.py",
     "curriculum/roadmap/beginner/06-prompt-injection-and-untrusted-content/lab.py",
+    "curriculum/roadmap/beginner/07-context-and-evidence-security/lab.py",
     "curriculum/roadmap/intermediate/01-agent-memory-security/lab.py",
     "curriculum/roadmap/intermediate/04-secrets-and-credential-security/lab.py",
     "curriculum/roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/lab.py",
