@@ -1,0 +1,59 @@
+{
+  "id": "intermediate-03-agent-identity-delegation",
+  "version": "1.0",
+  "title": "Agent Identity and Delegated Authority Plane",
+  "subtitle": "Authenticate subject and workload independently; attenuate authority at every audience",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "identity", "label": "AUTHENTICATED IDENTITIES", "x": 45, "y": 130, "w": 320, "h": 455},
+    {"id": "authority", "label": "DELEGATION AUTHORITY", "x": 400, "y": 130, "w": 430, "h": 455},
+    {"id": "services", "label": "RESOURCE-SERVER HOPS", "x": 865, "y": 130, "w": 690, "h": 455},
+    {"id": "evidence", "label": "CURRENT LIFECYCLE + DECISION EVIDENCE", "x": 400, "y": 625, "w": 1155, "h": 225}
+  ],
+  "nodes": [
+    {"id": "human", "group": "identity", "type": "control", "label": "Human session", "detail": "subject • tenant • assurance • expiry", "x": 75, "y": 185, "w": 260, "h": 95, "ports": {"out": "right"}},
+    {"id": "workload", "group": "identity", "type": "control", "label": "Agent workload", "detail": "attestation • key • tenant • expiry", "x": 75, "y": 335, "w": 260, "h": 95, "ports": {"out": "right"}},
+    {"id": "agent", "group": "identity", "type": "state", "label": "Managed agent identity", "detail": "immutable ID • blueprint • sponsor • lifecycle", "x": 75, "y": 485, "w": 260, "h": 80, "ports": {"out": "right"}},
+    {"id": "resolve", "group": "authority", "type": "enforcement", "label": "Current identity + entitlement", "detail": "bind tenant • purpose • policy • resources", "x": 430, "y": 185, "w": 180, "h": 120, "ports": {"in": "left", "out": "right"}},
+    {"id": "issue", "group": "authority", "type": "decision", "label": "Root grant", "detail": "one subject • sender • audience • scope • TTL", "x": 635, "y": 185, "w": 165, "h": 120, "ports": {"in": "left", "out": "right"}},
+    {"id": "exchange", "group": "authority", "type": "enforcement", "label": "Per-hop exchange", "detail": "subset • new actor • next audience • shorter expiry", "x": 500, "y": 420, "w": 230, "h": 120, "ports": {"in": "right", "out": "right"}},
+    {"id": "case", "group": "services", "type": "enforcement", "label": "Case service", "detail": "verify root audience + sender • exchange", "x": 900, "y": 185, "w": 255, "h": 120, "ports": {"in": "left", "exchange": "bottom"}},
+    {"id": "store", "group": "services", "type": "enforcement", "label": "Attachment store", "detail": "verify child + current resource policy", "x": 1265, "y": 185, "w": 255, "h": 120, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "proof", "group": "services", "type": "control", "label": "One-use request proof", "detail": "grant • sender key • method • URI • nonce • time", "x": 900, "y": 420, "w": 255, "h": 120, "ports": {"out": "right"}},
+    {"id": "result", "group": "services", "type": "untrusted", "label": "Bounded resource data", "detail": "returned only after final authorization", "x": 1265, "y": 420, "w": 255, "h": 120, "ports": {"in": "left"}},
+    {"id": "registries", "group": "evidence", "type": "control", "label": "Current registries", "detail": "session • workload • agent • sponsor • entitlement", "x": 440, "y": 690, "w": 260, "h": 105, "ports": {"out": "top"}},
+    {"id": "lineage", "group": "evidence", "type": "state", "label": "Grant lineage", "detail": "root • parent • depth • state • replay cache", "x": 755, "y": 690, "w": 250, "h": 105, "ports": {"out": "top"}},
+    {"id": "audit", "group": "evidence", "type": "state", "label": "Bounded audit receipt", "detail": "digests • actors • versions • reason; no tokens", "x": 1060, "y": 690, "w": 250, "h": 105, "ports": {"out": "right"}},
+    {"id": "terminal", "group": "evidence", "type": "decision", "label": "Explicit outcome", "detail": "allow • idempotent • deny • paused • error", "x": 1365, "y": 690, "w": 160, "h": 105, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "human_to_resolve", "from": "human", "from_port": "out", "to": "resolve", "to_port": "in", "kind": "control", "label": "", "points": [[335, 232], [380, 232], [380, 215], [430, 215]]},
+    {"id": "workload_to_resolve", "from": "workload", "from_port": "out", "to": "resolve", "to_port": "in", "kind": "control", "label": "", "points": [[335, 382], [380, 382], [380, 275], [430, 275]]},
+    {"id": "agent_to_resolve", "from": "agent", "from_port": "out", "to": "resolve", "to_port": "in", "kind": "control", "label": "", "points": [[335, 525], [395, 525], [395, 295], [430, 295]]},
+    {"id": "resolve_to_issue", "from": "resolve", "from_port": "out", "to": "issue", "to_port": "in", "kind": "enforcement", "label": "", "points": [[610, 245], [635, 245]]},
+    {"id": "issue_to_case", "from": "issue", "from_port": "out", "to": "case", "to_port": "in", "kind": "enforcement", "label": "", "points": [[800, 245], [900, 245]]},
+    {"id": "case_to_exchange", "from": "case", "from_port": "exchange", "to": "exchange", "to_port": "in", "kind": "control", "label": "case-service attestation", "points": [[1027, 305], [1027, 370], [730, 370], [730, 480]], "label_at": [880, 360]},
+    {"id": "exchange_to_store", "from": "exchange", "from_port": "out", "to": "store", "to_port": "in", "kind": "enforcement", "label": "narrower child grant", "points": [[730, 480], [820, 480], [820, 335], [1235, 335], [1235, 245], [1265, 245]], "label_at": [1027, 325]},
+    {"id": "proof_to_case", "from": "proof", "from_port": "out", "to": "case", "to_port": "in", "kind": "control", "label": "fresh proof", "points": [[1027, 420], [1027, 305]], "label_at": [1065, 365]},
+    {"id": "proof_to_store", "from": "proof", "from_port": "out", "to": "store", "to_port": "in", "kind": "control", "label": "new proof for child", "points": [[1155, 480], [1235, 480], [1235, 275], [1265, 275]], "label_at": [1235, 390]},
+    {"id": "store_to_result", "from": "store", "from_port": "out", "to": "result", "to_port": "in", "kind": "untrusted", "label": "authorized data only", "points": [[1392, 305], [1392, 420]], "label_at": [1440, 365]},
+    {"id": "registries_to_resolve", "from": "registries", "from_port": "out", "to": "resolve", "to_port": "in", "kind": "control", "label": "current facts", "points": [[570, 690], [570, 610], [470, 610], [470, 305]], "label_at": [520, 600]},
+    {"id": "lineage_to_exchange", "from": "lineage", "from_port": "out", "to": "exchange", "to_port": "in", "kind": "control", "label": "active ancestors", "points": [[880, 690], [880, 610], [615, 610], [615, 540]], "label_at": [748, 600]},
+    {"id": "case_to_audit", "from": "case", "from_port": "exchange", "to": "audit", "to_port": "out", "kind": "evidence", "label": "decision", "points": [[1080, 305], [1080, 650], [1185, 650], [1185, 690]], "label_at": [1132, 640]},
+    {"id": "store_to_audit", "from": "store", "from_port": "out", "to": "audit", "to_port": "out", "kind": "evidence", "label": "resource decision", "points": [[1450, 305], [1570, 305], [1570, 610], [1240, 610], [1240, 690]], "label_at": [1405, 600]},
+    {"id": "audit_to_terminal", "from": "audit", "from_port": "out", "to": "terminal", "to_port": "in", "kind": "evidence", "label": "observable", "points": [[1310, 742], [1365, 742]], "label_at": [1337, 730]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "A human session, an attested agent workload, and a managed sponsor-backed agent identity enter a delegation authority that resolves current entitlements and issues a sender- and audience-bound root grant. The case service verifies the root, authenticates as a new workload, and exchanges it for a narrower child grant for the attachment store. Each resource-server call requires a fresh one-use request proof. The attachment store applies current resource policy before returning bounded data. Current registries, grant lineage and replay state, bounded audit receipts, and explicit outcomes support every decision."
+  },
+  "validation": {
+    "no_overlaps": true,
+    "route_around_nodes": true,
+    "min_text_padding": 16,
+    "min_connector_clearance": 12,
+    "verify_port_attachment": true,
+    "verify_contrast": true
+  }
+}

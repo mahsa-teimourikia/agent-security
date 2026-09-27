@@ -18,6 +18,7 @@ LABS = [
     "curriculum/roadmap/beginner/07-context-and-evidence-security/lab.py",
     "curriculum/roadmap/intermediate/01-agent-memory-security/lab.py",
     "curriculum/roadmap/intermediate/02-state-checkpoint-and-durable-execution-security/lab.py",
+    "curriculum/roadmap/intermediate/03-agent-identity-and-delegated-authority/lab.py",
     "curriculum/roadmap/intermediate/04-secrets-and-credential-security/lab.py",
     "curriculum/roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/lab.py",
     "curriculum/roadmap/intermediate/07-tool-result-and-output-poisoning/lab.py",
