@@ -1,0 +1,45 @@
+{
+  "id": "foundation-07-context-evidence",
+  "version": "1.0",
+  "title": "Context Compiler: Exact Evidence to Verified Release",
+  "subtitle": "Admission, authority, lifecycle, conflict, budget, and citation checks remain outside the model",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "inputs", "label": "CANDIDATE DATA", "x": 45, "y": 130, "w": 275, "h": 560},
+    {"id": "compiler", "label": "TRUSTED CONTEXT COMPILER", "x": 355, "y": 130, "w": 610, "h": 560},
+    {"id": "generation", "label": "UNTRUSTED GENERATION", "x": 1000, "y": 130, "w": 245, "h": 560},
+    {"id": "release", "label": "TRUSTED RELEASE", "x": 1280, "y": 130, "w": 275, "h": 560},
+    {"id": "evidence", "label": "BOUNDED DECISION EVIDENCE", "x": 355, "y": 735, "w": 1200, "h": 120}
+  ],
+  "nodes": [
+    {"id": "request", "group": "inputs", "type": "control", "label": "Authenticated request", "detail": "subject • tenant • clearance • purpose • required claims", "x": 70, "y": 190, "w": 225, "h": 115},
+    {"id": "candidates", "group": "inputs", "type": "untrusted", "label": "Candidate references", "detail": "retrieval • tool • memory • handoff • user", "x": 70, "y": 370, "w": 225, "h": 115},
+    {"id": "registry", "group": "inputs", "type": "state", "label": "Evidence registry", "detail": "version • digest • scope • lifecycle • lineage", "x": 70, "y": 550, "w": 225, "h": 105},
+    {"id": "admission", "group": "compiler", "type": "control", "label": "Admission gate", "detail": "exact binding • authorization • freshness", "x": 390, "y": 190, "w": 235, "h": 115},
+    {"id": "resolution", "group": "compiler", "type": "decision", "label": "Authority + conflict", "detail": "resolve • insufficient • conflict", "x": 690, "y": 190, "w": 235, "h": 115},
+    {"id": "budget", "group": "compiler", "type": "control", "label": "Deterministic budget", "detail": "required support first • record exclusions", "x": 390, "y": 410, "w": 235, "h": 115},
+    {"id": "manifest", "group": "compiler", "type": "decision", "label": "Exact manifest", "detail": "refs • resolved claims • policy + registry versions", "x": 690, "y": 410, "w": 235, "h": 115},
+    {"id": "model", "group": "generation", "type": "untrusted", "label": "Model draft", "detail": "claims + exact citation proposals", "x": 1025, "y": 310, "w": 195, "h": 145},
+    {"id": "verify", "group": "release", "type": "enforcement", "label": "Release verifier", "detail": "manifest membership • current binding • claim support", "x": 1305, "y": 230, "w": 225, "h": 135},
+    {"id": "terminal", "group": "release", "type": "decision", "label": "Terminal result", "detail": "ANSWERED • ABSTAINED • BLOCKED • ERROR", "x": 1305, "y": 455, "w": 225, "h": 120},
+    {"id": "trace", "group": "evidence", "type": "state", "label": "Minimized trace receipt", "detail": "request digest • candidate decisions • manifest digest • terminal reason", "x": 610, "y": 765, "w": 690, "h": 65}
+  ],
+  "edges": [
+    {"from": "request", "to": "admission", "kind": "control", "label": "trusted context", "points": [[295, 247], [390, 247]], "label_at": [342, 237]},
+    {"from": "candidates", "to": "admission", "kind": "untrusted", "label": "exact refs", "points": [[295, 427], [330, 427], [330, 330], [370, 330], [370, 270], [390, 270]], "label_at": [334, 346]},
+    {"from": "registry", "to": "admission", "kind": "control", "label": "current metadata", "points": [[295, 602], [345, 602], [345, 325], [507, 325], [507, 305]], "label_at": [410, 315]},
+    {"from": "admission", "to": "resolution", "kind": "control", "label": "eligible only", "points": [[625, 247], [690, 247]], "label_at": [657, 237]},
+    {"from": "resolution", "to": "budget", "kind": "control", "label": "resolved support", "points": [[807, 305], [807, 350], [507, 350], [507, 410]], "label_at": [660, 340]},
+    {"from": "budget", "to": "manifest", "kind": "control", "label": "selected", "points": [[625, 467], [690, 467]], "label_at": [657, 457]},
+    {"from": "manifest", "to": "model", "kind": "untrusted", "label": "evidence as data", "points": [[925, 467], [975, 467], [975, 382], [1025, 382]], "label_at": [975, 450]},
+    {"from": "model", "to": "verify", "kind": "untrusted", "label": "draft proposal", "points": [[1220, 382], [1260, 382], [1260, 297], [1305, 297]], "label_at": [1260, 370]},
+    {"from": "manifest", "to": "verify", "kind": "control", "label": "exact contract", "points": [[807, 525], [807, 665], [1260, 665], [1260, 320], [1305, 320]], "label_at": [1080, 655]},
+    {"from": "verify", "to": "terminal", "kind": "enforcement", "label": "decision", "points": [[1417, 365], [1417, 455]], "label_at": [1450, 412]},
+    {"from": "admission", "to": "trace", "kind": "evidence", "label": "admission receipt", "points": [[625, 290], [650, 290], [650, 715], [800, 715], [800, 765]], "label_at": [720, 705]},
+    {"from": "verify", "to": "trace", "kind": "evidence", "label": "release receipt", "points": [[1530, 340], [1540, 340], [1540, 715], [1150, 715], [1150, 765]], "label_at": [1350, 705]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "alt_text": "An authenticated request, candidate references, and current evidence registry enter a trusted context compiler. Admission precedes authority and conflict resolution, deterministic budgeting, and an exact evidence manifest. The manifest supplies data to an untrusted model. A trusted verifier compares drafted claims and citations with that manifest before producing answered, abstained, blocked, or error states. Bounded admission and release receipts flow to a minimized trace."
+  }
+}
