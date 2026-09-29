@@ -72,6 +72,12 @@ export const publishedLessons = [
     correct: 0,
     explanation: "The serialized grant is not a bearer credential. The resource server must authenticate the named delegate, match the bound sender key, validate a fresh proof for the exact request, and recheck current lifecycle, entitlement, policy, lineage, operation, and resource state.",
   }, "agent_identity_delegation"),
+  lesson("r-i04", "Intermediate", "04", "Secrets and credential security", "Keep credential material outside model context, memory, tools, output, errors, and telemetry while preserving useful provider access.", "Derive one-use, short-lived leases from authenticated current state; bind exact authority and secret version; materialize only inside the executor; and prove replay, rotation, and exposure controls.", "roadmap/intermediate/04-secrets-and-credential-security", "lab", {
+    prompt: "An agent framework masks a provider key in object representations and keeps it in local run context instead of the prompt. What additional control is required?",
+    options: ["None; masked local context is a complete isolation boundary", "Keep raw material outside the agent runtime, derive a narrow one-use lease, and materialize the exact current version only inside a fixed executor", "Let the model request a vault reference instead of the key"],
+    correct: 1,
+    explanation: "Masking reduces accidental display, and local context is not automatically model-visible, but application code and serialized state may still expose it. A trusted broker and executor must own current authorization, exact binding, materialization, lifecycle, and telemetry minimization.",
+  }, "secrets_credential_security"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -130,7 +136,7 @@ export const publishedLessons = [
 
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
-  { level: "State & execution", range: "01–10", status: "3 published · 7 in progress", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
+  { level: "State & execution", range: "01–10", status: "4 published · 6 in progress", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "Pilot labs", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
@@ -148,7 +154,7 @@ export const roadmapCourses = [
   road("I01", "01", "State & execution", "Agent memory security", "roadmap/intermediate/01-agent-memory-security", "Published", "README · lifecycle lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("I02", "02", "State & execution", "Checkpoint and durable execution security", "roadmap/intermediate/02-state-checkpoint-and-durable-execution-security", "Published", "README · durable-workflow lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("I03", "03", "State & execution", "Agent identity and delegated authority", "roadmap/intermediate/03-agent-identity-and-delegated-authority", "Published", "README · identity/delegation lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
-  road("I04", "04", "State & execution", "Secrets and credential security", "roadmap/intermediate/04-secrets-and-credential-security", "Pilot", "README · lab · needs notebook and tests"),
+  road("I04", "04", "State & execution", "Secrets and credential security", "roadmap/intermediate/04-secrets-and-credential-security", "Published", "README · credential-broker lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("I05", "05", "State & execution", "Filesystem, execution, and sandbox security", "roadmap/intermediate/05-filesystem-code-execution-and-sandbox-security", "Planned", "Release contract · needs lab, notebook, tests"),
   road("I06", "06", "State & execution", "Network egress, SSRF, and resources", "roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security", "Pilot", "README · lab · notebook · needs deeper tests"),
   road("I07", "07", "State & execution", "Tool-result and output poisoning", "roadmap/intermediate/07-tool-result-and-output-poisoning", "Pilot", "README · lab · needs notebook and tests"),

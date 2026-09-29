@@ -1,0 +1,59 @@
+{
+  "id": "intermediate-04-secrets-credential-boundary",
+  "version": "1.0",
+  "title": "Secrets and Credential Execution Boundary",
+  "subtitle": "The model selects a resource; trusted code derives authority and materializes credentials only inside the executor",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "proposal", "label": "MODEL + TRUSTED APPLICATION", "x": 45, "y": 135, "w": 330, "h": 450},
+    {"id": "control", "label": "CREDENTIAL CONTROL PLANE", "x": 410, "y": 135, "w": 475, "h": 450},
+    {"id": "execution", "label": "ISOLATED EXECUTION PLANE", "x": 920, "y": 135, "w": 635, "h": 450},
+    {"id": "evidence", "label": "CURRENT LIFECYCLE + REDACTED EVIDENCE", "x": 410, "y": 625, "w": 1145, "h": 225}
+  ],
+  "nodes": [
+    {"id": "model", "group": "proposal", "type": "untrusted", "label": "Model proposal", "detail": "resource identifier only", "x": 75, "y": 205, "w": 270, "h": 90, "padding": 16, "ports": {"out": "right"}},
+    {"id": "runtime", "group": "proposal", "type": "control", "label": "Trusted runtime context", "detail": "attested workload • tenant • request ID", "x": 75, "y": 355, "w": 270, "h": 100, "padding": 16, "ports": {"out": "right"}},
+    {"id": "contract", "group": "proposal", "type": "enforcement", "label": "Application tool contract", "detail": "derive audience • purpose • operation", "x": 75, "y": 495, "w": 270, "h": 70, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "policy", "group": "control", "type": "enforcement", "label": "Current resource policy", "detail": "tenant • resource • operation • version", "x": 440, "y": 205, "w": 200, "h": 115, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "broker", "group": "control", "type": "decision", "label": "Credential broker", "detail": "one-use lease • sender • audience • TTL", "x": 665, "y": 205, "w": 190, "h": 115, "padding": 16, "ports": {"in": "left", "out": "right", "metadata": "bottom", "state": "bottom"}},
+    {"id": "vaultmeta", "group": "control", "type": "state", "label": "Vault metadata", "detail": "secret ID • current version • state; no bytes", "x": 500, "y": 405, "w": 280, "h": 105, "padding": 16, "ports": {"out": "right", "state": "bottom"}},
+    {"id": "executor", "group": "execution", "type": "enforcement", "label": "Credential executor", "detail": "reauthorize • atomically claim • materialize", "x": 950, "y": 205, "w": 250, "h": 115, "padding": 16, "ports": {"in": "left", "vault": "bottom", "out": "right", "audit": "bottom"}},
+    {"id": "provider", "group": "execution", "type": "enforcement", "label": "Exact external provider", "detail": "validate version • operation • resource", "x": 1280, "y": 205, "w": 245, "h": 115, "padding": 16, "ports": {"in": "left", "out": "bottom", "audit": "bottom"}},
+    {"id": "ephemeral", "group": "execution", "type": "state", "label": "Ephemeral material handle", "detail": "executor-only • shortest practical lifetime • zeroized", "x": 950, "y": 420, "w": 250, "h": 105, "padding": 16, "ports": {"in": "left", "out": "top"}},
+    {"id": "result", "group": "execution", "type": "untrusted", "label": "Bounded provider result", "detail": "content or generic terminal error; never credential bytes", "x": 1280, "y": 420, "w": 245, "h": 105, "padding": 16, "ports": {"in": "top"}},
+    {"id": "versions", "group": "evidence", "type": "state", "label": "Secret lifecycle", "detail": "create • rotate • disable • recover", "x": 450, "y": 690, "w": 235, "h": 105, "padding": 16, "ports": {"out": "top"}},
+    {"id": "ledger", "group": "evidence", "type": "state", "label": "Lease ledger", "detail": "active • claimed • revoked • replay", "x": 735, "y": 690, "w": 235, "h": 105, "padding": 16, "ports": {"out": "top"}},
+    {"id": "audit", "group": "evidence", "type": "state", "label": "Allowlisted audit receipt", "detail": "digests • versions • reason; no payload or credential", "x": 1020, "y": 690, "w": 265, "h": 105, "padding": 16, "ports": {"executor": "top", "provider": "top", "out": "right"}},
+    {"id": "outcome", "group": "evidence", "type": "decision", "label": "Explicit outcome", "detail": "allow • deny • error", "x": 1340, "y": 690, "w": 180, "h": 105, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "model_to_contract", "from": "model", "from_port": "out", "to": "contract", "to_port": "in", "kind": "untrusted", "label": "policy_id", "points": [[345, 250], [365, 250], [365, 480], [210, 480], [210, 495]], "label_at": [365, 335]},
+    {"id": "runtime_to_policy", "from": "runtime", "from_port": "out", "to": "policy", "to_port": "in", "kind": "control", "label": "", "points": [[345, 405], [390, 405], [390, 260], [440, 260]]},
+    {"id": "contract_to_policy", "from": "contract", "from_port": "out", "to": "policy", "to_port": "in", "kind": "enforcement", "label": "", "points": [[345, 530], [400, 530], [400, 300], [440, 300]]},
+    {"id": "policy_to_broker", "from": "policy", "from_port": "out", "to": "broker", "to_port": "in", "kind": "enforcement", "label": "", "points": [[640, 260], [665, 260]]},
+    {"id": "vaultmeta_to_broker", "from": "vaultmeta", "from_port": "out", "to": "broker", "to_port": "metadata", "kind": "control", "label": "current version", "points": [[780, 455], [825, 455], [825, 345], [760, 345], [760, 320]], "label_at": [824, 400]},
+    {"id": "broker_to_executor", "from": "broker", "from_port": "out", "to": "executor", "to_port": "in", "kind": "enforcement", "label": "", "points": [[855, 260], [950, 260]]},
+    {"id": "vaultmeta_to_ephemeral", "from": "vaultmeta", "from_port": "out", "to": "ephemeral", "to_port": "in", "kind": "control", "label": "materialize exact version", "points": [[780, 455], [950, 455]], "label_at": [865, 440]},
+    {"id": "ephemeral_to_executor", "from": "ephemeral", "from_port": "out", "to": "executor", "to_port": "vault", "kind": "control", "label": "short-lived handle", "points": [[1075, 420], [1075, 320]], "label_at": [1120, 370]},
+    {"id": "executor_to_provider", "from": "executor", "from_port": "out", "to": "provider", "to_port": "in", "kind": "enforcement", "label": "", "points": [[1200, 260], [1280, 260]]},
+    {"id": "provider_to_result", "from": "provider", "from_port": "out", "to": "result", "to_port": "in", "kind": "untrusted", "label": "validated output", "points": [[1402, 320], [1402, 420]], "label_at": [1450, 370]},
+    {"id": "versions_to_vault", "from": "versions", "from_port": "out", "to": "vaultmeta", "to_port": "state", "kind": "control", "label": "current state", "points": [[567, 690], [567, 610], [640, 610], [640, 510]], "label_at": [602, 600]},
+    {"id": "ledger_to_broker", "from": "ledger", "from_port": "out", "to": "broker", "to_port": "state", "kind": "control", "label": "atomic claim", "points": [[852, 690], [852, 610], [760, 610], [760, 320]], "label_at": [805, 600]},
+    {"id": "executor_to_audit", "from": "executor", "from_port": "audit", "to": "audit", "to_port": "executor", "kind": "evidence", "label": "redacted decision", "points": [[1075, 320], [1075, 650], [1120, 650], [1120, 690]], "label_at": [1120, 640]},
+    {"id": "provider_to_audit", "from": "provider", "from_port": "audit", "to": "audit", "to_port": "provider", "kind": "evidence", "label": "generic provider state", "points": [[1402, 320], [1535, 320], [1535, 610], [1210, 610], [1210, 690]], "label_at": [1372, 600]},
+    {"id": "audit_to_outcome", "from": "audit", "from_port": "out", "to": "outcome", "to_port": "in", "kind": "evidence", "label": "observable", "points": [[1285, 742], [1340, 742]], "label_at": [1312, 730]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "A model proposes only a policy resource identifier. Trusted runtime identity and an application tool contract enter current resource policy. A credential broker consults vault metadata but never secret bytes, then issues an opaque one-use lease. The credential executor reauthorizes, atomically claims the lease, materializes the exact secret version into an ephemeral handle, and calls one external provider. Only a bounded result or generic error returns. Secret lifecycle, lease state, redacted receipts, and explicit outcomes support every decision."
+  },
+  "validation": {
+    "no_overlaps": true,
+    "route_around_nodes": true,
+    "min_text_padding": 16,
+    "min_connector_clearance": 12,
+    "verify_port_attachment": true,
+    "verify_contrast": true
+  }
+}
