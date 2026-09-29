@@ -26,14 +26,14 @@ These chapters establish the conceptual sequence. Foundation 01–07 have passed
 the publication gate: each owns a reusable lab, top-to-bottom executable
 notebook, focused tests, and a Learning Hub checkpoint.
 
-## Intermediate sequence (three published, pilot labs, and planned topics)
+## Intermediate sequence (four published, pilot labs, and planned topics)
 
 | Course | Focus |
 | --- | --- |
 | [01](roadmap/intermediate/01-agent-memory-security/) **Published** | secure long-term memory lifecycle, consent, versioning, deletion, SDK adapter, notebook, and tests |
 | [02](roadmap/intermediate/02-state-checkpoint-and-durable-execution-security/) **Published** | secure checkpoint chains, current resume authorization, deterministic migration, exclusive leases, uncertain-effect reconciliation, SDK adapter, notebook, and tests |
 | [03](roadmap/intermediate/03-agent-identity-and-delegated-authority/) **Published** | distinct human, agent, and workload identity; sender-bound per-hop delegation; current lifecycle enforcement; SDK adapter; notebook; diagram; and tests |
-| [04](roadmap/intermediate/04-secrets-and-credential-security/) | secrets and credentials |
+| [04](roadmap/intermediate/04-secrets-and-credential-security/) **Published** | credential isolation, one-use version-bound leases, rotation and replay controls, SDK adapter, notebook, diagram, and tests |
 | [05](roadmap/intermediate/05-filesystem-code-execution-and-sandbox-security/) | filesystem, execution, and sandboxing |
 | [06](roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/) | egress, SSRF, and external resources |
 | [07](roadmap/intermediate/07-tool-result-and-output-poisoning/) | tool-result and output poisoning |

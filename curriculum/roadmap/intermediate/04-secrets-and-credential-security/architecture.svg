@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Secrets and Credential Execution Boundary</title>
+<desc id="desc">A model proposes only a policy resource identifier. Trusted runtime identity and an application tool contract enter current resource policy. A credential broker consults vault metadata but never secret bytes, then issues an opaque one-use lease. The credential executor reauthorizes, atomically claims the lease, materializes the exact secret version into an ephemeral handle, and calls one external provider. Only a bounded result or generic error returns. Secret lifecycle, lease state, redacted receipts, and explicit outcomes support every decision.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Secrets and Credential Execution Boundary</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">The model selects a resource; trusted code derives authority and materializes credentials only inside the executor</text>
+<rect x="45" y="135" width="330" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="61" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">MODEL + TRUSTED APPLICATION</text>
+<rect x="410" y="135" width="475" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="426" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">CREDENTIAL CONTROL PLANE</text>
+<rect x="920" y="135" width="635" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="936" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">ISOLATED EXECUTION PLANE</text>
+<rect x="410" y="625" width="1145" height="225" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="426" y="657" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">CURRENT LIFECYCLE + REDACTED EVIDENCE</text>
+<polyline points="345,250 365,250 365,480 210,480 210,495" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="329.75" y="322" width="70.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="365" y="335" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">policy_id</text>
+<polyline points="345,405 390,405 390,260 440,260" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<polyline points="345,530 400,530 400,300 440,300" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<polyline points="640,260 665,260" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<polyline points="780,455 825,455 825,345 760,345 760,320" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="769.25" y="387" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="824" y="400" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">current version</text>
+<polyline points="855,260 950,260" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<polyline points="780,455 950,455" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="777.75" y="427" width="174.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="865" y="440" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">materialize exact version</text>
+<polyline points="1075,420 1075,320" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1055.5" y="357" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1120" y="370" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">short-lived handle</text>
+<polyline points="1200,260 1280,260" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<polyline points="1402,320 1402,420" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1392.0" y="357" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1450" y="370" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">validated output</text>
+<polyline points="567,690 567,610 640,610 640,510" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="553.75" y="587" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="602" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">current state</text>
+<polyline points="852,690 852,610 760,610 760,320" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="760.0" y="587" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="805" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">atomic claim</text>
+<polyline points="1075,320 1075,650 1120,650 1120,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1058.75" y="627" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1120" y="640" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">redacted decision</text>
+<polyline points="1402,320 1535,320 1535,610 1210,610 1210,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1294.5" y="587" width="155.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1372" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">generic provider state</text>
+<polyline points="1285,742 1340,742" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1273.5" y="717" width="77.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1312" y="730" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">observable</text>
+<rect x="75" y="205" width="270" height="90" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="210.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Model proposal</text>
+<text x="210.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">resource identifier only</text>
+<rect x="75" y="355" width="270" height="100" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="210.0" y="386" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trusted runtime context</text>
+<text x="210.0" y="410" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">attested workload • tenant •</text>
+<text x="210.0" y="426" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">request ID</text>
+<rect x="75" y="495" width="270" height="70" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="210.0" y="526" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Application tool contract</text>
+<text x="210.0" y="550" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">derive audience • purpose •</text>
+<text x="210.0" y="566" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">operation</text>
+<rect x="440" y="205" width="200" height="115" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="540.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Current resource</text>
+<text x="540.0" y="255" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">policy</text>
+<text x="540.0" y="279" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant • resource •</text>
+<text x="540.0" y="295" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">operation • version</text>
+<rect x="665" y="205" width="190" height="115" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="760.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Credential broker</text>
+<text x="760.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">one-use lease •</text>
+<text x="760.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">sender • audience •</text>
+<text x="760.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">TTL</text>
+<rect x="500" y="405" width="280" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="640.0" y="436" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Vault metadata</text>
+<text x="640.0" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">secret ID • current version •</text>
+<text x="640.0" y="476" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">state; no bytes</text>
+<rect x="950" y="205" width="250" height="115" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1075.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Credential executor</text>
+<text x="1075.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">reauthorize • atomically</text>
+<text x="1075.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">claim • materialize</text>
+<rect x="1280" y="205" width="245" height="115" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1402.5" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Exact external provider</text>
+<text x="1402.5" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">validate version •</text>
+<text x="1402.5" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">operation • resource</text>
+<rect x="950" y="420" width="250" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1075.0" y="451" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Ephemeral material handle</text>
+<text x="1075.0" y="475" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">executor-only • shortest</text>
+<text x="1075.0" y="491" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">practical lifetime •</text>
+<text x="1075.0" y="507" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">zeroized</text>
+<rect x="1280" y="420" width="245" height="105" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="1402.5" y="451" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Bounded provider result</text>
+<text x="1402.5" y="475" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">content or generic terminal</text>
+<text x="1402.5" y="491" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">error; never credential</text>
+<text x="1402.5" y="507" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">bytes</text>
+<rect x="450" y="690" width="235" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="567.5" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Secret lifecycle</text>
+<text x="567.5" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">create • rotate • disable</text>
+<text x="567.5" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• recover</text>
+<rect x="735" y="690" width="235" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="852.5" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Lease ledger</text>
+<text x="852.5" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">active • claimed • revoked</text>
+<text x="852.5" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• replay</text>
+<rect x="1020" y="690" width="265" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1152.5" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Allowlisted audit receipt</text>
+<text x="1152.5" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digests • versions • reason;</text>
+<text x="1152.5" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">no payload or credential</text>
+<rect x="1340" y="690" width="180" height="105" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1430.0" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Explicit outcome</text>
+<text x="1430.0" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">allow • deny •</text>
+<text x="1430.0" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">error</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
