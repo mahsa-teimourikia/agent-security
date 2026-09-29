@@ -20,6 +20,7 @@ LABS = [
     "curriculum/roadmap/intermediate/02-state-checkpoint-and-durable-execution-security/lab.py",
     "curriculum/roadmap/intermediate/03-agent-identity-and-delegated-authority/lab.py",
     "curriculum/roadmap/intermediate/04-secrets-and-credential-security/lab.py",
+    "curriculum/roadmap/intermediate/05-filesystem-code-execution-and-sandbox-security/lab.py",
     "curriculum/roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/lab.py",
     "curriculum/roadmap/intermediate/07-tool-result-and-output-poisoning/lab.py",
     "curriculum/roadmap/intermediate/09-mcp-security/lab.py",
