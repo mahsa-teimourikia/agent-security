@@ -1,0 +1,59 @@
+{
+  "id": "intermediate-05-sandbox-execution-boundary",
+  "version": "1.0",
+  "title": "Filesystem and Code Execution Boundary",
+  "subtitle": "Untrusted archive and program identifiers cross into trusted admission, then a disposable runtime enforces every effect",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "proposal", "label": "MODEL + TRUSTED APP", "x": 45, "y": 135, "w": 300, "h": 450},
+    {"id": "admission", "label": "ADMISSION CONTROL PLANE", "x": 380, "y": 135, "w": 430, "h": 450},
+    {"id": "execution", "label": "DISPOSABLE EXECUTION PLANE", "x": 845, "y": 135, "w": 710, "h": 450},
+    {"id": "evidence", "label": "LIFECYCLE + REDACTED EVIDENCE", "x": 380, "y": 625, "w": 1175, "h": 225}
+  ],
+  "nodes": [
+    {"id": "model", "group": "proposal", "type": "untrusted", "label": "Agent proposal", "detail": "archive ID • program ID", "x": 75, "y": 205, "w": 240, "h": 85, "padding": 16, "ports": {"out": "bottom"}},
+    {"id": "runtime_context", "group": "proposal", "type": "control", "label": "Trusted runtime context", "detail": "attested workload • tenant • request ID", "x": 75, "y": 345, "w": 240, "h": 100, "padding": 16, "ports": {"out": "right"}},
+    {"id": "tool_contract", "group": "proposal", "type": "enforcement", "label": "Narrow tool contract", "detail": "identifiers only; no roots, image, network, or limits", "x": 75, "y": 490, "w": 240, "h": 75, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "archive_registry", "group": "admission", "type": "state", "label": "Tenant archive registry", "detail": "owner • upload digest • immutable manifest", "x": 410, "y": 205, "w": 180, "h": 105, "padding": 16, "ports": {"out": "right"}},
+    {"id": "archive_inspector", "group": "admission", "type": "enforcement", "label": "Archive admission", "detail": "canonical paths • no links/devices • size limits", "x": 610, "y": 205, "w": 170, "h": 105, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "broker", "group": "admission", "type": "decision", "label": "Sandbox broker", "detail": "current policy • image digest • one-use grant", "x": 500, "y": 405, "w": 200, "h": 110, "padding": 16, "ports": {"identity": "left", "archive": "top", "out": "right", "audit": "bottom"}},
+    {"id": "workspace", "group": "execution", "type": "state", "label": "Ephemeral workspace", "detail": "read-only input • one writable output • no secrets", "x": 875, "y": 205, "w": 190, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right", "destroy": "bottom"}},
+    {"id": "sandbox_runtime", "group": "execution", "type": "enforcement", "label": "Isolated runtime", "detail": "claim grant • enforce each effect • terminate", "x": 1090, "y": 205, "w": 200, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right", "fs": "bottom", "resource": "bottom", "network": "bottom", "audit": "bottom"}},
+    {"id": "output_validator", "group": "execution", "type": "decision", "label": "Bounded output validator", "detail": "schema • size • terminal state; no raw stdout", "x": 1320, "y": 205, "w": 205, "h": 105, "padding": 16, "ports": {"in": "left"}},
+    {"id": "filesystem_policy", "group": "execution", "type": "enforcement", "label": "Filesystem policy", "detail": "resolve at use • exact roots • deny links and host paths", "x": 875, "y": 420, "w": 190, "h": 105, "padding": 16, "ports": {"out": "top"}},
+    {"id": "resource_policy", "group": "execution", "type": "enforcement", "label": "Resource policy", "detail": "wall time • CPU • memory • PIDs • disk • output", "x": 1090, "y": 420, "w": 200, "h": 105, "padding": 16, "ports": {"out": "top"}},
+    {"id": "network_policy", "group": "execution", "type": "enforcement", "label": "Network + syscall policy", "detail": "default deny egress • syscall allowlist", "x": 1320, "y": 420, "w": 205, "h": 105, "padding": 16, "ports": {"out": "top"}},
+    {"id": "audit", "group": "evidence", "type": "state", "label": "Allowlisted execution receipt", "detail": "digests • versions • counters • reason • cleanup; no paths, code, content, or secrets", "x": 450, "y": 690, "w": 300, "h": 105, "padding": 16, "ports": {"broker": "top", "runtime": "top", "out": "right"}},
+    {"id": "outcome", "group": "evidence", "type": "decision", "label": "Verified terminal outcome", "detail": "allow report • deny • error • sandbox destroyed", "x": 1205, "y": 690, "w": 280, "h": 105, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "model_to_contract", "from": "model", "from_port": "out", "to": "tool_contract", "to_port": "in", "kind": "untrusted", "label": "untrusted identifiers", "points": [[195, 290], [195, 490]], "label_at": [245, 390]},
+    {"id": "context_to_broker", "from": "runtime_context", "from_port": "out", "to": "broker", "to_port": "identity", "kind": "control", "label": "identity + tenant", "points": [[315, 395], [455, 395], [455, 460], [500, 460]], "label_at": [395, 382]},
+    {"id": "contract_to_broker", "from": "tool_contract", "from_port": "out", "to": "broker", "to_port": "identity", "kind": "enforcement", "label": "fixed request", "points": [[315, 527], [455, 527], [455, 480], [500, 480]], "label_at": [390, 515]},
+    {"id": "registry_to_inspector", "from": "archive_registry", "from_port": "out", "to": "archive_inspector", "to_port": "in", "kind": "control", "label": "manifest", "points": [[590, 257], [610, 257]], "label_at": [600, 245]},
+    {"id": "inspector_to_broker", "from": "archive_inspector", "from_port": "out", "to": "broker", "to_port": "archive", "kind": "enforcement", "label": "admitted paths + digest", "points": [[695, 310], [695, 355], [600, 355], [600, 405]], "label_at": [647, 345]},
+    {"id": "broker_to_workspace", "from": "broker", "from_port": "out", "to": "workspace", "to_port": "in", "kind": "enforcement", "label": "one-use grant", "points": [[700, 460], [830, 460], [830, 257], [875, 257]], "label_at": [800, 448]},
+    {"id": "workspace_to_runtime", "from": "workspace", "from_port": "out", "to": "sandbox_runtime", "to_port": "in", "kind": "control", "label": "mounted input", "points": [[1065, 257], [1090, 257]], "label_at": [1077, 245]},
+    {"id": "runtime_to_output", "from": "sandbox_runtime", "from_port": "out", "to": "output_validator", "to_port": "in", "kind": "enforcement", "label": "bounded result", "points": [[1290, 257], [1320, 257]], "label_at": [1305, 245]},
+    {"id": "filesystem_to_runtime", "from": "filesystem_policy", "from_port": "out", "to": "sandbox_runtime", "to_port": "fs", "kind": "enforcement", "label": "path checks", "points": [[970, 420], [970, 365], [1140, 365], [1140, 310]], "label_at": [1045, 355]},
+    {"id": "resource_to_runtime", "from": "resource_policy", "from_port": "out", "to": "sandbox_runtime", "to_port": "resource", "kind": "enforcement", "label": "hard limits", "points": [[1190, 420], [1190, 310]], "label_at": [1220, 365]},
+    {"id": "network_to_runtime", "from": "network_policy", "from_port": "out", "to": "sandbox_runtime", "to_port": "network", "kind": "enforcement", "label": "deny", "points": [[1422, 420], [1422, 365], [1240, 365], [1240, 310]], "label_at": [1340, 355]},
+    {"id": "broker_to_audit", "from": "broker", "from_port": "audit", "to": "audit", "to_port": "broker", "kind": "evidence", "label": "admission receipt", "points": [[600, 515], [600, 690]], "label_at": [650, 610]},
+    {"id": "runtime_to_audit", "from": "sandbox_runtime", "from_port": "audit", "to": "audit", "to_port": "runtime", "kind": "evidence", "label": "decision + counters", "points": [[1190, 310], [1190, 610], [690, 610], [690, 690]], "label_at": [930, 600]},
+    {"id": "audit_to_outcome", "from": "audit", "from_port": "out", "to": "outcome", "to_port": "in", "kind": "evidence", "label": "observable evidence", "points": [[750, 742], [1205, 742]], "label_at": [977, 730]},
+    {"id": "workspace_destroy", "from": "workspace", "from_port": "destroy", "to": "outcome", "to_port": "in", "kind": "control", "label": "destroy on every terminal path", "points": [[970, 310], [840, 310], [840, 835], [1165, 835], [1165, 770], [1205, 770]], "label_at": [1000, 825]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "An agent proposes only archive and program identifiers while authenticated application context supplies identity and tenant. Archive admission canonicalizes paths and rejects links, special files, collisions, and oversized content. A broker binds current policy, image, input, and program digests into a one-use grant. A disposable runtime enforces exact filesystem roots, resource budgets, default-deny network and syscall policy, validates bounded output, emits redacted receipts, and destroys the workspace on every terminal path."
+  },
+  "validation": {
+    "no_overlaps": true,
+    "route_around_nodes": true,
+    "min_text_padding": 16,
+    "min_connector_clearance": 12,
+    "verify_port_attachment": true,
+    "verify_contrast": true
+  }
+}

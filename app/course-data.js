@@ -78,6 +78,12 @@ export const publishedLessons = [
     correct: 1,
     explanation: "Masking reduces accidental display, and local context is not automatically model-visible, but application code and serialized state may still expose it. A trusted broker and executor must own current authorization, exact binding, materialization, lifecycle, and telemetry minimization.",
   }, "secrets_credential_security"),
+  lesson("r-i05", "Intermediate", "05", "Filesystem, code execution, and sandbox security", "Treat uploaded archives and generated programs as hostile while preserving useful analysis inside a disposable, capability-bounded runtime.", "Admit immutable input, derive a one-use execution grant from authenticated state, enforce filesystem, network, syscall, and resource policy independently, validate bounded output, and prove destruction.", "roadmap/intermediate/05-filesystem-code-execution-and-sandbox-security", "lab", {
+    prompt: "Which design is sufficient for executing hostile generated code?",
+    options: ["A safe-system prompt plus a temporary directory", "A host subprocess with a client timeout", "A one-use, identity-bound grant redeemed in an independently isolated, capability-bounded runtime with validated output and verified destruction"],
+    correct: 2,
+    explanation: "A prompt, temporary directory, or client timeout does not remove ambient host authority or prove termination. The control must be enforced beneath the model, bind current authenticated state, constrain every effect, and verify cleanup.",
+  }, "filesystem_sandbox_security"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -136,7 +142,7 @@ export const publishedLessons = [
 
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
-  { level: "State & execution", range: "01–10", status: "4 published · 6 in progress", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
+  { level: "State & execution", range: "01–10", status: "5 published · 5 in progress", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "Pilot labs", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
@@ -155,7 +161,7 @@ export const roadmapCourses = [
   road("I02", "02", "State & execution", "Checkpoint and durable execution security", "roadmap/intermediate/02-state-checkpoint-and-durable-execution-security", "Published", "README · durable-workflow lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("I03", "03", "State & execution", "Agent identity and delegated authority", "roadmap/intermediate/03-agent-identity-and-delegated-authority", "Published", "README · identity/delegation lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("I04", "04", "State & execution", "Secrets and credential security", "roadmap/intermediate/04-secrets-and-credential-security", "Published", "README · credential-broker lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
-  road("I05", "05", "State & execution", "Filesystem, execution, and sandbox security", "roadmap/intermediate/05-filesystem-code-execution-and-sandbox-security", "Planned", "Release contract · needs lab, notebook, tests"),
+  road("I05", "05", "State & execution", "Filesystem, code execution, and sandbox security", "roadmap/intermediate/05-filesystem-code-execution-and-sandbox-security", "Published", "README · sandbox-boundary lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("I06", "06", "State & execution", "Network egress, SSRF, and resources", "roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security", "Pilot", "README · lab · notebook · needs deeper tests"),
   road("I07", "07", "State & execution", "Tool-result and output poisoning", "roadmap/intermediate/07-tool-result-and-output-poisoning", "Pilot", "README · lab · needs notebook and tests"),
   road("I08", "08", "State & execution", "Agentic RAG security", "roadmap/intermediate/08-agentic-rag-security", "Planned", "Release contract · needs lab, notebook, tests"),

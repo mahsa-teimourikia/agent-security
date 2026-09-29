@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Filesystem and Code Execution Boundary</title>
+<desc id="desc">An agent proposes only archive and program identifiers while authenticated application context supplies identity and tenant. Archive admission canonicalizes paths and rejects links, special files, collisions, and oversized content. A broker binds current policy, image, input, and program digests into a one-use grant. A disposable runtime enforces exact filesystem roots, resource budgets, default-deny network and syscall policy, validates bounded output, emits redacted receipts, and destroys the workspace on every terminal path.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Filesystem and Code Execution Boundary</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Untrusted archive and program identifiers cross into trusted admission, then a disposable runtime enforces every effect</text>
+<rect x="45" y="135" width="300" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="61" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">MODEL + TRUSTED APP</text>
+<rect x="380" y="135" width="430" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="396" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">ADMISSION CONTROL PLANE</text>
+<rect x="845" y="135" width="710" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="861" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">DISPOSABLE EXECUTION PLANE</text>
+<rect x="380" y="625" width="1175" height="225" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="396" y="657" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">LIFECYCLE + REDACTED EVIDENCE</text>
+<polyline points="195,290 195,490" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="170.75" y="377" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="245" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">untrusted identifiers</text>
+<polyline points="315,395 455,395 455,460 500,460" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="333.75" y="369" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="395" y="382" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">identity + tenant</text>
+<polyline points="315,527 455,527 455,480 500,480" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="341.75" y="502" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="390" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">fixed request</text>
+<polyline points="590,257 610,257" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="568.0" y="232" width="64.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="600" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">manifest</text>
+<polyline points="695,310 695,355 600,355 600,405" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="566.25" y="332" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="647" y="345" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">admitted paths + digest</text>
+<polyline points="700,460 830,460 830,257 875,257" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="751.75" y="435" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="800" y="448" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">one-use grant</text>
+<polyline points="1065,257 1090,257" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1028.75" y="232" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1077" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">mounted input</text>
+<polyline points="1290,257 1320,257" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1253.5" y="232" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1305" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">bounded result</text>
+<polyline points="970,420 970,365 1140,365 1140,310" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1003.25" y="342" width="83.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1045" y="355" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">path checks</text>
+<polyline points="1190,420 1190,310" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1178.25" y="352" width="83.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1220" y="365" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">hard limits</text>
+<polyline points="1422,420 1422,365 1240,365 1240,310" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1321.0" y="342" width="38.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1340" y="355" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">deny</text>
+<polyline points="600,515 600,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="588.75" y="597" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="650" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">admission receipt</text>
+<polyline points="1190,310 1190,610 690,610 690,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="862.25" y="587" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="930" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">decision + counters</text>
+<polyline points="750,742 1205,742" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="909.25" y="717" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="977" y="730" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">observable evidence</text>
+<polyline points="970,310 840,310 840,835 1165,835 1165,770 1205,770" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="896.5" y="812" width="207.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1000" y="825" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">destroy on every terminal path</text>
+<rect x="75" y="205" width="240" height="85" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="195.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Agent proposal</text>
+<text x="195.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">archive ID • program ID</text>
+<rect x="75" y="345" width="240" height="100" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="195.0" y="376" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trusted runtime context</text>
+<text x="195.0" y="400" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">attested workload • tenant</text>
+<text x="195.0" y="416" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• request ID</text>
+<rect x="75" y="490" width="240" height="75" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="195.0" y="521" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Narrow tool contract</text>
+<text x="195.0" y="545" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identifiers only; no roots,</text>
+<text x="195.0" y="561" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">image, network, or limits</text>
+<rect x="410" y="205" width="180" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="500.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Tenant archive</text>
+<text x="500.0" y="255" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">registry</text>
+<text x="500.0" y="279" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">owner • upload</text>
+<text x="500.0" y="295" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest • immutable</text>
+<text x="500.0" y="311" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">manifest</text>
+<rect x="610" y="205" width="170" height="105" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="695.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Archive admission</text>
+<text x="695.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">canonical paths •</text>
+<text x="695.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">no links/devices •</text>
+<text x="695.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">size limits</text>
+<rect x="500" y="405" width="200" height="110" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="600.0" y="436" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Sandbox broker</text>
+<text x="600.0" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">current policy • image</text>
+<text x="600.0" y="476" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest • one-use grant</text>
+<rect x="875" y="205" width="190" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="970.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Ephemeral workspace</text>
+<text x="970.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">read-only input •</text>
+<text x="970.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">one writable output</text>
+<text x="970.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• no secrets</text>
+<rect x="1090" y="205" width="200" height="105" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1190.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Isolated runtime</text>
+<text x="1190.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">claim grant • enforce</text>
+<text x="1190.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">each effect •</text>
+<text x="1190.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">terminate</text>
+<rect x="1320" y="205" width="205" height="105" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1422.5" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Bounded output</text>
+<text x="1422.5" y="255" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">validator</text>
+<text x="1422.5" y="279" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">schema • size •</text>
+<text x="1422.5" y="295" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">terminal state; no raw</text>
+<text x="1422.5" y="311" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stdout</text>
+<rect x="875" y="420" width="190" height="105" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="970.0" y="451" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Filesystem policy</text>
+<text x="970.0" y="475" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">resolve at use •</text>
+<text x="970.0" y="491" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact roots • deny</text>
+<text x="970.0" y="507" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">links and host paths</text>
+<rect x="1090" y="420" width="200" height="105" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1190.0" y="451" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Resource policy</text>
+<text x="1190.0" y="475" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">wall time • CPU •</text>
+<text x="1190.0" y="491" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">memory • PIDs • disk •</text>
+<text x="1190.0" y="507" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">output</text>
+<rect x="1320" y="420" width="205" height="105" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1422.5" y="451" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Network + syscall</text>
+<text x="1422.5" y="470" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">policy</text>
+<text x="1422.5" y="494" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">default deny egress •</text>
+<text x="1422.5" y="510" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">syscall allowlist</text>
+<rect x="450" y="690" width="300" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="600.0" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Allowlisted execution receipt</text>
+<text x="600.0" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digests • versions • counters •</text>
+<text x="600.0" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">reason • cleanup; no paths, code,</text>
+<text x="600.0" y="777" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">content, or secrets</text>
+<rect x="1205" y="690" width="280" height="105" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1345.0" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Verified terminal outcome</text>
+<text x="1345.0" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">allow report • deny • error •</text>
+<text x="1345.0" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">sandbox destroyed</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
