@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Brokered External Fetch Boundary</title>
+<desc id="desc">An agent proposes only an untrusted HTTPS URL while authenticated application context supplies workload and tenant identity. A canonical parser, tenant policy, trusted resolver, and one-use broker validate the URL and every A and AAAA answer. The executor connects only to the approved IP while preserving the original Host and TLS SNI, verifies the peer, revalidates every redirect hop, and streams responses through deadline, size, expansion, and media-type limits. Only bounded content labeled external-untrusted and redacted decision receipts leave the boundary.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Brokered External Fetch Boundary</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">A URL proposal never becomes network authority; every destination, connection, redirect, and response is independently constrained</text>
+<rect x="45" y="135" width="300" height="455" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="61" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">MODEL + TRUSTED APP</text>
+<rect x="380" y="135" width="430" height="455" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="396" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">ADMISSION CONTROL PLANE</text>
+<rect x="845" y="135" width="710" height="455" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="861" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">CONSTRAINED EGRESS PLANE</text>
+<rect x="380" y="625" width="1175" height="225" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="396" y="657" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">BOUNDED RESULT + REDACTED EVIDENCE</text>
+<polyline points="195,290 195,480" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="195.0" y="372" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="240" y="385" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">URL proposal</text>
+<polyline points="315,525 365,525 365,260 410,260" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="313.5" y="377" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="365" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">bounded string</text>
+<polyline points="315,395 350,395 350,500 610,500" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="393.75" y="477" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="455" y="490" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">identity + tenant</text>
+<polyline points="590,260 610,260" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="519.25" y="232" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="600" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">canonical origin + path</text>
+<polyline points="590,290 600,290 600,370 395,370 395,480 410,480" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="448.5" y="347" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="500" y="360" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">canonical host</text>
+<polyline points="695,315 695,425" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="688.5" y="357" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="740" y="370" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">current policy</text>
+<polyline points="590,480 610,480" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="542.0" y="452" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="600" y="465" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">all answers safe</text>
+<polyline points="780,480 830,480 830,260 875,260" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="776.75" y="377" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="825" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">one-use grant</text>
+<polyline points="1065,260 1090,260" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="999.5" y="232" width="155.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1077" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">approved IP + Host/SNI</text>
+<polyline points="1290,260 1320,260" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1250.25" y="232" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1305" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">verified stream</text>
+<polyline points="1422,315 1422,472 1290,472" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1325.0" y="447" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1370" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">3xx Location</text>
+<polyline points="1090,472 825,472 825,575 365,575 365,260 410,260" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="642.5" y="552" width="155.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="720" y="565" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">re-authorize every hop</text>
+<polyline points="1422,315 1515,315 1515,610 607,610 607,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="936.25" y="587" width="187.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1030" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">admitted bytes + provenance</text>
+<polyline points="695,535 695,655 1340,655 1340,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="940.75" y="632" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1015" y="645" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">decision + DNS digest</text>
+<polyline points="750,742 1190,742" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="912.0" y="717" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="970" y="730" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">terminal outcome</text>
+<rect x="75" y="205" width="240" height="85" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="195.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Agent proposal</text>
+<text x="195.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">untrusted HTTPS URL only</text>
+<rect x="75" y="345" width="240" height="100" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="195.0" y="376" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trusted runtime context</text>
+<text x="195.0" y="400" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">attested workload • tenant</text>
+<text x="195.0" y="416" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• request ID</text>
+<rect x="75" y="480" width="240" height="90" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="195.0" y="511" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Strict tool contract</text>
+<text x="195.0" y="535" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">URL only; no method,</text>
+<text x="195.0" y="551" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">headers, IP, policy, or</text>
+<text x="195.0" y="567" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">limits</text>
+<rect x="410" y="205" width="180" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="500.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Canonical URL</text>
+<text x="500.0" y="255" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">parser</text>
+<text x="500.0" y="279" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">HTTPS • no</text>
+<text x="500.0" y="295" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">userinfo/IP • exact</text>
+<text x="500.0" y="311" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">host, port, path</text>
+<rect x="610" y="205" width="170" height="110" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="695.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Tenant egress</text>
+<text x="695.0" y="255" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">policy</text>
+<text x="695.0" y="279" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">method • hosts •</text>
+<text x="695.0" y="295" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">paths • byte/time</text>
+<text x="695.0" y="311" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">budgets</text>
+<rect x="410" y="425" width="180" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="500.0" y="456" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trusted resolver</text>
+<text x="500.0" y="480" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">validate every A +</text>
+<text x="500.0" y="496" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">AAAA; deny special-</text>
+<text x="500.0" y="512" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">use ranges</text>
+<rect x="610" y="425" width="170" height="110" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="695.0" y="456" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">One-use fetch</text>
+<text x="695.0" y="475" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">broker</text>
+<text x="695.0" y="499" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">bind identity •</text>
+<text x="695.0" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">URL • policy • DNS</text>
+<text x="695.0" y="531" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest • budgets</text>
+<rect x="875" y="205" width="190" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="970.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Pinned connection</text>
+<text x="970.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">connect approved IP</text>
+<text x="970.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• preserve Host and</text>
+<text x="970.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">TLS SNI</text>
+<rect x="1090" y="205" width="200" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1190.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TLS + peer check</text>
+<text x="1190.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">certificate name •</text>
+<text x="1190.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">validity • actual peer</text>
+<text x="1190.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">address</text>
+<rect x="1320" y="205" width="205" height="110" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1422.5" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Streaming response</text>
+<text x="1422.5" y="255" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">gate</text>
+<text x="1422.5" y="279" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">deadline •</text>
+<text x="1422.5" y="295" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">wire/decoded bytes •</text>
+<text x="1422.5" y="311" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">ratio • media type</text>
+<rect x="1090" y="410" width="200" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1190.0" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Manual redirect</text>
+<text x="1190.0" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">validator</text>
+<text x="1190.0" y="484" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">cap + loop check;</text>
+<text x="1190.0" y="500" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">every hop re-enters</text>
+<text x="1190.0" y="516" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">admission</text>
+<rect x="465" y="690" width="285" height="105" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="607.5" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Bounded untrusted result</text>
+<text x="607.5" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">content • digest • media type •</text>
+<text x="607.5" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">redirect count • trust label</text>
+<rect x="1190" y="690" width="300" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1340.0" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Redacted decision receipt</text>
+<text x="1340.0" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">trace • policy version • counters</text>
+<text x="1340.0" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• reason; no URL query, body, or</text>
+<text x="1340.0" y="777" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">credentials</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>

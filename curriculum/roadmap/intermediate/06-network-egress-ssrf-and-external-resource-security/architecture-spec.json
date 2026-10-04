@@ -1,0 +1,51 @@
+{
+  "id": "intermediate-06-egress-ssrf-boundary",
+  "version": "1.0",
+  "title": "Brokered External Fetch Boundary",
+  "subtitle": "A URL proposal never becomes network authority; every destination, connection, redirect, and response is independently constrained",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "proposal", "label": "MODEL + TRUSTED APP", "x": 45, "y": 135, "w": 300, "h": 455},
+    {"id": "admission", "label": "ADMISSION CONTROL PLANE", "x": 380, "y": 135, "w": 430, "h": 455},
+    {"id": "execution", "label": "CONSTRAINED EGRESS PLANE", "x": 845, "y": 135, "w": 710, "h": 455},
+    {"id": "evidence", "label": "BOUNDED RESULT + REDACTED EVIDENCE", "x": 380, "y": 625, "w": 1175, "h": 225}
+  ],
+  "nodes": [
+    {"id": "model", "group": "proposal", "type": "untrusted", "label": "Agent proposal", "detail": "untrusted HTTPS URL only", "x": 75, "y": 205, "w": 240, "h": 85, "padding": 16, "ports": {"out": "bottom"}},
+    {"id": "runtime_context", "group": "proposal", "type": "control", "label": "Trusted runtime context", "detail": "attested workload • tenant • request ID", "x": 75, "y": 345, "w": 240, "h": 100, "padding": 16, "ports": {"out": "right"}},
+    {"id": "tool_contract", "group": "proposal", "type": "enforcement", "label": "Strict tool contract", "detail": "URL only; no method, headers, IP, policy, or limits", "x": 75, "y": 480, "w": 240, "h": 90, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "canonicalizer", "group": "admission", "type": "enforcement", "label": "Canonical URL parser", "detail": "HTTPS • no userinfo/IP • exact host, port, path", "x": 410, "y": 205, "w": 180, "h": 110, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "policy", "group": "admission", "type": "state", "label": "Tenant egress policy", "detail": "method • hosts • paths • byte/time budgets", "x": 610, "y": 205, "w": 170, "h": 110, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "resolver", "group": "admission", "type": "enforcement", "label": "Trusted resolver", "detail": "validate every A + AAAA; deny special-use ranges", "x": 410, "y": 425, "w": 180, "h": 110, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "broker", "group": "admission", "type": "decision", "label": "One-use fetch broker", "detail": "bind identity • URL • policy • DNS digest • budgets", "x": 610, "y": 425, "w": 170, "h": 110, "padding": 16, "ports": {"identity": "left", "policy": "top", "dns": "left", "out": "right", "audit": "bottom"}},
+    {"id": "connection", "group": "execution", "type": "enforcement", "label": "Pinned connection", "detail": "connect approved IP • preserve Host and TLS SNI", "x": 875, "y": 205, "w": 190, "h": 110, "padding": 16, "ports": {"in": "left", "out": "right", "peer": "bottom"}},
+    {"id": "tls_peer", "group": "execution", "type": "enforcement", "label": "TLS + peer check", "detail": "certificate name • validity • actual peer address", "x": 1090, "y": 205, "w": 200, "h": 110, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "response_gate", "group": "execution", "type": "decision", "label": "Streaming response gate", "detail": "deadline • wire/decoded bytes • ratio • media type", "x": 1320, "y": 205, "w": 205, "h": 110, "padding": 16, "ports": {"in": "left", "redirect": "bottom", "out": "bottom"}},
+    {"id": "redirect", "group": "execution", "type": "enforcement", "label": "Manual redirect validator", "detail": "cap + loop check; every hop re-enters admission", "x": 1090, "y": 410, "w": 200, "h": 125, "padding": 16, "ports": {"in": "right", "out": "left"}},
+    {"id": "result", "group": "evidence", "type": "decision", "label": "Bounded untrusted result", "detail": "content • digest • media type • redirect count • trust label", "x": 465, "y": 690, "w": 285, "h": 105, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "audit", "group": "evidence", "type": "state", "label": "Redacted decision receipt", "detail": "trace • policy version • counters • reason; no URL query, body, or credentials", "x": 1190, "y": 690, "w": 300, "h": 105, "padding": 16, "ports": {"broker": "top", "result": "left"}}
+  ],
+  "edges": [
+    {"id": "model_to_contract", "from": "model", "from_port": "out", "to": "tool_contract", "to_port": "in", "kind": "untrusted", "label": "URL proposal", "points": [[195, 290], [195, 480]], "label_at": [240, 385]},
+    {"id": "contract_to_parser", "from": "tool_contract", "from_port": "out", "to": "canonicalizer", "to_port": "in", "kind": "untrusted", "label": "bounded string", "points": [[315, 525], [365, 525], [365, 260], [410, 260]], "label_at": [365, 390]},
+    {"id": "context_to_broker", "from": "runtime_context", "from_port": "out", "to": "broker", "to_port": "identity", "kind": "control", "label": "identity + tenant", "points": [[315, 395], [350, 395], [350, 500], [610, 500]], "label_at": [455, 490]},
+    {"id": "parser_to_policy", "from": "canonicalizer", "from_port": "out", "to": "policy", "to_port": "in", "kind": "enforcement", "label": "canonical origin + path", "points": [[590, 260], [610, 260]], "label_at": [600, 245]},
+    {"id": "parser_to_resolver", "from": "canonicalizer", "from_port": "out", "to": "resolver", "to_port": "in", "kind": "control", "label": "canonical host", "points": [[590, 290], [600, 290], [600, 370], [395, 370], [395, 480], [410, 480]], "label_at": [500, 360]},
+    {"id": "policy_to_broker", "from": "policy", "from_port": "out", "to": "broker", "to_port": "policy", "kind": "control", "label": "current policy", "points": [[695, 315], [695, 425]], "label_at": [740, 370]},
+    {"id": "resolver_to_broker", "from": "resolver", "from_port": "out", "to": "broker", "to_port": "dns", "kind": "enforcement", "label": "all answers safe", "points": [[590, 480], [610, 480]], "label_at": [600, 465]},
+    {"id": "broker_to_connection", "from": "broker", "from_port": "out", "to": "connection", "to_port": "in", "kind": "enforcement", "label": "one-use grant", "points": [[780, 480], [830, 480], [830, 260], [875, 260]], "label_at": [825, 390]},
+    {"id": "connection_to_tls", "from": "connection", "from_port": "out", "to": "tls_peer", "to_port": "in", "kind": "control", "label": "approved IP + Host/SNI", "points": [[1065, 260], [1090, 260]], "label_at": [1077, 245]},
+    {"id": "tls_to_gate", "from": "tls_peer", "from_port": "out", "to": "response_gate", "to_port": "in", "kind": "enforcement", "label": "verified stream", "points": [[1290, 260], [1320, 260]], "label_at": [1305, 245]},
+    {"id": "gate_to_redirect", "from": "response_gate", "from_port": "redirect", "to": "redirect", "to_port": "in", "kind": "untrusted", "label": "3xx Location", "points": [[1422, 315], [1422, 472], [1290, 472]], "label_at": [1370, 460]},
+    {"id": "redirect_to_parser", "from": "redirect", "from_port": "out", "to": "canonicalizer", "to_port": "in", "kind": "enforcement", "label": "re-authorize every hop", "points": [[1090, 472], [825, 472], [825, 575], [365, 575], [365, 260], [410, 260]], "label_at": [720, 565]},
+    {"id": "gate_to_result", "from": "response_gate", "from_port": "out", "to": "result", "to_port": "in", "kind": "evidence", "label": "admitted bytes + provenance", "points": [[1422, 315], [1515, 315], [1515, 610], [607, 610], [607, 690]], "label_at": [1030, 600]},
+    {"id": "broker_to_audit", "from": "broker", "from_port": "audit", "to": "audit", "to_port": "broker", "kind": "evidence", "label": "decision + DNS digest", "points": [[695, 535], [695, 655], [1340, 655], [1340, 690]], "label_at": [1015, 645]},
+    {"id": "result_to_audit", "from": "result", "from_port": "out", "to": "audit", "to_port": "result", "kind": "evidence", "label": "terminal outcome", "points": [[750, 742], [1190, 742]], "label_at": [970, 730]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "An agent proposes only an untrusted HTTPS URL while authenticated application context supplies workload and tenant identity. A canonical parser, tenant policy, trusted resolver, and one-use broker validate the URL and every A and AAAA answer. The executor connects only to the approved IP while preserving the original Host and TLS SNI, verifies the peer, revalidates every redirect hop, and streams responses through deadline, size, expansion, and media-type limits. Only bounded content labeled external-untrusted and redacted decision receipts leave the boundary."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
