@@ -1,0 +1,52 @@
+{
+  "id": "intermediate-07-tool-result-output-boundary",
+  "version": "1.0",
+  "title": "Evidence Admission and Output Release Boundary",
+  "subtitle": "Tool content may inform a proposal; it never becomes identity, policy, approval, authority, or releasable output by itself",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "request", "label": "TRUSTED REQUEST + UNTRUSTED CONNECTOR", "x": 45, "y": 135, "w": 390, "h": 455},
+    {"id": "admission", "label": "EVIDENCE ADMISSION", "x": 470, "y": 135, "w": 430, "h": 455},
+    {"id": "decision", "label": "PROPOSAL + INDEPENDENT DECISION", "x": 935, "y": 135, "w": 620, "h": 455},
+    {"id": "evidence", "label": "RELEASED PROJECTION + AUDIT", "x": 470, "y": 625, "w": 1085, "h": 225}
+  ],
+  "nodes": [
+    {"id": "runtime", "group": "request", "type": "control", "label": "Trusted runtime context", "detail": "workload • tenant • case", "x": 75, "y": 195, "w": 155, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "broker", "group": "request", "type": "enforcement", "label": "One-use evidence request", "detail": "case • tool • schema • nonce", "x": 250, "y": 195, "w": 155, "h": 120, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "connector", "group": "request", "type": "untrusted", "label": "CRM connector result", "detail": "signed envelope + structured data + hostile prose", "x": 140, "y": 410, "w": 200, "h": 115, "padding": 16, "ports": {"request": "top", "out": "right"}},
+    {"id": "integrity", "group": "admission", "type": "enforcement", "label": "Identity + integrity", "detail": "connector • key • signature • request binding", "x": 500, "y": 195, "w": 170, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "validation", "group": "admission", "type": "enforcement", "label": "Scope + schema + freshness", "detail": "tenant • case • status • version • exact facts", "x": 700, "y": 195, "w": 170, "h": 130, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "capsule", "group": "admission", "type": "state", "label": "Evidence capsule", "detail": "verified facts • provenance • untrusted prose", "x": 500, "y": 410, "w": 170, "h": 125, "padding": 16, "ports": {"in": "right", "context": "right", "audit": "bottom"}},
+    {"id": "compiler", "group": "admission", "type": "enforcement", "label": "Context compiler", "detail": "escape delimiters • quote prose • enforce budget", "x": 700, "y": 420, "w": 170, "h": 110, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "model", "group": "decision", "type": "untrusted", "label": "Agent proposals", "detail": "action proposal + fact references", "x": 965, "y": 205, "w": 170, "h": 110, "padding": 16, "ports": {"context": "left", "action": "right", "output": "bottom"}},
+    {"id": "authorizer", "group": "decision", "type": "decision", "label": "Follow-on authorizer", "detail": "identity • case • policy • evidence scope", "x": 1165, "y": 195, "w": 170, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right", "audit": "bottom"}},
+    {"id": "executor", "group": "decision", "type": "enforcement", "label": "Narrow executor", "detail": "only the independently authorized effect", "x": 1365, "y": 205, "w": 160, "h": 110, "padding": 16, "ports": {"in": "left"}},
+    {"id": "release", "group": "decision", "type": "decision", "label": "Output release gate", "detail": "safe template • current cited facts • classification • channel", "x": 1090, "y": 425, "w": 220, "h": 110, "padding": 16, "ports": {"proposal": "left", "evidence": "left", "out": "bottom", "audit": "bottom"}},
+    {"id": "projection", "group": "evidence", "type": "decision", "label": "Verified projection", "detail": "bounded rendered answer + exact evidence citations", "x": 550, "y": 690, "w": 260, "h": 105, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "audit", "group": "evidence", "type": "state", "label": "Redacted decision receipts", "detail": "trace • stage • reason • versions • digests • counts; no raw content", "x": 1200, "y": 690, "w": 285, "h": 105, "padding": 16, "ports": {"in": "left", "admission": "top", "action": "top", "release": "top"}}
+  ],
+  "edges": [
+    {"id": "runtime_to_broker", "from": "runtime", "from_port": "out", "to": "broker", "to_port": "in", "kind": "control", "label": "authenticated scope", "points": [[230, 255], [250, 255]], "label_at": [240, 337]},
+    {"id": "broker_to_connector", "from": "broker", "from_port": "out", "to": "connector", "to_port": "request", "kind": "control", "label": "bound request + nonce", "points": [[327, 315], [327, 365], [240, 365], [240, 410]], "label_at": [282, 355]},
+    {"id": "connector_to_integrity", "from": "connector", "from_port": "out", "to": "integrity", "to_port": "in", "kind": "untrusted", "label": "untrusted result envelope", "points": [[340, 467], [455, 467], [455, 260], [500, 260]], "label_at": [450, 375]},
+    {"id": "integrity_to_validation", "from": "integrity", "from_port": "out", "to": "validation", "to_port": "in", "kind": "enforcement", "label": "authenticated envelope", "points": [[670, 260], [700, 260]], "label_at": [685, 350]},
+    {"id": "validation_to_capsule", "from": "validation", "from_port": "out", "to": "capsule", "to_port": "in", "kind": "enforcement", "label": "atomically admitted once", "points": [[785, 325], [785, 370], [685, 370], [685, 472], [670, 472]], "label_at": [735, 360]},
+    {"id": "capsule_to_compiler", "from": "capsule", "from_port": "context", "to": "compiler", "to_port": "in", "kind": "control", "label": "facts + quoted prose", "points": [[670, 472], [700, 472]], "label_at": [685, 395]},
+    {"id": "compiler_to_model", "from": "compiler", "from_port": "out", "to": "model", "to_port": "context", "kind": "untrusted", "label": "bounded untrusted context", "points": [[870, 475], [915, 475], [915, 260], [965, 260]], "label_at": [920, 365]},
+    {"id": "model_to_authorizer", "from": "model", "from_port": "action", "to": "authorizer", "to_port": "in", "kind": "untrusted", "label": "proposal, not authority", "points": [[1135, 260], [1165, 260]], "label_at": [1150, 350]},
+    {"id": "authorizer_to_executor", "from": "authorizer", "from_port": "out", "to": "executor", "to_port": "in", "kind": "enforcement", "label": "authorized effect", "points": [[1335, 260], [1365, 260]], "label_at": [1350, 350]},
+    {"id": "model_to_release", "from": "model", "from_port": "output", "to": "release", "to_port": "proposal", "kind": "untrusted", "label": "template + fact refs", "points": [[1050, 315], [1050, 480], [1090, 480]], "label_at": [1045, 400]},
+    {"id": "capsule_to_release", "from": "capsule", "from_port": "context", "to": "release", "to_port": "evidence", "kind": "control", "label": "current evidence registry", "points": [[670, 500], [1030, 500], [1030, 505], [1090, 505]], "label_at": [850, 488]},
+    {"id": "release_to_projection", "from": "release", "from_port": "out", "to": "projection", "to_port": "in", "kind": "evidence", "label": "reconstructed safe output", "points": [[1200, 535], [1200, 610], [680, 610], [680, 690]], "label_at": [940, 600]},
+    {"id": "capsule_to_audit", "from": "capsule", "from_port": "audit", "to": "audit", "to_port": "admission", "kind": "evidence", "label": "admission decision", "points": [[585, 535], [585, 650], [1280, 650], [1280, 690]], "label_at": [850, 640]},
+    {"id": "authorizer_to_audit", "from": "authorizer", "from_port": "audit", "to": "audit", "to_port": "action", "kind": "evidence", "label": "action decision", "points": [[1250, 325], [1250, 620], [1350, 620], [1350, 690]], "label_at": [1300, 610]},
+    {"id": "release_to_audit", "from": "release", "from_port": "audit", "to": "audit", "to_port": "release", "kind": "evidence", "label": "release decision", "points": [[1260, 535], [1260, 590], [1420, 590], [1420, 690]], "label_at": [1340, 580]},
+    {"id": "projection_to_audit", "from": "projection", "from_port": "out", "to": "audit", "to_port": "in", "kind": "evidence", "label": "citations + output digest", "points": [[810, 742], [1200, 742]], "label_at": [1005, 730]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "An authenticated support workload issues a one-use request to a CRM connector. The connector returns a signed envelope containing structured facts and potentially hostile prose. Admission verifies connector identity, signature, request binding, tenant, case, schema, freshness, size, and version, then creates an evidence capsule whose prose stays external-untrusted. A context compiler quotes that prose. The agent may propose an action or fact references, but a current-state authorizer independently grants effects and an output gate reconstructs a bounded answer only from releasable cited facts. Redacted receipts record every stage without raw content."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
