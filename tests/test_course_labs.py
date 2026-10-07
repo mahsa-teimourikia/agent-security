@@ -23,6 +23,7 @@ LABS = [
     "curriculum/roadmap/intermediate/05-filesystem-code-execution-and-sandbox-security/lab.py",
     "curriculum/roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/lab.py",
     "curriculum/roadmap/intermediate/07-tool-result-and-output-poisoning/lab.py",
+    "curriculum/roadmap/intermediate/08-agentic-rag-security/lab.py",
     "curriculum/roadmap/intermediate/09-mcp-security/lab.py",
     "curriculum/roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation/lab.py",
     "curriculum/roadmap/enterprise/06-agent-security-governance/lab.py",

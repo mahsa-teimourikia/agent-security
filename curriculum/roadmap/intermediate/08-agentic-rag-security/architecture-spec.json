@@ -1,0 +1,48 @@
+{
+  "id": "intermediate-08-agentic-rag-security",
+  "version": "1.0",
+  "title": "Authorization-Aware Agentic RAG Boundary",
+  "subtitle": "Authorize candidates before scoring; release only current claims supported by exact permitted evidence",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "request", "label": "AUTHENTICATED RUN + MODEL PROPOSAL", "x": 45, "y": 140, "w": 330, "h": 450},
+    {"id": "retrieval", "label": "TRUSTED RETRIEVAL CONTROL PLANE", "x": 410, "y": 140, "w": 650, "h": 450},
+    {"id": "release", "label": "UNTRUSTED SYNTHESIS + RELEASE", "x": 1095, "y": 140, "w": 460, "h": 450},
+    {"id": "operations", "label": "CURRENT STATE + REDACTED OPERATIONS EVIDENCE", "x": 410, "y": 660, "w": 1145, "h": 190}
+  ],
+  "nodes": [
+    {"id": "identity", "group": "request", "type": "control", "label": "Trusted run context", "detail": "workload • subject • tenant • groups", "x": 80, "y": 205, "w": 260, "h": 115, "padding": 16, "ports": {"out": "right", "state": "bottom"}},
+    {"id": "proposal", "group": "request", "type": "untrusted", "label": "Agent query proposal", "detail": "query • purpose • bounded top-k", "x": 80, "y": 410, "w": 260, "h": 115, "padding": 16, "ports": {"out": "right"}},
+    {"id": "broker", "group": "retrieval", "type": "enforcement", "label": "One-use retrieval grant", "detail": "bind run • identity • query • policy • index", "x": 445, "y": 205, "w": 250, "h": 125, "padding": 16, "ports": {"identity": "left", "proposal": "left", "out": "right", "ops": "bottom"}},
+    {"id": "trim", "group": "retrieval", "type": "enforcement", "label": "Candidate security trim", "detail": "tenant • ACL • lifecycle • review • purpose", "x": 765, "y": 205, "w": 250, "h": 125, "padding": 16, "ports": {"in": "left", "out": "bottom", "state": "bottom"}},
+    {"id": "rank", "group": "retrieval", "type": "decision", "label": "Rank authorized candidates", "detail": "local hybrid score • top-k • chunk budget", "x": 765, "y": 410, "w": 250, "h": 120, "padding": 16, "ports": {"in": "top", "out": "left"}},
+    {"id": "snapshot", "group": "retrieval", "type": "state", "label": "Evidence snapshot", "detail": "source + chunk versions • digests • lineage", "x": 445, "y": 410, "w": 250, "h": 120, "padding": 16, "ports": {"in": "right", "out": "right", "ops": "bottom"}},
+    {"id": "synthesis", "group": "release", "type": "untrusted", "label": "Agent synthesis proposal", "detail": "atomic claims + exact evidence refs", "x": 1130, "y": 205, "w": 190, "h": 120, "padding": 16, "ports": {"context": "left", "out": "right"}},
+    {"id": "gate", "group": "release", "type": "enforcement", "label": "Claim release gate", "detail": "current refs • support • authority • conflicts", "x": 1335, "y": 205, "w": 185, "h": 120, "padding": 16, "ports": {"proposal": "left", "evidence": "left", "out": "bottom", "ops": "bottom"}},
+    {"id": "answer", "group": "release", "type": "decision", "label": "Cited safe answer", "detail": "application-rendered verified facts", "x": 1240, "y": 430, "w": 220, "h": 100, "padding": 16, "ports": {"in": "top"}},
+    {"id": "state", "group": "operations", "type": "state", "label": "Authoritative state", "detail": "identity • policy • source registry • index generation", "x": 500, "y": 720, "w": 350, "h": 100, "padding": 16, "ports": {"out": "top"}},
+    {"id": "ops", "group": "operations", "type": "state", "label": "Budgets + redacted receipts", "detail": "query digest • decision • versions • evidence IDs • counts", "x": 1115, "y": 720, "w": 350, "h": 100, "padding": 16, "ports": {"in": "top", "grant": "top", "retrieve": "top", "release": "top"}}
+  ],
+  "edges": [
+    {"id": "identity_to_broker", "from": "identity", "from_port": "out", "to": "broker", "to_port": "identity", "kind": "control", "label": "authenticated scope", "points": [[340, 262], [395, 262], [395, 245], [445, 245]], "label_at": [395, 228]},
+    {"id": "proposal_to_broker", "from": "proposal", "from_port": "out", "to": "broker", "to_port": "proposal", "kind": "untrusted", "label": "proposal, not filter authority", "points": [[340, 467], [395, 467], [395, 290], [445, 290]], "label_at": [395, 385]},
+    {"id": "broker_to_trim", "from": "broker", "from_port": "out", "to": "trim", "to_port": "in", "kind": "enforcement", "label": "bound grant", "points": [[695, 267], [765, 267]], "label_at": [730, 250]},
+    {"id": "trim_to_rank", "from": "trim", "from_port": "out", "to": "rank", "to_port": "in", "kind": "enforcement", "label": "authorized candidates only", "points": [[890, 330], [890, 410]], "label_at": [890, 372]},
+    {"id": "rank_to_snapshot", "from": "rank", "from_port": "out", "to": "snapshot", "to_port": "in", "kind": "evidence", "label": "ranked chunks", "points": [[765, 470], [695, 470]], "label_at": [730, 390]},
+    {"id": "snapshot_to_synthesis", "from": "snapshot", "from_port": "out", "to": "synthesis", "to_port": "context", "kind": "untrusted", "label": "quoted evidence, never instructions", "points": [[695, 490], [1075, 490], [1075, 265], [1130, 265]], "label_at": [930, 477]},
+    {"id": "synthesis_to_gate", "from": "synthesis", "from_port": "out", "to": "gate", "to_port": "proposal", "kind": "untrusted", "label": "claims + refs", "points": [[1320, 265], [1335, 265]], "label_at": [1327, 350]},
+    {"id": "snapshot_to_gate", "from": "snapshot", "from_port": "out", "to": "gate", "to_port": "evidence", "kind": "control", "label": "exact evidence registry", "points": [[695, 515], [1080, 515], [1080, 300], [1335, 300]], "label_at": [940, 502]},
+    {"id": "gate_to_answer", "from": "gate", "from_port": "out", "to": "answer", "to_port": "in", "kind": "enforcement", "label": "verified projection", "points": [[1427, 325], [1427, 385], [1350, 385], [1350, 430]], "label_at": [1390, 375]},
+    {"id": "state_to_trim", "from": "state", "from_port": "out", "to": "trim", "to_port": "state", "kind": "control", "label": "current versions + ACLs", "points": [[675, 720], [675, 645], [940, 645], [940, 330]], "label_at": [805, 633]},
+    {"id": "identity_to_ops", "from": "identity", "from_port": "state", "to": "ops", "to_port": "in", "kind": "evidence", "label": "run attribution", "points": [[210, 320], [210, 645], [1185, 645], [1185, 720]], "label_at": [680, 633]},
+    {"id": "broker_to_ops", "from": "broker", "from_port": "ops", "to": "ops", "to_port": "grant", "kind": "evidence", "label": "grant decision", "points": [[570, 330], [570, 625], [1260, 625], [1260, 720]], "label_at": [915, 613]},
+    {"id": "snapshot_to_ops", "from": "snapshot", "from_port": "ops", "to": "ops", "to_port": "retrieve", "kind": "evidence", "label": "retrieval receipt", "points": [[570, 530], [570, 605], [1340, 605], [1340, 720]], "label_at": [955, 593]},
+    {"id": "gate_to_ops", "from": "gate", "from_port": "ops", "to": "ops", "to_port": "release", "kind": "evidence", "label": "release decision", "points": [[1465, 325], [1465, 585], [1420, 585], [1420, 720]], "label_at": [1442, 573]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "An authenticated run and an untrusted agent query proposal enter a one-use retrieval broker. The trusted control plane derives scope, filters tenant, ACL, lifecycle, review, and purpose before scoring, ranks only authorized candidates under a budget, and creates provenance-bearing evidence snapshots. The agent proposes atomic claims and exact citations, while a claim release gate rechecks current evidence, source authority, support, and conflicts before rendering a cited answer. Current registries, budgets, and redacted receipts support every boundary."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
