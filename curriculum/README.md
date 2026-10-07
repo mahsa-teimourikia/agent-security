@@ -2,7 +2,7 @@
 
 This map defines the next 36-course learning path. Course numbers restart at
 `01` within each level; the Learning Hub prefixes them with `F`, `I`, `A`, or
-`E` when a globally unique label is useful. The currently published seventeen-course
+`E` when a globally unique label is useful. The currently published eighteen-course
 path remains listed in the repository root and Learning Hub while the remaining
 topics pass their delivery gates. The expansion follows one
 enterprise research-and-support scenario: an apparently helpful agent gains
@@ -26,7 +26,7 @@ These chapters establish the conceptual sequence. Foundation 01–07 have passed
 the publication gate: each owns a reusable lab, top-to-bottom executable
 notebook, focused tests, and a Learning Hub checkpoint.
 
-## Intermediate sequence (six published, pilot labs, and planned topics)
+## Intermediate sequence (seven published, pilot labs, and planned topics)
 
 | Course | Focus |
 | --- | --- |
@@ -36,7 +36,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [04](roadmap/intermediate/04-secrets-and-credential-security/) **Published** | credential isolation, one-use version-bound leases, rotation and replay controls, SDK adapter, notebook, diagram, and tests |
 | [05](roadmap/intermediate/05-filesystem-code-execution-and-sandbox-security/) **Published** | archive admission, one-use execution grants, filesystem/network/syscall/resource enforcement, SDK adapter, notebook, diagram, and tests |
 | [06](roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/) **Published** | canonical URL admission, all-answer DNS policy, one-use fetch grants, connection authority, per-hop redirects, bounded responses, SDK/HTTPX adapter, notebook, diagram, and tests |
-| [07](roadmap/intermediate/07-tool-result-and-output-poisoning/) | tool-result and output poisoning |
+| [07](roadmap/intermediate/07-tool-result-and-output-poisoning/) **Published** | evidence admission, hostile-prose containment, independent action authorization, safe output reconstruction, SDK adapter, notebook, diagram, and tests |
 | [08](roadmap/intermediate/08-agentic-rag-security/) | agentic RAG security |
 | [09](roadmap/intermediate/09-mcp-security/) | MCP security |
 | [10](roadmap/intermediate/10-human-in-the-loop-security/) | human-in-the-loop security |

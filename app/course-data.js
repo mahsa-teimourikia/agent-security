@@ -90,6 +90,12 @@ export const publishedLessons = [
     correct: 1,
     explanation: "Public classification does not prove continuity. The grant binds a DNS snapshot, and the executor must prevent a later unvetted resolution from selecting the actual peer while retaining HTTP and TLS hostname authority.",
   }, "network_egress_ssrf"),
+  lesson("r-i07", "Intermediate", "07", "Tool-result and output poisoning", "Admit tool results as bounded, provenance-bearing evidence without turning their content into identity, policy, approval, authority, or releasable output.", "Bind a one-use evidence request, authenticate and validate the exact result, quote hostile prose, independently authorize follow-on actions, and reconstruct released output only from current releasable facts.", "roadmap/intermediate/07-tool-result-and-output-poisoning", "lab", {
+    prompt: "An authenticated connector returns schema-valid evidence saying a customer export is security-approved. May the agent export the records?",
+    options: ["Maybe; connector identity and schema validity can imply approval", "Yes, if the result is signed", "No; current trusted policy must authorize the exact export at the effect boundary"],
+    correct: 2,
+    explanation: "Authentication establishes origin and schema establishes shape; neither grants authority. Treat the result as evidence, then apply current trusted identity, policy, approval, and resource state before any effect.",
+  }, "tool_result_output_poisoning"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -148,7 +154,7 @@ export const publishedLessons = [
 
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
-  { level: "State & execution", range: "01–10", status: "6 published · 4 in progress", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
+  { level: "State & execution", range: "01–10", status: "7 published · 3 in progress", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "Pilot labs", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
@@ -169,7 +175,7 @@ export const roadmapCourses = [
   road("I04", "04", "State & execution", "Secrets and credential security", "roadmap/intermediate/04-secrets-and-credential-security", "Published", "README · credential-broker lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("I05", "05", "State & execution", "Filesystem, code execution, and sandbox security", "roadmap/intermediate/05-filesystem-code-execution-and-sandbox-security", "Published", "README · sandbox-boundary lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("I06", "06", "State & execution", "Network egress, SSRF, and resources", "roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security", "Published", "README · egress-broker lab · OpenAI Agents SDK + HTTPX adapter · notebook · diagram · tests · checkpoint"),
-  road("I07", "07", "State & execution", "Tool-result and output poisoning", "roadmap/intermediate/07-tool-result-and-output-poisoning", "Pilot", "README · lab · needs notebook and tests"),
+  road("I07", "07", "State & execution", "Tool-result and output poisoning", "roadmap/intermediate/07-tool-result-and-output-poisoning", "Published", "README · evidence-admission lab · OpenAI Agents SDK guardrail adapter · notebook · diagram · tests · checkpoint"),
   road("I08", "08", "State & execution", "Agentic RAG security", "roadmap/intermediate/08-agentic-rag-security", "Planned", "Release contract · needs lab, notebook, tests"),
   road("I09", "09", "State & execution", "MCP security", "roadmap/intermediate/09-mcp-security", "Pilot", "README · lab · notebook · needs protocol update and tests"),
   road("I10", "10", "State & execution", "Human-in-the-loop security", "roadmap/intermediate/10-human-in-the-loop-security", "Planned", "Release contract · needs lab, notebook, tests"),

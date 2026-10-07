@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Evidence Admission and Output Release Boundary</title>
+<desc id="desc">An authenticated support workload issues a one-use request to a CRM connector. The connector returns a signed envelope containing structured facts and potentially hostile prose. Admission verifies connector identity, signature, request binding, tenant, case, schema, freshness, size, and version, then creates an evidence capsule whose prose stays external-untrusted. A context compiler quotes that prose. The agent may propose an action or fact references, but a current-state authorizer independently grants effects and an output gate reconstructs a bounded answer only from releasable cited facts. Redacted receipts record every stage without raw content.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Evidence Admission and Output Release Boundary</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Tool content may inform a proposal; it never becomes identity, policy, approval, authority, or releasable output by itself</text>
+<rect x="45" y="135" width="390" height="455" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="61" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED REQUEST + UNTRUSTED CONNECTOR</text>
+<rect x="470" y="135" width="430" height="455" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="486" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">EVIDENCE ADMISSION</text>
+<rect x="935" y="135" width="620" height="455" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="951" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">PROPOSAL + INDEPENDENT DECISION</text>
+<rect x="470" y="625" width="1085" height="225" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="486" y="657" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">RELEASED PROJECTION + AUDIT</text>
+<polyline points="230,255 250,255" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="172.25" y="324" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="240" y="337" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">authenticated scope</text>
+<polyline points="327,315 327,365 240,365 240,410" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="207.75" y="342" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="282" y="355" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">bound request + nonce</text>
+<polyline points="340,467 455,467 455,260 500,260" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="362.75" y="362" width="174.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="450" y="375" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">untrusted result envelope</text>
+<polyline points="670,260 700,260" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="607.5" y="337" width="155.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="685" y="350" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">authenticated envelope</text>
+<polyline points="785,325 785,370 685,370 685,472 670,472" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="651.0" y="347" width="168.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="735" y="360" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">atomically admitted once</text>
+<polyline points="670,472 700,472" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="614.0" y="382" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="685" y="395" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">facts + quoted prose</text>
+<polyline points="870,475 915,475 915,260 965,260" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="832.75" y="352" width="174.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="920" y="365" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">bounded untrusted context</text>
+<polyline points="1135,260 1165,260" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1069.25" y="337" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1150" y="350" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">proposal, not authority</text>
+<polyline points="1335,260 1365,260" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1288.75" y="337" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1350" y="350" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">authorized effect</text>
+<polyline points="1050,315 1050,480 1090,480" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="974.0" y="387" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1045" y="400" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">template + fact refs</text>
+<polyline points="670,500 1030,500 1030,505 1090,505" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="762.75" y="475" width="174.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="850" y="488" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">current evidence registry</text>
+<polyline points="1200,535 1200,610 680,610 680,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="852.75" y="587" width="174.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="940" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">reconstructed safe output</text>
+<polyline points="585,535 585,650 1280,650 1280,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="785.5" y="627" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="850" y="640" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">admission decision</text>
+<polyline points="1250,325 1250,620 1350,620 1350,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1245.25" y="597" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1300" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">action decision</text>
+<polyline points="1260,535 1260,590 1420,590 1420,690" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1282.0" y="567" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1340" y="580" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">release decision</text>
+<polyline points="810,742 1200,742" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="917.75" y="717" width="174.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1005" y="730" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">citations + output digest</text>
+<rect x="75" y="195" width="155" height="120" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="152.5" y="226" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trusted runtime</text>
+<text x="152.5" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">context</text>
+<text x="152.5" y="269" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">workload •</text>
+<text x="152.5" y="285" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant • case</text>
+<rect x="250" y="195" width="155" height="120" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="327.5" y="226" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">One-use evidence</text>
+<text x="327.5" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">request</text>
+<text x="327.5" y="269" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">case • tool •</text>
+<text x="327.5" y="285" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">schema • nonce</text>
+<rect x="140" y="410" width="200" height="115" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="240.0" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">CRM connector result</text>
+<text x="240.0" y="465" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signed envelope +</text>
+<text x="240.0" y="481" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">structured data +</text>
+<text x="240.0" y="497" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">hostile prose</text>
+<rect x="500" y="195" width="170" height="130" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="585.0" y="226" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Identity +</text>
+<text x="585.0" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">integrity</text>
+<text x="585.0" y="269" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">connector • key •</text>
+<text x="585.0" y="285" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signature •</text>
+<text x="585.0" y="301" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">request binding</text>
+<rect x="700" y="195" width="170" height="130" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="785.0" y="226" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Scope + schema +</text>
+<text x="785.0" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">freshness</text>
+<text x="785.0" y="269" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant • case •</text>
+<text x="785.0" y="285" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">status • version •</text>
+<text x="785.0" y="301" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact facts</text>
+<rect x="500" y="410" width="170" height="125" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="585.0" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Evidence capsule</text>
+<text x="585.0" y="465" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">verified facts •</text>
+<text x="585.0" y="481" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">provenance •</text>
+<text x="585.0" y="497" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">untrusted prose</text>
+<rect x="700" y="420" width="170" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="785.0" y="451" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Context compiler</text>
+<text x="785.0" y="475" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">escape delimiters</text>
+<text x="785.0" y="491" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• quote prose •</text>
+<text x="785.0" y="507" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">enforce budget</text>
+<rect x="965" y="205" width="170" height="110" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="1050.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Agent proposals</text>
+<text x="1050.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">action proposal +</text>
+<text x="1050.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">fact references</text>
+<rect x="1165" y="195" width="170" height="130" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1250.0" y="226" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Follow-on</text>
+<text x="1250.0" y="245" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">authorizer</text>
+<text x="1250.0" y="269" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identity • case •</text>
+<text x="1250.0" y="285" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">policy • evidence</text>
+<text x="1250.0" y="301" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">scope</text>
+<rect x="1365" y="205" width="160" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1445.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Narrow executor</text>
+<text x="1445.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">only the</text>
+<text x="1445.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">independently</text>
+<text x="1445.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authorized effect</text>
+<rect x="1090" y="425" width="220" height="110" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1200.0" y="456" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Output release gate</text>
+<text x="1200.0" y="480" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">safe template • current</text>
+<text x="1200.0" y="496" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">cited facts •</text>
+<text x="1200.0" y="512" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">classification • channel</text>
+<rect x="550" y="690" width="260" height="105" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="680.0" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Verified projection</text>
+<text x="680.0" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">bounded rendered answer +</text>
+<text x="680.0" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact evidence citations</text>
+<rect x="1200" y="690" width="285" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1342.5" y="721" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Redacted decision receipts</text>
+<text x="1342.5" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">trace • stage • reason •</text>
+<text x="1342.5" y="761" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">versions • digests • counts; no</text>
+<text x="1342.5" y="777" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">raw content</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
