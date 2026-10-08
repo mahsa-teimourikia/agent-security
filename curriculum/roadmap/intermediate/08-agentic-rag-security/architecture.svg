@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Authorization-Aware Agentic RAG Boundary</title>
+<desc id="desc">An authenticated run and an untrusted agent query proposal enter a one-use retrieval broker. The trusted control plane derives scope, filters tenant, ACL, lifecycle, review, and purpose before scoring, ranks only authorized candidates under a budget, and creates provenance-bearing evidence snapshots. The agent proposes atomic claims and exact citations, while a claim release gate rechecks current evidence, source authority, support, and conflicts before rendering a cited answer. Current registries, budgets, and redacted receipts support every boundary.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Authorization-Aware Agentic RAG Boundary</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Authorize candidates before scoring; release only current claims supported by exact permitted evidence</text>
+<rect x="45" y="140" width="330" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="61" y="172" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">AUTHENTICATED RUN + MODEL PROPOSAL</text>
+<rect x="410" y="140" width="650" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="426" y="172" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED RETRIEVAL CONTROL PLANE</text>
+<rect x="1095" y="140" width="460" height="450" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="1111" y="172" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">UNTRUSTED SYNTHESIS + RELEASE</text>
+<rect x="410" y="660" width="1145" height="190" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="426" y="692" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">CURRENT STATE + REDACTED OPERATIONS EVIDENCE</text>
+<polyline points="340,262 395,262 395,245 445,245" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="327.25" y="215" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="395" y="228" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">authenticated scope</text>
+<polyline points="340,467 395,467 395,290 445,290" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="291.5" y="372" width="207.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="395" y="385" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">proposal, not filter authority</text>
+<polyline points="695,267 765,267" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="688.25" y="237" width="83.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="730" y="250" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">bound grant</text>
+<polyline points="890,330 890,410" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="799.5" y="359" width="181.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="890" y="372" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">authorized candidates only</text>
+<polyline points="765,470 695,470" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="681.75" y="377" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="730" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">ranked chunks</text>
+<polyline points="695,490 1075,490 1075,265 1130,265" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="810.25" y="464" width="239.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="930" y="477" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">quoted evidence, never instructions</text>
+<polyline points="1320,265 1335,265" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1278.75" y="337" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1327" y="350" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">claims + refs</text>
+<polyline points="695,515 1080,515 1080,300 1335,300" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="859.25" y="489" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="940" y="502" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">exact evidence registry</text>
+<polyline points="1427,325 1427,385 1350,385 1350,430" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1322.25" y="362" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1390" y="375" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">verified projection</text>
+<polyline points="675,720 675,645 940,645 940,330" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="724.25" y="620" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="805" y="633" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">current versions + ACLs</text>
+<polyline points="210,320 210,645 1185,645 1185,720" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="625.25" y="620" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="680" y="633" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">run attribution</text>
+<polyline points="570,330 570,625 1260,625 1260,720" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="863.5" y="600" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="915" y="613" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">grant decision</text>
+<polyline points="570,530 570,605 1340,605 1340,720" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="893.75" y="580" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="955" y="593" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">retrieval receipt</text>
+<polyline points="1465,325 1465,585 1420,585 1420,720" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1384.0" y="560" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1442" y="573" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">release decision</text>
+<rect x="80" y="205" width="260" height="115" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="210.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trusted run context</text>
+<text x="210.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">workload • subject • tenant •</text>
+<text x="210.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">groups</text>
+<rect x="80" y="410" width="260" height="115" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="210.0" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Agent query proposal</text>
+<text x="210.0" y="465" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">query • purpose • bounded</text>
+<text x="210.0" y="481" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">top-k</text>
+<rect x="445" y="205" width="250" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="570.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">One-use retrieval grant</text>
+<text x="570.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">bind run • identity • query</text>
+<text x="570.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• policy • index</text>
+<rect x="765" y="205" width="250" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="890.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Candidate security trim</text>
+<text x="890.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant • ACL • lifecycle •</text>
+<text x="890.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">review • purpose</text>
+<rect x="765" y="410" width="250" height="120" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="890.0" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Rank authorized candidates</text>
+<text x="890.0" y="465" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">local hybrid score • top-k •</text>
+<text x="890.0" y="481" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">chunk budget</text>
+<rect x="445" y="410" width="250" height="120" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="570.0" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Evidence snapshot</text>
+<text x="570.0" y="465" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">source + chunk versions •</text>
+<text x="570.0" y="481" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digests • lineage</text>
+<rect x="1130" y="205" width="190" height="120" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="1225.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Agent synthesis</text>
+<text x="1225.0" y="255" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">proposal</text>
+<text x="1225.0" y="279" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">atomic claims +</text>
+<text x="1225.0" y="295" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact evidence refs</text>
+<rect x="1335" y="205" width="185" height="120" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1427.5" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Claim release gate</text>
+<text x="1427.5" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">current refs •</text>
+<text x="1427.5" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">support • authority</text>
+<text x="1427.5" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• conflicts</text>
+<rect x="1240" y="430" width="220" height="100" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1350.0" y="461" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Cited safe answer</text>
+<text x="1350.0" y="485" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">application-rendered</text>
+<text x="1350.0" y="501" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">verified facts</text>
+<rect x="500" y="720" width="350" height="100" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="675.0" y="751" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Authoritative state</text>
+<text x="675.0" y="775" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identity • policy • source registry •</text>
+<text x="675.0" y="791" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">index generation</text>
+<rect x="1115" y="720" width="350" height="100" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1290.0" y="751" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Budgets + redacted receipts</text>
+<text x="1290.0" y="775" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">query digest • decision • versions •</text>
+<text x="1290.0" y="791" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">evidence IDs • counts</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
