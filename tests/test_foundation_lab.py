@@ -1,4 +1,5 @@
 """Regression tests for the deterministic foundation security controls."""
+from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import sys
@@ -15,7 +16,6 @@ assert _mcp_spec and _mcp_spec.loader
 _mcp_lab = importlib.util.module_from_spec(_mcp_spec)
 sys.modules[_mcp_spec.name] = _mcp_lab
 _mcp_spec.loader.exec_module(_mcp_lab)
-Call, dispatch = _mcp_lab.Call, _mcp_lab.dispatch
 
 
 NOW = datetime(2026, 8, 11, tzinfo=timezone.utc)
@@ -68,7 +68,30 @@ class FoundationLabTests(unittest.TestCase):
         self.assertTrue(allowed_url("https://api.example.test/x", policy, resolved_ip="8.8.8.8")["allow"])
 
     def test_mcp_gateway_rejects_discovery_audience_and_schema_bypasses(self) -> None:
-        safe = Call("agent-gateway", "mcp-research-v1", "search_policy", "north", frozenset({"search_policy"}), {"query": "x"}, "mcp-gateway")
-        self.assertEqual(dispatch(safe)["decision"], "allow")
-        self.assertEqual(dispatch(Call(**{**safe.__dict__, "server": "unknown"}))["decision"], "deny")
-        self.assertEqual(dispatch(Call(**{**safe.__dict__, "token_audience": "api"}))["decision"], "deny")
+        boundary, principal, token, document, registration = _mcp_lab.build_scenario()
+        lease = _mcp_lab.admit_default_catalog(boundary, principal, document, registration)
+        proposal = _mcp_lab.ToolProposal(
+            "foundation-mcp", registration.server_id, "lookup_case",
+            {"case_id": "case-n-100"}, lease.catalog_digest,
+        )
+        self.assertEqual(
+            boundary.dispatch(
+                principal, token, lease, proposal, _mcp_lab.safe_read_execution, now=_mcp_lab.NOW
+            )["status"],
+            "allow",
+        )
+        self.assertEqual(
+            boundary.dispatch(
+                principal, token, lease, replace(proposal, server_id="unknown"),
+                _mcp_lab.safe_read_execution, now=_mcp_lab.NOW,
+            )["status"],
+            "deny",
+        )
+        self.assertEqual(
+            boundary.dispatch(
+                principal, replace(token, audience="api"), lease,
+                replace(proposal, request_id="wrong-audience"),
+                _mcp_lab.safe_read_execution, now=_mcp_lab.NOW,
+            )["status"],
+            "deny",
+        )

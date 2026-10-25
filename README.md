@@ -82,7 +82,7 @@ python3 scripts/execute-notebooks.py --timeout 90
 - [MITRE ATLAS](https://atlas.mitre.org/)
 - [NIST AI Agent Standards Initiative](https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative)
 - [Google Secure AI Framework](https://cloud.google.com/use-cases/secure-ai-framework)
-- [MCP Security Best Practices 2025-11-25](https://modelcontextprotocol.io/docs/2025-11-25/tutorials/security/security_best_practices)
+- [MCP Security Best Practices 2026-07-28](https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices)
 - [OWASP MCP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/MCP_Security_Cheat_Sheet.html)
 - [NSA MCP Security Design Considerations](https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/4496698/nsa-releases-security-design-considerations-for-ai-driven-automation-leveraging/)
 - [Microsoft Agent Safety](https://learn.microsoft.com/en-us/agent-framework/agents/safety)

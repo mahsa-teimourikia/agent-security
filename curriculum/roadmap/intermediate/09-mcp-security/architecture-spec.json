@@ -1,0 +1,49 @@
+{
+  "id": "intermediate-09-mcp-security",
+  "version": "1.0",
+  "title": "Modern MCP Host Security Boundary",
+  "subtitle": "Treat discovery and model proposals as untrusted; bind each call to trusted identity, catalog, policy, and result admission",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "inputs", "label": "UNTRUSTED DISCOVERY + INTENT", "x": 45, "y": 140, "w": 300, "h": 470},
+    {"id": "host", "label": "TRUSTED MCP HOST CONTROL PLANE", "x": 380, "y": 140, "w": 650, "h": 470},
+    {"id": "protocol", "label": "SDK + MCP SERVER BOUNDARY", "x": 1065, "y": 140, "w": 490, "h": 470},
+    {"id": "operations", "label": "CURRENT POLICY + PRIVACY-MINIMIZED EVIDENCE", "x": 380, "y": 665, "w": 1175, "h": 170}
+  ],
+  "nodes": [
+    {"id": "discovery", "group": "inputs", "type": "untrusted", "label": "Discovery snapshot", "detail": "self-reported identity • tools • schemas • hints", "x": 80, "y": 205, "w": 230, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "proposal", "group": "inputs", "type": "untrusted", "label": "Model call proposal", "detail": "server • tool • arguments • request ID", "x": 80, "y": 425, "w": 230, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "inventory", "group": "host", "type": "state", "label": "Trusted server inventory", "detail": "connection ID • URI • audience • approved contracts", "x": 415, "y": 205, "w": 250, "h": 120, "padding": 16, "ports": {"discovery": "left", "out": "right", "ops": "bottom"}},
+    {"id": "catalog", "group": "host", "type": "enforcement", "label": "Catalog admission", "detail": "protocol • exact schema digest • bounded TTL", "x": 745, "y": 205, "w": 250, "h": 120, "padding": 16, "ports": {"in": "left", "out": "bottom", "ops": "bottom"}},
+    {"id": "call_gate", "group": "host", "type": "enforcement", "label": "Call authorization", "detail": "identity • audience • scope • tenant • confirmation", "x": 415, "y": 425, "w": 250, "h": 120, "padding": 16, "ports": {"proposal": "left", "catalog": "top", "out": "right", "ops": "bottom"}},
+    {"id": "grant", "group": "host", "type": "control", "label": "One-use execution grant", "detail": "exact proposal • connection • catalog • expiry", "x": 745, "y": 425, "w": 250, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right", "ops": "bottom"}},
+    {"id": "client", "group": "protocol", "type": "control", "label": "MCP Python SDK client", "detail": "2026-07-28 per-request metadata", "x": 1100, "y": 205, "w": 190, "h": 120, "padding": 16, "ports": {"grant": "left", "call": "right"}},
+    {"id": "server", "group": "protocol", "type": "untrusted", "label": "MCP server", "detail": "tool execution with narrow downstream capability", "x": 1330, "y": 205, "w": 190, "h": 120, "padding": 16, "ports": {"call": "left", "result": "bottom"}},
+    {"id": "result_gate", "group": "protocol", "type": "enforcement", "label": "Result admission", "detail": "error • exact schema • tenant • resource • size", "x": 1100, "y": 425, "w": 190, "h": 120, "padding": 16, "ports": {"result": "right", "out": "right", "ops": "bottom"}},
+    {"id": "context", "group": "protocol", "type": "decision", "label": "Bounded model context", "detail": "validated structure • untrusted-content label", "x": 1330, "y": 425, "w": 190, "h": 120, "padding": 16, "ports": {"in": "left"}},
+    {"id": "current_state", "group": "operations", "type": "state", "label": "Current control state", "detail": "identity • revocation • policy • confirmation • idempotency", "x": 465, "y": 715, "w": 390, "h": 90, "padding": 16, "ports": {"out": "top"}},
+    {"id": "receipts", "group": "operations", "type": "state", "label": "Decision receipts", "detail": "safe IDs • digests • phases • reasons • versions", "x": 1095, "y": 715, "w": 390, "h": 90, "padding": 16, "ports": {"discovery": "top", "admission": "top", "dispatch": "top", "result": "top"}}
+  ],
+  "edges": [
+    {"id": "discovery_to_inventory", "from": "discovery", "from_port": "out", "to": "inventory", "to_port": "discovery", "kind": "untrusted", "label": "metadata only", "points": [[310, 265], [415, 265]], "label_at": [362, 247]},
+    {"id": "inventory_to_catalog", "from": "inventory", "from_port": "out", "to": "catalog", "to_port": "in", "kind": "enforcement", "label": "approved", "points": [[665, 265], [745, 265]], "label_at": [705, 247]},
+    {"id": "proposal_to_gate", "from": "proposal", "from_port": "out", "to": "call_gate", "to_port": "proposal", "kind": "untrusted", "label": "proposal only", "points": [[310, 485], [415, 485]], "label_at": [362, 467]},
+    {"id": "catalog_to_gate", "from": "catalog", "from_port": "out", "to": "call_gate", "to_port": "catalog", "kind": "control", "label": "short-lived lease", "points": [[870, 325], [870, 375], [540, 375], [540, 425]], "label_at": [705, 363]},
+    {"id": "gate_to_grant", "from": "call_gate", "from_port": "out", "to": "grant", "to_port": "in", "kind": "enforcement", "label": "exact call", "points": [[665, 485], [745, 485]], "label_at": [705, 467]},
+    {"id": "grant_to_client", "from": "grant", "from_port": "out", "to": "client", "to_port": "grant", "kind": "control", "label": "redeem once", "points": [[995, 485], [1045, 485], [1045, 265], [1100, 265]], "label_at": [1045, 365]},
+    {"id": "client_to_server", "from": "client", "from_port": "call", "to": "server", "to_port": "call", "kind": "control", "label": "call", "points": [[1290, 265], [1330, 265]], "label_at": [1310, 247]},
+    {"id": "server_to_result", "from": "server", "from_port": "result", "to": "result_gate", "to_port": "result", "kind": "untrusted", "label": "untrusted result", "points": [[1425, 325], [1425, 375], [1310, 375], [1310, 485], [1290, 485]], "label_at": [1367, 363]},
+    {"id": "result_to_context", "from": "result_gate", "from_port": "out", "to": "context", "to_port": "in", "kind": "enforcement", "label": "admit", "points": [[1290, 485], [1330, 485]], "label_at": [1310, 467]},
+    {"id": "state_to_gate", "from": "current_state", "from_port": "out", "to": "call_gate", "to_port": "catalog", "kind": "control", "label": "current authority", "points": [[660, 715], [660, 635], [570, 635], [570, 545]], "label_at": [615, 623]},
+    {"id": "inventory_to_receipts", "from": "inventory", "from_port": "ops", "to": "receipts", "to_port": "discovery", "kind": "evidence", "label": "discovery decision", "points": [[540, 325], [540, 650], [1160, 650], [1160, 715]], "label_at": [850, 638]},
+    {"id": "catalog_to_receipts", "from": "catalog", "from_port": "ops", "to": "receipts", "to_port": "admission", "kind": "evidence", "label": "catalog digest", "points": [[900, 325], [900, 630], [1240, 630], [1240, 715]], "label_at": [1070, 618]},
+    {"id": "grant_to_receipts", "from": "grant", "from_port": "ops", "to": "receipts", "to_port": "dispatch", "kind": "evidence", "label": "call decisions", "points": [[870, 545], [870, 610], [1320, 610], [1320, 715]], "label_at": [1095, 598]},
+    {"id": "result_to_receipts", "from": "result_gate", "from_port": "ops", "to": "receipts", "to_port": "result", "kind": "evidence", "label": "result decision", "points": [[1195, 545], [1195, 590], [1400, 590], [1400, 715]], "label_at": [1297, 578]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "A modern MCP host receives untrusted discovery metadata and a model call proposal. Trusted inventory reconciles authenticated connection identity with an exact catalog contract, then application policy validates identity, token audience, scope, tenant, confirmation, and current state before issuing a one-use execution grant. The official MCP client invokes a server with a narrow downstream capability. Server-produced results pass through a schema, tenant, resource, error, and size gate before entering model context with an untrusted-content label. Privacy-minimized receipts record every decision phase."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}

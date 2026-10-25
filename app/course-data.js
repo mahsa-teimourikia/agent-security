@@ -102,6 +102,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "A model-proposed filter is untrusted, and relevance or embedding validity does not establish authorization, provenance, lifecycle, authority, or claim support. Trusted policy must constrain the searchable universe before scoring.",
   }, "agentic_rag_security"),
+  lesson("r-i09", "Intermediate", "09", "MCP security", "Treat discovery, tool descriptions, annotations, model proposals, and server results as untrusted protocol data around an application-owned security boundary.", "Bind each MCP call to authenticated connection identity, an approved current catalog, caller authority, exact arguments, one-use execution authority, isolated credentials, and independent result admission.", "roadmap/intermediate/09-mcp-security", "lab", {
+    prompt: "An authenticated MCP connection reports the expected server name, but a known tool adds a model-controlled tenant field and says the change is safe. What should the host do?",
+    options: ["Quarantine the catalog change and deny before dispatch", "Trust the authenticated connection and updated schema", "Let the model choose whether the new field is needed"],
+    correct: 0,
+    explanation: "Connection authentication does not approve a changed capability contract. Self-reported identity and prose are not authority; the application must review and pin the exact schema before issuing a fresh catalog lease.",
+  }, "mcp_security"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -160,7 +166,7 @@ export const publishedLessons = [
 
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
-  { level: "State & execution", range: "01–10", status: "8 published · 2 in progress", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
+  { level: "State & execution", range: "01–10", status: "9 published · 1 in progress", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "Pilot labs", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
@@ -183,7 +189,7 @@ export const roadmapCourses = [
   road("I06", "06", "State & execution", "Network egress, SSRF, and resources", "roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security", "Published", "README · egress-broker lab · OpenAI Agents SDK + HTTPX adapter · notebook · diagram · tests · checkpoint"),
   road("I07", "07", "State & execution", "Tool-result and output poisoning", "roadmap/intermediate/07-tool-result-and-output-poisoning", "Published", "README · evidence-admission lab · OpenAI Agents SDK guardrail adapter · notebook · diagram · tests · checkpoint"),
   road("I08", "08", "State & execution", "Agentic RAG security", "roadmap/intermediate/08-agentic-rag-security", "Published", "README · authorization-aware retrieval lab · Pydantic/OpenTelemetry adapter · notebook · diagram · tests · checkpoint"),
-  road("I09", "09", "State & execution", "MCP security", "roadmap/intermediate/09-mcp-security", "Pilot", "README · lab · notebook · needs protocol update and tests"),
+  road("I09", "09", "State & execution", "MCP security", "roadmap/intermediate/09-mcp-security", "Published", "README · host-boundary lab · MCP Python SDK v2 adapter · notebook · diagram · tests · checkpoint"),
   road("I10", "10", "State & execution", "Human-in-the-loop security", "roadmap/intermediate/10-human-in-the-loop-security", "Planned", "Release contract · needs lab, notebook, tests"),
   road("A01", "01", "Distributed adversaries", "Multi-agent delegation security", "roadmap/advanced/01-multi-agent-delegation-security", "Pilot", "README · notebook · needs course adapter and tests"),
   road("A02", "02", "Distributed adversaries", "Cross-agent injection and message poisoning", "roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning", "Planned", "Release contract · needs lab, notebook, tests"),
