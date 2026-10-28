@@ -16,6 +16,19 @@ assert _mcp_spec and _mcp_spec.loader
 _mcp_lab = importlib.util.module_from_spec(_mcp_spec)
 sys.modules[_mcp_spec.name] = _mcp_lab
 _mcp_spec.loader.exec_module(_mcp_lab)
+_hitl_spec = importlib.util.spec_from_file_location(
+    "hitl_security_lab",
+    Path(__file__).parents[1]
+    / "curriculum"
+    / "roadmap"
+    / "intermediate"
+    / "10-human-in-the-loop-security"
+    / "lab.py",
+)
+assert _hitl_spec and _hitl_spec.loader
+_hitl_lab = importlib.util.module_from_spec(_hitl_spec)
+sys.modules[_hitl_spec.name] = _hitl_lab
+_hitl_spec.loader.exec_module(_hitl_lab)
 
 
 NOW = datetime(2026, 8, 11, tzinfo=timezone.utc)
@@ -95,3 +108,36 @@ class FoundationLabTests(unittest.TestCase):
             )["status"],
             "deny",
         )
+
+    def test_human_review_ignores_client_approval_and_executes_once(self) -> None:
+        plane, requester, approver, _, proposal = _hitl_lab.build_scenario()
+        forged = replace(proposal, client_claimed_approved=True)
+        submitted = plane.submit(requester, forged, now=_hitl_lab.NOW)
+        reviewed = plane.decide(
+            approver,
+            submitted.review_id,
+            _hitl_lab.ReviewChoice.APPROVE,
+            rationale_code="foundation-regression",
+            expected_version=submitted.version,
+            now=_hitl_lab.NOW,
+        )
+        completed = plane.execute(
+            requester,
+            submitted.review_id,
+            reviewed.grant_id,
+            forged,
+            _hitl_lab.safe_provider,
+            now=_hitl_lab.NOW,
+        )
+        replay = plane.execute(
+            requester,
+            submitted.review_id,
+            reviewed.grant_id,
+            forged,
+            _hitl_lab.safe_provider,
+            now=_hitl_lab.NOW,
+        )
+        self.assertEqual(submitted.reason, "review-required")
+        self.assertTrue(completed.effect_applied)
+        self.assertFalse(replay.effect_applied)
+        self.assertEqual(len(plane.operations), 1)

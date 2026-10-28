@@ -2,7 +2,7 @@
 
 This map defines the next 36-course learning path. Course numbers restart at
 `01` within each level; the Learning Hub prefixes them with `F`, `I`, `A`, or
-`E` when a globally unique label is useful. The currently published nineteen-course
+`E` when a globally unique label is useful. The currently published twenty-course
 path remains listed in the repository root and Learning Hub while the remaining
 topics pass their delivery gates. The expansion follows one
 enterprise research-and-support scenario: an apparently helpful agent gains
@@ -26,7 +26,7 @@ These chapters establish the conceptual sequence. Foundation 01–07 have passed
 the publication gate: each owns a reusable lab, top-to-bottom executable
 notebook, focused tests, and a Learning Hub checkpoint.
 
-## Intermediate sequence (nine published and one planned topic)
+## Intermediate sequence (ten published topics)
 
 | Course | Focus |
 | --- | --- |
@@ -39,7 +39,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [07](roadmap/intermediate/07-tool-result-and-output-poisoning/) **Published** | evidence admission, hostile-prose containment, independent action authorization, safe output reconstruction, SDK adapter, notebook, diagram, and tests |
 | [08](roadmap/intermediate/08-agentic-rag-security/) **Published** | authorization-before-ranking, source/chunk lineage, poison containment, conflict-aware claim release, Pydantic/OpenTelemetry adapter, notebook, diagram, and tests |
 | [09](roadmap/intermediate/09-mcp-security/) **Published** | modern MCP discovery and catalog pinning, authenticated connection identity, exact call grants, credential isolation, result admission, MCP Python SDK v2 adapter, notebook, diagram, and tests |
-| [10](roadmap/intermediate/10-human-in-the-loop-security/) | human-in-the-loop security |
+| [10](roadmap/intermediate/10-human-in-the-loop-security/) **Published** | durable human review state, tenant-scoped queues, reviewer independence and quorum, exact one-use grants, resume reauthorization, ambiguous-outcome reconciliation, OpenAI Agents SDK adapter, notebook, diagram, and tests |
 
 ## Advanced sequence (pilot labs and planned topics)
 
