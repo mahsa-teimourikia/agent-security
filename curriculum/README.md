@@ -26,7 +26,7 @@ These chapters establish the conceptual sequence. Foundation 01–07 have passed
 the publication gate: each owns a reusable lab, top-to-bottom executable
 notebook, focused tests, and a Learning Hub checkpoint.
 
-## Intermediate sequence (eight published, pilot labs, and planned topics)
+## Intermediate sequence (nine published and one planned topic)
 
 | Course | Focus |
 | --- | --- |
@@ -38,7 +38,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [06](roadmap/intermediate/06-network-egress-ssrf-and-external-resource-security/) **Published** | canonical URL admission, all-answer DNS policy, one-use fetch grants, connection authority, per-hop redirects, bounded responses, SDK/HTTPX adapter, notebook, diagram, and tests |
 | [07](roadmap/intermediate/07-tool-result-and-output-poisoning/) **Published** | evidence admission, hostile-prose containment, independent action authorization, safe output reconstruction, SDK adapter, notebook, diagram, and tests |
 | [08](roadmap/intermediate/08-agentic-rag-security/) **Published** | authorization-before-ranking, source/chunk lineage, poison containment, conflict-aware claim release, Pydantic/OpenTelemetry adapter, notebook, diagram, and tests |
-| [09](roadmap/intermediate/09-mcp-security/) | MCP security |
+| [09](roadmap/intermediate/09-mcp-security/) **Published** | modern MCP discovery and catalog pinning, authenticated connection identity, exact call grants, credential isolation, result admission, MCP Python SDK v2 adapter, notebook, diagram, and tests |
 | [10](roadmap/intermediate/10-human-in-the-loop-security/) | human-in-the-loop security |
 
 ## Advanced sequence (pilot labs and planned topics)
