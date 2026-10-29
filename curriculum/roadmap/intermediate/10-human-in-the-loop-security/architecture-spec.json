@@ -1,0 +1,51 @@
+{
+  "id": "intermediate-10-human-in-the-loop-security",
+  "version": "1.0",
+  "title": "Durable Human Decision Control Plane",
+  "subtitle": "Keep proposal, review, resume authority, effect, and reconciliation separate across one delayed workflow",
+  "canvas": {"width": 1600, "height": 900, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "intent", "label": "UNTRUSTED INTENT + STATE", "x": 45, "y": 140, "w": 285, "h": 470},
+    {"id": "control", "label": "TRUSTED REVIEW CONTROL PLANE", "x": 365, "y": 140, "w": 650, "h": 470},
+    {"id": "people", "label": "HUMAN DECISION + EFFECT BOUNDARY", "x": 1050, "y": 140, "w": 505, "h": 470},
+    {"id": "operations", "label": "CURRENT AUTHORITY + PRIVACY-MINIMIZED EVIDENCE", "x": 365, "y": 665, "w": 1190, "h": 170}
+  ],
+  "nodes": [
+    {"id": "proposal", "group": "intent", "type": "untrusted", "label": "Action proposal", "detail": "action • resource • arguments • claimed approval", "x": 75, "y": 205, "w": 225, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "agent_state", "group": "intent", "type": "untrusted", "label": "Serialized agent state", "detail": "SDK interruption • tool arguments • run context", "x": 75, "y": 425, "w": 225, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "admission", "group": "control", "type": "enforcement", "label": "Proposal admission", "detail": "requester • tenant • policy • resource • risk tier", "x": 400, "y": 205, "w": 250, "h": 120, "padding": 16, "ports": {"proposal": "left", "state": "left", "out": "right", "authority": "bottom"}},
+    {"id": "packet", "group": "control", "type": "state", "label": "Server-owned review packet", "detail": "sanitized fields • exact digest • version • expiry", "x": 730, "y": 205, "w": 250, "h": 120, "padding": 16, "ports": {"in": "left", "queue": "right", "decision": "bottom", "evidence": "bottom"}},
+    {"id": "decision", "group": "control", "type": "enforcement", "label": "Atomic decision transition", "detail": "eligible reviewer • separation • quorum • CAS", "x": 400, "y": 425, "w": 250, "h": 120, "padding": 16, "ports": {"reviewer": "top", "packet": "top", "out": "right", "authority": "bottom"}},
+    {"id": "grant", "group": "control", "type": "control", "label": "One-use execution grant", "detail": "exact proposal • requester • policy • resource • expiry", "x": 730, "y": 425, "w": 250, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right", "evidence": "bottom"}},
+    {"id": "queue", "group": "people", "type": "control", "label": "Tenant-scoped queue", "detail": "current role • assignment • bounded evidence", "x": 1085, "y": 205, "w": 200, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "reviewer", "group": "people", "type": "decision", "label": "Authenticated reviewer(s)", "detail": "approve • reject • request changes", "x": 1325, "y": 205, "w": 195, "h": 120, "padding": 16, "ports": {"in": "left", "decision": "bottom"}},
+    {"id": "resume", "group": "people", "type": "enforcement", "label": "Reauthorize + reserve", "detail": "current identity • policy • resource • logical operation", "x": 1085, "y": 425, "w": 200, "h": 120, "padding": 16, "ports": {"grant": "left", "out": "right", "authority": "bottom"}},
+    {"id": "effect", "group": "people", "type": "control", "label": "Effect + reconciliation", "detail": "idempotent provider • completed | failed | unknown", "x": 1325, "y": 425, "w": 195, "h": 120, "padding": 16, "ports": {"in": "left", "evidence": "bottom"}},
+    {"id": "authority", "group": "operations", "type": "state", "label": "Current authority and workflow state", "detail": "identity • role • policy • resource • review • operation", "x": 450, "y": 715, "w": 415, "h": 90, "padding": 16, "ports": {"admission": "top", "decision": "top", "resume": "top"}},
+    {"id": "receipts", "group": "operations", "type": "state", "label": "Decision and outcome receipts", "detail": "safe IDs • digests • versions • reason codes • provider reference", "x": 1070, "y": 715, "w": 415, "h": 90, "padding": 16, "ports": {"packet": "top", "grant": "top", "effect": "top"}}
+  ],
+  "edges": [
+    {"id": "proposal_to_admission", "from": "proposal", "from_port": "out", "to": "admission", "to_port": "proposal", "kind": "untrusted", "label": "proposal only", "points": [[300, 265], [400, 265]], "label_at": [350, 247]},
+    {"id": "state_to_admission", "from": "agent_state", "from_port": "out", "to": "admission", "to_port": "state", "kind": "untrusted", "label": "reference only", "points": [[300, 485], [350, 485], [350, 295], [400, 295]], "label_at": [350, 391]},
+    {"id": "admission_to_packet", "from": "admission", "from_port": "out", "to": "packet", "to_port": "in", "kind": "enforcement", "label": "admit", "points": [[650, 265], [730, 265]], "label_at": [690, 247]},
+    {"id": "packet_to_queue", "from": "packet", "from_port": "queue", "to": "queue", "to_port": "in", "kind": "control", "label": "eligible view", "points": [[980, 265], [1085, 265]], "label_at": [1032, 247]},
+    {"id": "queue_to_reviewer", "from": "queue", "from_port": "out", "to": "reviewer", "to_port": "in", "kind": "control", "label": "route", "points": [[1285, 265], [1325, 265]], "label_at": [1305, 247]},
+    {"id": "reviewer_to_decision", "from": "reviewer", "from_port": "decision", "to": "decision", "to_port": "reviewer", "kind": "untrusted", "label": "authenticated choice", "points": [[1422, 325], [1422, 375], [525, 375], [525, 425]], "label_at": [973, 363]},
+    {"id": "packet_to_decision", "from": "packet", "from_port": "decision", "to": "decision", "to_port": "packet", "kind": "control", "label": "versioned record", "points": [[855, 325], [855, 395], [565, 395], [565, 425]], "label_at": [710, 383]},
+    {"id": "decision_to_grant", "from": "decision", "from_port": "out", "to": "grant", "to_port": "in", "kind": "enforcement", "label": "exact intent", "points": [[650, 485], [730, 485]], "label_at": [690, 467]},
+    {"id": "grant_to_resume", "from": "grant", "from_port": "out", "to": "resume", "to_port": "grant", "kind": "control", "label": "redeem", "points": [[980, 485], [1085, 485]], "label_at": [1032, 467]},
+    {"id": "resume_to_effect", "from": "resume", "from_port": "out", "to": "effect", "to_port": "in", "kind": "enforcement", "label": "reserve", "points": [[1285, 485], [1325, 485]], "label_at": [1305, 467]},
+    {"id": "authority_to_admission", "from": "authority", "from_port": "admission", "to": "admission", "to_port": "authority", "kind": "control", "label": "current inputs", "points": [[530, 715], [530, 640], [470, 640], [470, 325]], "label_at": [500, 628]},
+    {"id": "authority_to_decision", "from": "authority", "from_port": "decision", "to": "decision", "to_port": "authority", "kind": "control", "label": "current eligibility", "points": [[650, 715], [650, 625], [600, 625], [600, 545]], "label_at": [625, 613]},
+    {"id": "authority_to_resume", "from": "authority", "from_port": "resume", "to": "resume", "to_port": "authority", "kind": "control", "label": "reauthorize", "points": [[785, 715], [785, 605], [1160, 605], [1160, 545]], "label_at": [972, 593]},
+    {"id": "packet_to_receipts", "from": "packet", "from_port": "evidence", "to": "receipts", "to_port": "packet", "kind": "evidence", "label": "review evidence", "points": [[900, 325], [900, 645], [1160, 645], [1160, 715]], "label_at": [1030, 633]},
+    {"id": "grant_to_receipts", "from": "grant", "from_port": "evidence", "to": "receipts", "to_port": "grant", "kind": "evidence", "label": "grant evidence", "points": [[855, 545], [855, 625], [1275, 625], [1275, 715]], "label_at": [1065, 613]},
+    {"id": "effect_to_receipts", "from": "effect", "from_port": "evidence", "to": "receipts", "to_port": "effect", "kind": "evidence", "label": "outcome", "points": [[1422, 545], [1422, 715]], "label_at": [1422, 630]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "An untrusted action proposal and serialized agent state enter a trusted review control plane. Proposal admission creates a sanitized, versioned server-owned review packet that is visible only through a tenant-scoped queue. Authenticated reviewers submit decisions to an atomic transition enforcing eligibility, separation of duties, quorum, and optimistic concurrency. Approval creates an exact one-use execution grant. Resume reauthorizes current identity, policy, resource, and logical operation before an idempotent effect. Ambiguous outcomes enter reconciliation instead of retry. Current authority feeds every enforcement point, and privacy-minimized receipts preserve decision and outcome evidence."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
