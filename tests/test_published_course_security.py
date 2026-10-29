@@ -175,7 +175,13 @@ def test_delegation_enforces_identity_tenant_artifact_and_budget(delegation):
     service, registry, authority, parent, worker, request = delegation.build_scenario(now=NOW)
     issued = service.issue(authority, parent, replace(request, budget=1), now=NOW)
     assert issued.envelope
-    session = delegation.WorkerSession(issued.envelope, service, registry, "research-runtime")
+    session = delegation.WorkerSession(
+        issued.envelope,
+        service,
+        registry,
+        "research-runtime",
+        evidence_registry=delegation.evidence_registry_for(issued.envelope),
+    )
     operation = delegation.OperationRequest("op-1", "try-1", "search", "case:42", "evidence-list")
     candidate = delegation.candidate_for(issued.envelope, operation)
     assert not session.execute(replace(worker, tenant="south"), operation, candidate, now=NOW).allowed

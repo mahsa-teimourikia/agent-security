@@ -1,63 +1,29 @@
 # 01 — Multi-Agent Delegation Security
 
-<!-- roadmap-status -->
-> **Roadmap status: Pilot.** Some executable evidence exists; the remaining gate is listed in the Learning Hub.
+> **Roadmap status: Published.** The complete course lives at
+> [Advanced 02 — Multi-Agent Delegation Security](../../../advanced/02-multi-agent-security/README.md).
 
-## Learning objectives
+This roadmap entry and the published course previously described the same
+topic at different depths. They now share one canonical implementation so
+learners do not encounter a shallow duplicate or two conflicting security
+contracts. The historical published path and Learning Hub lesson ID remain
+stable for compatibility.
 
-Compare team topologies, construct a delegation envelope, enforce capability
-attenuation, and detect over-delegation, tenant switching, expired work, and
-delegation loops before a specialist can act.
+The canonical course includes:
 
-## Scenario and mental model
+- an in-depth delegation model covering authenticated identity, authority
+  attenuation, audience, tenant, resource, policy, lineage, lifetime, budget,
+  fan-out, replay, revocation, termination, and result admission;
+- current reviews of OpenAI Agents SDK, LangChain/LangGraph, Microsoft Agent
+  Framework, Google ADK, A2A, OAuth token exchange, SPIFFE/SPIRE, and
+  OpenTelemetry;
+- a credential-free deterministic lab and a real OpenAI Agents SDK companion;
+- a 20-case evaluation with valid, attack, and operational-failure
+  populations;
+- registry-backed evidence provenance, atomic concurrency tests, and
+  deterministic architecture evidence; and
+- production replacements, recovery guidance, exercises, a checkpoint, and
+  authoritative references.
 
-An orchestrator delegates policy research to a specialist. The specialist may
-read approved documents, but cannot inherit the orchestrator’s future write
-capability, use another tenant, or delegate indefinitely. A message is not a
-credential; it is an untrusted artifact plus a bounded authority request.
-
-```mermaid
-flowchart LR
- U[User identity] --> O[Orchestrator]
- O -->|tenant, task, scopes subset, budget, expiry, trace| S[Specialist]
- S -->|typed result + provenance| O
- O --> G[Independent tool gateway]
-```
-
-## Delegation envelope
-
-Bind parent and child identities, tenant, task purpose, parent scopes, child
-scopes, expiry, budget, maximum depth, approval constraints, and trace ID. The
-key invariant is `child_scopes ⊆ parent_scopes`; a child must also pass its own
-tool authorization, not merely present a trusted-looking handoff.
-
-## Attack walkthrough
-
-| Attack | Vulnerable behavior | Control | Evaluation |
-| --- | --- | --- | --- |
-| privilege amplification | child gets parent/admin scopes | subset check | escalation success = 0 |
-| tenant swap | handoff changes tenant | tenant binding | cross-tenant action = 0 |
-| stale delegation | child acts after expiry | expiry check | stale execution = 0 |
-| delegation loop | agents recursively dispatch | depth/budget/stop rule | bounded calls |
-| malicious specialist | result becomes instruction | typed provenance + reauth | unsafe follow-on = 0 |
-
-## Practical lab
-
-Run `python curriculum/shared/runtime_security_lab.py`; its `Delegation` object
-denies a child whose scopes exceed the parent’s and emits a trace. Then run
-`python labs/advanced/02_multi_agent_security.py` for the smaller role-contract
-baseline. Extend the runtime with `max_depth` and assert a cycle cannot dispatch
-more work. Inspect only structured receipts, never private model reasoning.
-
-## Production considerations
-
-Use distinct workload identities, short-lived audience-bound tokens, service
-authorization at each hop, isolated memory/state, per-agent budgets, circuit
-breakers, trace propagation, and a team-wide kill switch. Treat third-party
-specialists as supply-chain dependencies and preserve an operator-owned failure
-mode.
-
-## References
-
-- [NIST AI Agent Standards Initiative](https://www.nist.gov/artificial-intelligence/ai-agent-standards-initiative)
-- [MITRE ATLAS](https://atlas.mitre.org/)
+Start the [canonical course](../../../advanced/02-multi-agent-security/README.md)
+or return to the [curriculum sequence](../../../README.md).

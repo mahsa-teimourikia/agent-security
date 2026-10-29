@@ -1,5 +1,9 @@
 # Advanced 02 — Multi-Agent Delegation Security
 
+> **Roadmap status: Published.** This is the canonical implementation of
+> Roadmap Advanced 01. The historical `Advanced 02` path and Learning Hub ID
+> remain stable so existing links do not break.
+
 ## Course profile
 
 - **Level:** Advanced
@@ -42,7 +46,10 @@ You will be able to:
 6. make budget and idempotency decisions atomically under concurrency;
 7. integrate a well-known agent SDK without mistaking its handoff object,
    typed input, or agent name for authority; and
-8. measure safety violations and utility cost separately.
+8. resolve claimed evidence against current tenant-, resource-, version-, and
+   artifact-bound application records; and
+9. measure safety violations, failure containment, evidence completeness, and
+   utility separately.
 
 ## 1. Start with the architecture decision
 
@@ -134,7 +141,9 @@ transaction or compare-and-swap in durable storage.
 
 The child’s output is data, not proof. The trusted boundary binds the candidate
 to the envelope, logical operation, producer, tenant, artifact type, evidence
-IDs, and size limit, then computes the admitted artifact digest itself.
+IDs, and size limit. Each evidence ID must also resolve to a current,
+application-owned record for the same tenant, resource, and artifact contract.
+Only then does the boundary compute the admitted artifact digest itself.
 
 ## 4. Trust boundaries and threat model
 
@@ -159,6 +168,7 @@ within their documented operating assumptions.
 | retry duplicates work | stable logical operation ID | `idempotent-replay` |
 | operation ID is reused with changed content | digest-bound replay check | `operation-replay-mismatch` |
 | compromised worker forges a result | result binding and evidence contract | `result-binding` |
+| worker invents or reuses stale evidence | trusted evidence-registry resolution | `evidence-unavailable` / `evidence-stale` / `evidence-scope` |
 | worker continues after containment | independent termination state | `terminated` |
 
 The local HMAC key is synthetic course material. It proves that tampering is
@@ -209,7 +219,7 @@ contracts, then add application authorization.
 
 | Technology | Useful primitive | What it does not prove for you |
 | --- | --- | --- |
-| OpenAI Agents SDK | handoffs, agents-as-tools, typed handoff metadata, input filters, context | that the child is authorized for the tenant, resource, effect, or budget |
+| OpenAI Agents SDK | handoffs, agents-as-tools, typed handoff metadata, input filters, conditional enablement, context | that the child is authorized for the tenant, resource, effect, or budget |
 | LangGraph | explicit graphs, durable state, supervisor/tool patterns | that a routed node has least-privilege credentials |
 | Microsoft Agent Framework | workflow orchestration, handoff/group patterns, middleware, telemetry | business authorization and delegated-resource policy |
 | Google ADK | hierarchical agents, delegation, tools, evaluation/deployment integrations | that description-based routing grants authority |
@@ -218,14 +228,20 @@ contracts, then add application authorization.
 | SPIFFE/SPIRE | verifiable workload identity and rotation | what that workload may do to a particular resource |
 | OpenTelemetry | trace/context correlation across services | authorization, evidence truth, or permission to propagate sensitive data |
 
-As of this course review in September 2026, Microsoft’s official AutoGen
-repository describes AutoGen as maintenance-mode and directs new projects to
-Microsoft Agent Framework. Treat framework status as changing information:
-verify it again before selecting a production stack.
+As of this course review on 2026-10-28, Microsoft’s official AutoGen repository
+states that AutoGen is archived and no longer maintained, and directs new
+projects to Microsoft Agent Framework. Treat framework status as changing
+information: verify it again before selecting a production stack.
 
 This repository pins `openai-agents>=0.22.2,<0.23`; the companion was tested
-with 0.22.3. The point is not to endorse one orchestrator. It is to prove that a
-real SDK handoff can sit behind the same deterministic policy boundary.
+with 0.22.3 and compatibility-checked against 0.24.0, the latest release at the
+review date. In the current SDK, `is_enabled` runs before handoff arguments are
+parsed, so it cannot authorize fields from those arguments. If authorization
+depends on parsed input, it must run at the start of `on_handoff` and raise on
+denial; returning normally allows the transfer to continue. Handoff tool-input
+guardrails do not replace this check. The point is not to endorse one
+orchestrator. It is to prove that a real SDK handoff can sit behind the same
+deterministic policy boundary.
 
 ## 7. Practical lab
 
@@ -264,19 +280,22 @@ admitted artifact digest.
 1. Issue the narrow envelope and inspect its bindings.
 2. Execute one valid search and inspect the content-free receipt.
 3. Attempt scope and resource amplification.
-4. replay the same logical operation safely with a new attempt ID.
-5. mutate a replay and observe fail-closed behavior.
+4. Replay the same logical operation safely with a new attempt ID.
+5. Mutate a replay and observe fail-closed behavior.
 6. race more calls than the remaining budget permits.
 7. revoke or terminate the envelope and retry.
-8. construct an OpenAI Agents SDK handoff without a model call.
-9. widen the server-owned request and prove the SDK callback raises before
+8. reject invented, stale, cross-tenant, and cross-resource evidence claims.
+9. construct an OpenAI Agents SDK handoff without a model call.
+10. widen the server-owned request and prove the SDK callback raises before
    transfer.
-10. report attack and valid-task outcomes with separate denominators.
+11. report valid, attack, and operational-failure outcomes with separate
+    denominators.
 
 ## 8. Evaluation
 
-Use labelled cases. `expected_allowed=False` means an attack or invalid
-request; `expected_allowed=True` means legitimate work.
+The executable evaluation contains 20 labelled cases: 5 valid workflows, 12
+attack attempts, and 3 operational failures. It measures observed effects and
+trace completeness rather than treating an exception as proof of containment.
 
 \[
 attack\ success\ rate =
@@ -292,6 +311,11 @@ Do not call “six denials” a zero-percent violation rate unless the harness a
 proves no forbidden effect occurred. Do not count a framework exception,
 missing receipt, or verifier crash as a blocked attack.
 
+The course fixture requires valid completion, safe failure termination, and
+trace completeness to equal 1.0. Overall attack success and the
+privilege-amplification, cross-boundary, replay-mutation, and
+provenance-forgery rates must equal 0.0.
+
 Minimum release evidence should cover:
 
 - parent and worker identity substitution;
@@ -301,7 +325,8 @@ Minimum release evidence should cover:
 - concurrent budget exhaustion;
 - tampered and stale-policy envelopes;
 - ancestor revocation and termination;
-- result substitution, missing evidence, and oversize output; and
+- result substitution, invented/stale/wrong-scope evidence, and oversize
+  output; and
 - valid tasks that controls incorrectly block.
 
 ### Coordination tax
@@ -401,7 +426,9 @@ dimension and current policy before transfer or effect.
 - [SPIFFE concepts and SVIDs](https://spiffe.io/docs/latest/spiffe/concepts/)
 - [A2A protocol specification](https://a2a-protocol.org/latest/specification/)
 - [A2A Python SDK reference](https://a2a-protocol.org/latest/sdk/python/api/)
-- [OpenAI Agents SDK — orchestration and handoffs](https://developers.openai.com/api/docs/guides/agents/orchestration)
+- [OpenAI Agents SDK — multi-agent orchestration](https://openai.github.io/openai-agents-python/multi_agent/)
+- [OpenAI Agents SDK — handoffs](https://openai.github.io/openai-agents-python/handoffs/)
+- [OpenAI Agents SDK releases](https://github.com/openai/openai-agents-python/releases)
 - [LangChain — multi-agent patterns](https://docs.langchain.com/oss/python/langchain/multi-agent)
 - [Microsoft Agent Framework documentation](https://learn.microsoft.com/en-us/agent-framework/)
 - [Microsoft AutoGen repository status](https://github.com/microsoft/autogen)

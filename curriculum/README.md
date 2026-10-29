@@ -41,11 +41,11 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [09](roadmap/intermediate/09-mcp-security/) **Published** | modern MCP discovery and catalog pinning, authenticated connection identity, exact call grants, credential isolation, result admission, MCP Python SDK v2 adapter, notebook, diagram, and tests |
 | [10](roadmap/intermediate/10-human-in-the-loop-security/) **Published** | durable human review state, tenant-scoped queues, reviewer independence and quorum, exact one-use grants, resume reauthorization, ambiguous-outcome reconciliation, OpenAI Agents SDK adapter, notebook, diagram, and tests |
 
-## Advanced sequence (pilot labs and planned topics)
+## Advanced sequence (one published, one pilot, and eight planned topics)
 
 | Course | Focus |
 | --- | --- |
-| [01](roadmap/advanced/01-multi-agent-delegation-security/) | multi-agent delegation |
+| [01](advanced/02-multi-agent-security/) **Published** | authenticated multi-agent delegation, authority attenuation, current policy and revocation, registry-backed result provenance, OpenAI Agents SDK adapter, notebook, diagram, and tests |
 | [02](roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning/) | cross-agent injection and message poisoning |
 | [03](roadmap/advanced/03-cascading-failures-and-blast-radius-control/) | cascading failures and blast-radius control |
 | [04](roadmap/advanced/04-agent-to-agent-a2a-security/) | agent-to-agent (A2A) security |

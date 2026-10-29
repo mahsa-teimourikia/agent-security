@@ -60,12 +60,16 @@ test("roadmap status and promotion evidence remain explicit", () => {
       .map(({ material }) => material.match(/^curriculum\/(roadmap\/.+)\/README\.md$/)?.[1])
       .filter(Boolean),
   );
+  const publishedLessonIds = new Set(publishedLessons.map(({ id }) => id));
   for (const course of roadmapCourses) {
     assert.match(course.code, /^[FIAE]\d{2}$/);
     assert.ok(course.folder.startsWith("roadmap/"), `${course.code}: roadmap pages must remain separate from published lessons`);
     assert.ok(fs.existsSync(`curriculum/${course.folder}/README.md`), `${course.code}: missing roadmap page`);
     if (course.status === "Published") {
-      assert.ok(publishedRoadmapFolders.has(course.folder), `${course.code}: promoted course is absent from published lessons`);
+      assert.ok(
+        publishedRoadmapFolders.has(course.folder) || publishedLessonIds.has(course.lessonId),
+        `${course.code}: promoted course is absent from published lessons`,
+      );
       assert.ok(!course.evidence.includes("needs"), `${course.code}: published evidence still advertises a gap`);
     } else {
       assert.ok(!publishedRoadmapFolders.has(course.folder), `${course.code}: unpublished roadmap course leaked into published lessons`);

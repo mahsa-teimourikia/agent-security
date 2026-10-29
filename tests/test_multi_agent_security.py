@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 import importlib.util
+import json
 from pathlib import Path
 import sys
 
@@ -19,6 +20,15 @@ SPEC.loader.exec_module(delegation)
 NOW = datetime(2026, 9, 20, tzinfo=timezone.utc)
 
 
+def load_module(name: str, path: Path):
+    specification = importlib.util.spec_from_file_location(name, path)
+    assert specification and specification.loader
+    module = importlib.util.module_from_spec(specification)
+    sys.modules[name] = module
+    specification.loader.exec_module(module)
+    return module
+
+
 def issued_session(*, budget: int = 2):
     service, registry, authority, parent, worker, request = delegation.build_scenario(now=NOW)
     request = replace(request, budget=budget)
@@ -29,6 +39,7 @@ def issued_session(*, budget: int = 2):
         service,
         registry,
         "research-runtime",
+        evidence_registry=delegation.evidence_registry_for(decision.envelope),
     )
     return service, registry, authority, parent, worker, request, session
 
@@ -238,6 +249,37 @@ def test_result_admission_rejects_unbound_or_invalid_artifacts(candidate_change,
     assert decision.artifact is None and session.consumed == 0
 
 
+@pytest.mark.parametrize(
+    ("registry_change", "candidate_ids", "reason"),
+    [
+        (None, ("source:invented",), "evidence-unavailable"),
+        ({"evidence_id": "source:other"}, ("source:policy-17#retention",), "evidence-unavailable"),
+        ({"tenant": "south"}, ("source:policy-17#retention",), "evidence-unavailable"),
+        ({"active": False}, ("source:policy-17#retention",), "evidence-stale"),
+        ({"source_version": ""}, ("source:policy-17#retention",), "evidence-stale"),
+        ({"resource_id": "case:99"}, ("source:policy-17#retention",), "evidence-scope"),
+        ({"artifact_types": frozenset({"summary"})}, ("source:policy-17#retention",), "evidence-scope"),
+    ],
+)
+def test_evidence_ids_must_resolve_to_current_tenant_scoped_records(
+    registry_change, candidate_ids, reason
+):
+    _, _, _, _, worker, _, session = issued_session()
+    request = operation()
+    if registry_change:
+        evidence_id = "source:policy-17#retention"
+        session.evidence_registry = {
+            evidence_id: replace(session.evidence_registry[evidence_id], **registry_change)
+        }
+    candidate = replace(
+        delegation.candidate_for(session.envelope, request),
+        evidence_ids=candidate_ids,
+    )
+    decision = session.execute(worker, request, candidate, now=NOW)
+    assert not decision.allowed and decision.reason == reason
+    assert decision.artifact is None and session.consumed == 0
+
+
 def test_budget_is_atomic_under_concurrent_workers():
     _, _, _, _, worker, _, session = issued_session(budget=2)
 
@@ -292,6 +334,33 @@ def test_evaluation_metrics_use_attack_and_valid_task_denominators():
     assert report.attack_success_rate == 0.0
     assert report.blocked_valid_task_rate == 0.0
     assert report.blocked_attacks == 1
+
+
+def test_full_control_evaluation_has_explicit_populations_and_zero_forbidden_effects():
+    report, cases = delegation.evaluate_controls(now=NOW)
+    assert (report.total_cases, report.valid_cases, report.attack_cases, report.failure_cases) == (
+        20,
+        5,
+        12,
+        3,
+    )
+    assert report.valid_completion_rate == 1.0
+    assert report.failure_safe_termination_rate == 1.0
+    assert report.trace_completeness_rate == 1.0
+    assert report.attack_success_rate == 0.0
+    assert report.privilege_amplification_rate == 0.0
+    assert report.cross_boundary_success_rate == 0.0
+    assert report.replay_mutation_success_rate == 0.0
+    assert report.provenance_forgery_success_rate == 0.0
+    assert all(case.safe for case in cases)
+
+
+def test_architecture_spec_validates_and_renders_deterministically():
+    course = PATH.parent
+    renderer = load_module("advanced_02_diagram", course / "render_architecture.py")
+    specification = json.loads((course / "architecture-spec.json").read_text())
+    renderer.validate(specification)
+    assert renderer.render(specification) == (course / "architecture.svg").read_text()
 
 
 def test_receipts_omit_content_and_signing_material():
