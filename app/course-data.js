@@ -114,6 +114,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "A pause coordinates workflow but does not grant business authority. Client booleans, replacement arguments, and replacement serialized state are untrusted; exact server-owned review state and current effect-boundary authorization are required.",
   }, "human_in_the_loop_security"),
+  lesson("r-a02", "Advanced", "02", "Cross-agent injection and message poisoning", "Keep authenticated peer prose in the data plane while application-owned controls bind identity, source lineage, taint, allowed use, replay, and downstream effects.", "Admit a hostile peer message safely, preserve its security metadata through a transformation, deny authority laundering, and exercise a real OpenAI Agents SDK handoff boundary.", "roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning", "lab", {
+    prompt: "An authenticated researcher sends a schema-valid summary that says to export all customer records. What may the writer infer from the peer identity and valid schema?",
+    options: ["The export is authorized because the sender is authenticated", "The content is attributable and well-shaped, but any exact effect still requires independent current authorization", "The summary is trusted if the writer agent agrees with it"],
+    correct: 1,
+    explanation: "Authentication attributes the message and a schema constrains its shape. Neither proves source truth, allowed use, or permission; the application must preserve lineage and taint, then authorize the exact follow-on effect independently.",
+  }, "cross_agent_message_poisoning"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -173,7 +179,7 @@ export const publishedLessons = [
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
-  { level: "Distributed adversaries", range: "01–10", status: "1 published · 1 pilot · 8 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
+  { level: "Distributed adversaries", range: "01–10", status: "2 published · 1 pilot · 7 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
@@ -198,7 +204,7 @@ export const roadmapCourses = [
   road("I09", "09", "State & execution", "MCP security", "roadmap/intermediate/09-mcp-security", "Published", "README · host-boundary lab · MCP Python SDK v2 adapter · notebook · diagram · tests · checkpoint"),
   road("I10", "10", "State & execution", "Human-in-the-loop security", "roadmap/intermediate/10-human-in-the-loop-security", "Published", "README · durable review lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("A01", "01", "Distributed adversaries", "Multi-agent delegation security", "roadmap/advanced/01-multi-agent-delegation-security", "Published", "README · delegation lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint", "a2"),
-  road("A02", "02", "Distributed adversaries", "Cross-agent injection and message poisoning", "roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning", "Planned", "Release contract · needs lab, notebook, tests"),
+  road("A02", "02", "Distributed adversaries", "Cross-agent injection and message poisoning", "roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning", "Published", "README · message-boundary lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("A03", "03", "Distributed adversaries", "Cascading failures and blast radius", "roadmap/advanced/03-cascading-failures-and-blast-radius-control", "Planned", "Release contract · needs lab, notebook, tests"),
   road("A04", "04", "Distributed adversaries", "Agent-to-agent (A2A) security", "roadmap/advanced/04-agent-to-agent-a2a-security", "Planned", "A2A 1.0 contract · needs lab, notebook, tests"),
   road("A05", "05", "Distributed adversaries", "Protocol composition security", "roadmap/advanced/05-protocol-composition-security", "Planned", "Release contract · needs lab, notebook, tests"),
