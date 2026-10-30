@@ -156,7 +156,7 @@ export const publishedLessons = [
     correct: 0,
     explanation: "Any successful attempt makes that attack case a failure, severe outcomes cannot be averaged away, and verifier errors are missing evidence rather than proof of safety.",
   }),
-  lesson("a2", "Advanced", "02", "Multi-agent delegation", "Bind each handoff to authenticated identity, audience, resource, lineage, policy, budget, and a typed result contract.", "Prove framework routing cannot widen authority and that concurrent retries, revocation, and result admission fail closed.", "advanced/02-multi-agent-security", "02_multi_agent_security", {
+  lesson("a2", "Advanced", "02", "Multi-agent delegation", "Bind each handoff to authenticated identity, audience, resource, lineage, policy, budget, and current application-owned evidence.", "Prove framework routing cannot widen authority and that concurrency, replay, revocation, forged provenance, and result admission fail closed.", "advanced/02-multi-agent-security", "02_multi_agent_security", {
     prompt: "An SDK validates a handoff payload, but it requests a resource outside the parent grant and presents an envelope from an older policy version. What should the execution boundary do?",
     options: ["Deny and require a new, current, attenuated delegation", "Trust the typed SDK payload", "Let the child remove the extra resource"],
     correct: 0,
@@ -173,11 +173,11 @@ export const publishedLessons = [
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
-  { level: "Distributed adversaries", range: "01–10", status: "Pilot labs", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
+  { level: "Distributed adversaries", range: "01–10", status: "1 published · 1 pilot · 8 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
-const road = (code, number, level, title, folder, status, evidence) => ({ code, number, level, title, folder, status, evidence });
+const road = (code, number, level, title, folder, status, evidence, lessonId = null) => ({ code, number, level, title, folder, status, evidence, lessonId });
 
 export const roadmapCourses = [
   road("F01", "01", "Foundation", "Architecture and trust boundaries", "roadmap/beginner/01-agent-security-architecture-and-trust-boundaries", "Published", "README · lab · OpenTelemetry adapter · notebook · tests · checkpoint"),
@@ -197,7 +197,7 @@ export const roadmapCourses = [
   road("I08", "08", "State & execution", "Agentic RAG security", "roadmap/intermediate/08-agentic-rag-security", "Published", "README · authorization-aware retrieval lab · Pydantic/OpenTelemetry adapter · notebook · diagram · tests · checkpoint"),
   road("I09", "09", "State & execution", "MCP security", "roadmap/intermediate/09-mcp-security", "Published", "README · host-boundary lab · MCP Python SDK v2 adapter · notebook · diagram · tests · checkpoint"),
   road("I10", "10", "State & execution", "Human-in-the-loop security", "roadmap/intermediate/10-human-in-the-loop-security", "Published", "README · durable review lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
-  road("A01", "01", "Distributed adversaries", "Multi-agent delegation security", "roadmap/advanced/01-multi-agent-delegation-security", "Pilot", "README · notebook · needs course adapter and tests"),
+  road("A01", "01", "Distributed adversaries", "Multi-agent delegation security", "roadmap/advanced/01-multi-agent-delegation-security", "Published", "README · delegation lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint", "a2"),
   road("A02", "02", "Distributed adversaries", "Cross-agent injection and message poisoning", "roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning", "Planned", "Release contract · needs lab, notebook, tests"),
   road("A03", "03", "Distributed adversaries", "Cascading failures and blast radius", "roadmap/advanced/03-cascading-failures-and-blast-radius-control", "Planned", "Release contract · needs lab, notebook, tests"),
   road("A04", "04", "Distributed adversaries", "Agent-to-agent (A2A) security", "roadmap/advanced/04-agent-to-agent-a2a-security", "Planned", "A2A 1.0 contract · needs lab, notebook, tests"),

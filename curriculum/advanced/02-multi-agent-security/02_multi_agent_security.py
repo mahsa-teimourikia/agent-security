@@ -12,6 +12,7 @@ from hashlib import sha256
 from hmac import compare_digest, new as hmac_new
 import json
 from threading import Lock
+from typing import Mapping
 
 
 def _aware(value: datetime) -> bool:
@@ -148,6 +149,18 @@ class ArtifactCandidate:
 
 
 @dataclass(frozen=True)
+class EvidenceRecord:
+    """Application-owned evidence metadata used to validate child claims."""
+
+    evidence_id: str
+    tenant: str
+    resource_id: str
+    source_version: str
+    artifact_types: frozenset[str]
+    active: bool = True
+
+
+@dataclass(frozen=True)
 class Artifact:
     artifact_type: str
     content: str
@@ -214,6 +227,32 @@ class EvaluationReport:
     @property
     def blocked_valid_task_rate(self) -> float:
         return self.valid_tasks_blocked / self.valid_tasks if self.valid_tasks else 0.0
+
+
+@dataclass(frozen=True)
+class ControlEvaluationCase:
+    name: str
+    population: str
+    family: str
+    safe: bool
+    forbidden_effect: bool
+    trace_complete: bool
+
+
+@dataclass(frozen=True)
+class ControlEvaluationReport:
+    total_cases: int
+    valid_cases: int
+    attack_cases: int
+    failure_cases: int
+    valid_completion_rate: float
+    attack_success_rate: float
+    failure_safe_termination_rate: float
+    trace_completeness_rate: float
+    privilege_amplification_rate: float
+    cross_boundary_success_rate: float
+    replay_mutation_success_rate: float
+    provenance_forgery_success_rate: float
 
 
 class DelegationService:
@@ -395,6 +434,7 @@ class WorkerSession:
     revocations: RevocationRegistry
     runtime_audience: str
     max_artifact_bytes: int = 512
+    evidence_registry: Mapping[str, EvidenceRecord] = field(default_factory=dict)
     consumed: int = 0
     receipts: list[DecisionReceipt] = field(default_factory=list)
     _terminated_reason: str | None = field(default=None, init=False, repr=False)
@@ -550,6 +590,25 @@ class WorkerSession:
                 or len(set(candidate.evidence_ids)) != len(candidate.evidence_ids)
             ):
                 reason = "evidence-contract"
+            else:
+                for evidence_id in candidate.evidence_ids:
+                    evidence = self.evidence_registry.get(evidence_id)
+                    if (
+                        evidence is None
+                        or evidence.evidence_id != evidence_id
+                        or evidence.tenant != identity.tenant
+                    ):
+                        reason = "evidence-unavailable"
+                        break
+                    if not evidence.active or not evidence.source_version.strip():
+                        reason = "evidence-stale"
+                        break
+                    if (
+                        evidence.resource_id != request.resource_id
+                        or request.artifact_type not in evidence.artifact_types
+                    ):
+                        reason = "evidence-scope"
+                        break
 
             self._attempt_ids.add(request.attempt_id)
             artifact: Artifact | None = None
@@ -596,6 +655,345 @@ def evaluate_cases(cases: list[EvaluationCase]) -> EvaluationReport:
         valid_tasks=len(valid),
         valid_tasks_blocked=sum(not case.decision.allowed for case in valid),
     )
+
+
+def evaluate_controls(
+    *, now: datetime | None = None
+) -> tuple[ControlEvaluationReport, tuple[ControlEvaluationCase, ...]]:
+    """Exercise labelled valid, attack, and operational-failure populations."""
+
+    observed_at = now or datetime(2026, 10, 28, tzinfo=timezone.utc)
+    cases: list[ControlEvaluationCase] = []
+
+    def add(
+        name: str,
+        population: str,
+        family: str,
+        *,
+        safe: bool,
+        forbidden_effect: bool = False,
+        trace_complete: bool = True,
+    ) -> None:
+        cases.append(
+            ControlEvaluationCase(
+                name,
+                population,
+                family,
+                safe,
+                forbidden_effect,
+                trace_complete,
+            )
+        )
+
+    def fresh() -> tuple[
+        DelegationService,
+        RevocationRegistry,
+        ParentAuthority,
+        ActorContext,
+        ActorContext,
+        DelegationRequest,
+        DelegationEnvelope,
+        WorkerSession,
+    ]:
+        service, revocations, authority, parent, worker, request = build_scenario(
+            now=observed_at
+        )
+        issued = service.issue(authority, parent, request, now=observed_at)
+        assert issued.allowed and issued.envelope
+        envelope = issued.envelope
+        session = WorkerSession(
+            envelope,
+            service,
+            revocations,
+            "research-runtime",
+            evidence_registry=evidence_registry_for(envelope),
+        )
+        return (
+            service,
+            revocations,
+            authority,
+            parent,
+            worker,
+            request,
+            envelope,
+            session,
+        )
+
+    # Five valid workflows.
+    service, _, authority, parent, _, request = build_scenario(now=observed_at)
+    issued = service.issue(authority, parent, request, now=observed_at)
+    add(
+        "valid-narrow-issuance",
+        "valid",
+        "issuance",
+        safe=issued.allowed and issued.reason == "issued",
+        trace_complete=bool(issued.reason),
+    )
+
+    service, _, authority, parent, _, request = build_scenario(now=observed_at)
+    first = service.issue(authority, parent, request, now=observed_at)
+    reissued = service.issue(authority, parent, request, now=observed_at)
+    add(
+        "valid-idempotent-issuance",
+        "valid",
+        "issuance",
+        safe=(
+            first.allowed
+            and reissued.allowed
+            and reissued.reason == "idempotent-reissue"
+            and reissued.envelope == first.envelope
+        ),
+        trace_complete=bool(reissued.reason),
+    )
+
+    *_, worker, _, envelope, session = fresh()
+    operation = OperationRequest(
+        "valid-op", "valid-attempt", "search", "case:42", "evidence-list"
+    )
+    valid = session.execute(
+        worker, operation, candidate_for(envelope, operation), now=observed_at
+    )
+    add(
+        "valid-evidence-bound-result",
+        "valid",
+        "execution",
+        safe=valid.allowed and valid.artifact is not None and session.consumed == 1,
+        trace_complete=bool(valid.receipt.event_id),
+    )
+
+    *_, worker, _, envelope, session = fresh()
+    operation = OperationRequest(
+        "replay-op", "replay-attempt-1", "search", "case:42", "evidence-list"
+    )
+    first = session.execute(
+        worker, operation, candidate_for(envelope, operation), now=observed_at
+    )
+    replay_request = replace(operation, attempt_id="replay-attempt-2")
+    replay = session.execute(
+        worker,
+        replay_request,
+        candidate_for(envelope, replay_request),
+        now=observed_at,
+    )
+    add(
+        "valid-idempotent-operation-replay",
+        "valid",
+        "replay",
+        safe=(
+            first.allowed
+            and replay.allowed
+            and replay.replayed
+            and session.consumed == 1
+        ),
+        trace_complete=bool(replay.receipt.event_id),
+    )
+
+    *_, worker, _, envelope, session = fresh()
+    operation = OperationRequest(
+        "summary-op", "summary-attempt", "search", "case:42", "evidence-list"
+    )
+    result = session.execute(
+        worker,
+        operation,
+        candidate_for(envelope, operation, content="E-17, E-18"),
+        now=observed_at,
+    )
+    add(
+        "valid-bounded-artifact",
+        "valid",
+        "execution",
+        safe=result.allowed and result.artifact is not None,
+        trace_complete=bool(result.receipt.artifact_digest),
+    )
+
+    # Four issuance attacks.
+    issuance_attacks = (
+        ("scope-amplification", "amplification", {"scopes": frozenset({"delete"})}),
+        ("resource-amplification", "amplification", {"resources": frozenset({"case:99"})}),
+        ("cross-tenant-delegation", "cross-boundary", {"tenant": "south"}),
+        ("wrong-audience-delegation", "cross-boundary", {"audience": "billing-runtime"}),
+    )
+    for name, family, changes in issuance_attacks:
+        service, _, authority, parent, _, request = build_scenario(now=observed_at)
+        decision = service.issue(
+            authority, parent, replace(request, **changes), now=observed_at
+        )
+        add(
+            name,
+            "attack",
+            family,
+            safe=not decision.allowed,
+            forbidden_effect=decision.allowed,
+            trace_complete=bool(decision.reason),
+        )
+
+    # Eight use-time and result attacks.
+    for name, family in (
+        ("tampered-envelope", "amplification"),
+        ("substituted-worker", "cross-boundary"),
+        ("stale-policy", "stale"),
+        ("revoked-lineage", "stale"),
+        ("expired-envelope", "stale"),
+        ("mutated-operation-replay", "replay-mutation"),
+        ("forged-evidence-id", "provenance-forgery"),
+        ("forged-result-producer", "provenance-forgery"),
+    ):
+        service, revocations, _, _, worker, _, envelope, session = fresh()
+        operation = OperationRequest(
+            f"{name}-op", f"{name}-attempt", "search", "case:42", "evidence-list"
+        )
+        candidate = candidate_for(envelope, operation)
+        use_time = observed_at
+        if name == "tampered-envelope":
+            session.envelope = replace(envelope, budget=99)
+            candidate = candidate_for(session.envelope, operation)
+        elif name == "substituted-worker":
+            worker = replace(worker, workload_id="spiffe://attacker")
+        elif name == "stale-policy":
+            service.policy = replace(service.policy, version="policy-8")
+        elif name == "revoked-lineage":
+            revocations.revoke(envelope.envelope_id)
+        elif name == "expired-envelope":
+            use_time = envelope.expires_at
+        elif name == "mutated-operation-replay":
+            first = session.execute(worker, operation, candidate, now=observed_at)
+            assert first.allowed
+            operation = replace(operation, attempt_id=f"{name}-attempt-2")
+            candidate = candidate_for(envelope, operation, content="changed")
+        elif name == "forged-evidence-id":
+            candidate = replace(candidate, evidence_ids=("source:invented",))
+        elif name == "forged-result-producer":
+            candidate = replace(candidate, producer="other-agent")
+        decision = session.execute(worker, operation, candidate, now=use_time)
+        add(
+            name,
+            "attack",
+            family,
+            safe=not decision.allowed,
+            forbidden_effect=decision.allowed,
+            trace_complete=bool(decision.receipt.event_id),
+        )
+
+    # Three operational failures.
+    *_, worker, _, envelope, session = fresh()
+    session.terminate(reason="synthetic containment")
+    operation = OperationRequest(
+        "terminated-op", "terminated-attempt", "search", "case:42", "evidence-list"
+    )
+    terminated = session.execute(
+        worker, operation, candidate_for(envelope, operation), now=observed_at
+    )
+    add(
+        "terminated-worker",
+        "failure",
+        "containment",
+        safe=not terminated.allowed and terminated.reason == "terminated",
+        forbidden_effect=terminated.allowed,
+        trace_complete=bool(terminated.receipt.event_id),
+    )
+
+    service, revocations, authority, parent, worker, request = build_scenario(
+        now=observed_at
+    )
+    issued = service.issue(
+        authority, parent, replace(request, budget=1), now=observed_at
+    )
+    assert issued.allowed and issued.envelope
+    envelope = issued.envelope
+    session = WorkerSession(
+        envelope,
+        service,
+        revocations,
+        "research-runtime",
+        evidence_registry=evidence_registry_for(envelope),
+    )
+    first_request = OperationRequest(
+        "budget-op-1", "budget-attempt-1", "search", "case:42", "evidence-list"
+    )
+    second_request = OperationRequest(
+        "budget-op-2", "budget-attempt-2", "search", "case:42", "evidence-list"
+    )
+    assert session.execute(
+        worker,
+        first_request,
+        candidate_for(envelope, first_request),
+        now=observed_at,
+    ).allowed
+    exhausted = session.execute(
+        worker,
+        second_request,
+        candidate_for(envelope, second_request),
+        now=observed_at,
+    )
+    add(
+        "budget-exhaustion",
+        "failure",
+        "budget",
+        safe=not exhausted.allowed and exhausted.reason == "budget",
+        forbidden_effect=exhausted.allowed,
+        trace_complete=bool(exhausted.receipt.event_id),
+    )
+
+    *_, worker, _, envelope, session = fresh()
+
+    def concurrent(index: int) -> ExecutionDecision:
+        request = OperationRequest(
+            f"race-op-{index}",
+            f"race-attempt-{index}",
+            "search",
+            "case:42",
+            "evidence-list",
+        )
+        return session.execute(
+            worker,
+            request,
+            candidate_for(envelope, request, content=f"E-{index}"),
+            now=observed_at,
+        )
+
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        raced = list(pool.map(concurrent, range(8)))
+    allowed = sum(decision.allowed for decision in raced)
+    add(
+        "concurrent-budget-race",
+        "failure",
+        "concurrency",
+        safe=allowed == envelope.budget and session.consumed == envelope.budget,
+        forbidden_effect=allowed > envelope.budget,
+        trace_complete=len(session.receipts) == len(raced),
+    )
+
+    valid_cases = [case for case in cases if case.population == "valid"]
+    attack_cases = [case for case in cases if case.population == "attack"]
+    failure_cases = [case for case in cases if case.population == "failure"]
+
+    def family_rate(family: str) -> float:
+        family_cases = [case for case in attack_cases if case.family == family]
+        return (
+            sum(case.forbidden_effect for case in family_cases) / len(family_cases)
+            if family_cases
+            else 0.0
+        )
+
+    report = ControlEvaluationReport(
+        total_cases=len(cases),
+        valid_cases=len(valid_cases),
+        attack_cases=len(attack_cases),
+        failure_cases=len(failure_cases),
+        valid_completion_rate=sum(case.safe for case in valid_cases) / len(valid_cases),
+        attack_success_rate=sum(case.forbidden_effect for case in attack_cases)
+        / len(attack_cases),
+        failure_safe_termination_rate=sum(case.safe for case in failure_cases)
+        / len(failure_cases),
+        trace_completeness_rate=sum(case.trace_complete for case in cases) / len(cases),
+        privilege_amplification_rate=family_rate("amplification"),
+        cross_boundary_success_rate=family_rate("cross-boundary"),
+        replay_mutation_success_rate=family_rate("replay-mutation"),
+        provenance_forgery_success_rate=family_rate("provenance-forgery"),
+    )
+    return report, tuple(cases)
 
 
 def build_scenario(*, now: datetime) -> tuple[
@@ -662,6 +1060,20 @@ def candidate_for(
     )
 
 
+def evidence_registry_for(envelope: DelegationEnvelope) -> dict[str, EvidenceRecord]:
+    """Return the synthetic current evidence registry for the course scenario."""
+
+    return {
+        "source:policy-17#retention": EvidenceRecord(
+            evidence_id="source:policy-17#retention",
+            tenant=envelope.tenant,
+            resource_id="case:42",
+            source_version="policy-17",
+            artifact_types=frozenset({"evidence-list", "summary"}),
+        )
+    }
+
+
 def demo() -> tuple[WorkerSession, EvaluationReport]:
     now = datetime(2026, 9, 20, tzinfo=timezone.utc)
     service, registry, authority, parent, worker, request = build_scenario(now=now)
@@ -670,7 +1082,13 @@ def demo() -> tuple[WorkerSession, EvaluationReport]:
     envelope = issued.envelope
     assert envelope.scopes <= authority.scopes and service.verify(envelope)
 
-    session = WorkerSession(envelope, service, registry, "research-runtime")
+    session = WorkerSession(
+        envelope,
+        service,
+        registry,
+        "research-runtime",
+        evidence_registry=evidence_registry_for(envelope),
+    )
     valid_request = OperationRequest("op-1", "attempt-1", "search", "case:42", "evidence-list")
     valid = session.execute(worker, valid_request, candidate_for(envelope, valid_request), now=now)
     assert valid.allowed and valid.artifact

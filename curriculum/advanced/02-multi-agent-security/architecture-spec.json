@@ -114,6 +114,7 @@
       "group": "control_plane",
       "label": "Execution boundary",
       "subtitle": "Atomic budget · replay · result checks",
+      "subtitle_lines": ["Atomic budget · replay", "Result checks"],
       "type": "action",
       "bounds": {"x": 872, "y": 460, "width": 250, "height": 140},
       "ports": {
@@ -164,6 +165,7 @@
       "to": {"node": "delegation_service", "port": "identity"},
       "label": "authenticated authority",
       "kind": "primary",
+      "label_bounds": {"x": 807, "y": 207, "width": 132, "height": 22},
       "route": [[808, 245], [840, 245], [840, 236], [872, 236]]
     },
     {
@@ -172,6 +174,7 @@
       "to": {"node": "sdk_handoff", "port": "in"},
       "label": "route proposal",
       "kind": "secondary",
+      "label_bounds": {"x": 190, "y": 382, "width": 124, "height": 22},
       "route": [[252, 330], [252, 460]]
     },
     {
@@ -180,6 +183,7 @@
       "to": {"node": "delegation_service", "port": "proposal"},
       "label": "bounded metadata",
       "kind": "secondary",
+      "label_bounds": {"x": 570, "y": 365, "width": 136, "height": 22},
       "route": [[392, 515], [488, 515], [488, 392], [840, 392], [840, 284], [872, 284]]
     },
     {
@@ -188,6 +192,7 @@
       "to": {"node": "worker", "port": "in"},
       "label": "narrow envelope",
       "kind": "primary",
+      "label_bounds": {"x": 1138, "y": 268, "width": 122, "height": 22},
       "route": [[1122, 255], [1192, 255], [1192, 305], [1260, 305]]
     },
     {
@@ -196,6 +201,7 @@
       "to": {"node": "execution_boundary", "port": "envelope"},
       "label": "verified grant",
       "kind": "primary",
+      "label_bounds": {"x": 1008, "y": 376, "width": 104, "height": 22},
       "route": [[997, 320], [997, 460]]
     },
     {
@@ -204,7 +210,8 @@
       "to": {"node": "execution_boundary", "port": "policy"},
       "label": "current state",
       "kind": "primary",
-      "route": [[808, 520], [872, 520]]
+      "label_bounds": {"x": 798, "y": 486, "width": 98, "height": 22},
+      "route": [[808, 520], [840, 520], [840, 530], [872, 530]]
     },
     {
       "id": "worker_to_candidate",
@@ -212,6 +219,7 @@
       "to": {"node": "candidate", "port": "in"},
       "label": "untrusted output",
       "kind": "secondary",
+      "label_bounds": {"x": 1392, "y": 418, "width": 112, "height": 22},
       "route": [[1380, 360], [1380, 500]]
     },
     {
@@ -220,6 +228,7 @@
       "to": {"node": "execution_boundary", "port": "candidate"},
       "label": "validate before admission",
       "kind": "primary",
+      "label_bounds": {"x": 1128, "y": 564, "width": 148, "height": 22},
       "route": [[1260, 555], [1122, 555], [1122, 530]]
     },
     {
@@ -228,6 +237,7 @@
       "to": {"node": "admitted_artifact", "port": "in"},
       "label": "allow + receipt",
       "kind": "primary",
+      "label_bounds": {"x": 1008, "y": 632, "width": 106, "height": 22},
       "route": [[997, 600], [997, 690]]
     }
   ],
