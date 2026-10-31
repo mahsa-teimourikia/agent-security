@@ -1,0 +1,47 @@
+{
+  "id": "advanced-04-a2a-trust-boundary",
+  "version": "1.0",
+  "title": "A2A Discovery Describes; the Application Authorizes",
+  "subtitle": "Authenticate transport identity, derive a local skill grant, authorize every task resource, and bind callbacks and effects independently",
+  "canvas": {"width": 1400, "height": 1400, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "caller", "label": "UNTRUSTED ENTERPRISE CALLER", "x": 40, "y": 135, "w": 330, "h": 600},
+    {"id": "control", "label": "TRUSTED A2A CONTROL PLANE", "x": 405, "y": 135, "w": 560, "h": 600},
+    {"id": "peer", "label": "EXTERNAL SPECIALIST BOUNDARY", "x": 1000, "y": 135, "w": 360, "h": 600},
+    {"id": "outcomes", "label": "INDEPENDENT EFFECT + AUDIT EVIDENCE", "x": 405, "y": 790, "w": 955, "h": 530}
+  ],
+  "nodes": [
+    {"id": "client", "group": "caller", "type": "untrusted", "label": "Enterprise agent", "detail": "authenticated workload; proposes task content", "x": 75, "y": 205, "w": 260, "h": 105, "padding": 16, "ports": {"task": "right", "effect": "bottom"}},
+    {"id": "card", "group": "caller", "type": "untrusted", "label": "Agent Card", "detail": "signed discovery metadata; advertised skills are not grants", "x": 75, "y": 475, "w": 260, "h": 125, "padding": 16, "ports": {"out": "right"}},
+    {"id": "registry", "group": "control", "type": "state", "label": "Local peer registry", "detail": "issuer • key • endpoint • tenant • allowed skills", "x": 445, "y": 205, "w": 215, "h": 115, "padding": 16, "ports": {"out": "bottom"}},
+    {"id": "card_gate", "group": "control", "type": "enforcement", "label": "Card admission", "detail": "JWS • lifecycle • pinned endpoint • protocol • skill intersection", "x": 445, "y": 475, "w": 215, "h": 130, "padding": 16, "ports": {"card": "left", "registry": "top", "out": "right", "audit": "bottom"}},
+    {"id": "task_gate", "group": "control", "type": "decision", "label": "Task resource monitor", "detail": "identity • audience • tenant • owner • scope • replay • state", "x": 705, "y": 205, "w": 220, "h": 130, "padding": 16, "ports": {"client": "top", "grant": "left", "peer": "right", "artifact": "right", "effect": "bottom", "callback": "bottom", "audit": "bottom"}},
+    {"id": "callback_gate", "group": "control", "type": "enforcement", "label": "Callback egress gate", "detail": "HTTPS • host policy • all DNS answers • pinned IP • no redirects", "x": 705, "y": 475, "w": 220, "h": 130, "padding": 16, "ports": {"in": "top", "out": "right", "audit": "bottom"}},
+    {"id": "specialist", "group": "peer", "type": "untrusted", "label": "A2A 1.0 specialist", "detail": "authenticated peer; opaque implementation", "x": 1035, "y": 205, "w": 290, "h": 105, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "task", "group": "peer", "type": "state", "label": "Task + artifact", "detail": "task/context binding • typed state • tainted content", "x": 1035, "y": 420, "w": 290, "h": 120, "padding": 16, "ports": {"in": "top", "out": "left"}},
+    {"id": "webhook", "group": "peer", "type": "state", "label": "Client webhook", "detail": "task-bound receiver; authenticates notification", "x": 1035, "y": 625, "w": 290, "h": 85, "padding": 16, "ports": {"in": "left"}},
+    {"id": "effect", "group": "outcomes", "type": "enforcement", "label": "Idempotent effect gate", "detail": "current owner • successful task • exact artifact/action/target", "x": 520, "y": 910, "w": 320, "h": 130, "padding": 16, "ports": {"task": "top", "client": "left", "out": "right", "audit": "bottom"}},
+    {"id": "receipts", "group": "outcomes", "type": "state", "label": "Content-free receipts", "detail": "stage • reason • policy • protocol • stable IDs; no payloads or credentials", "x": 920, "y": 910, "w": 340, "h": 130, "padding": 16, "ports": {"effect": "left", "control": "top"}}
+  ],
+  "edges": [
+    {"id": "card_to_gate", "from": "card", "from_port": "out", "to": "card_gate", "to_port": "card", "kind": "untrusted", "label": "discovery claim", "points": [[335, 537], [445, 537]], "label_at": [390, 455]},
+    {"id": "registry_to_card_gate", "from": "registry", "from_port": "out", "to": "card_gate", "to_port": "registry", "kind": "control", "label": "trusted peer policy", "points": [[552, 320], [552, 475]], "label_at": [562, 397]},
+    {"id": "card_grant_to_task", "from": "card_gate", "from_port": "out", "to": "task_gate", "to_port": "grant", "kind": "enforcement", "label": "local skill grant", "points": [[660, 540], [680, 540], [680, 270], [705, 270]], "label_at": [690, 390]},
+    {"id": "client_to_task", "from": "client", "from_port": "task", "to": "task_gate", "to_port": "client", "kind": "untrusted", "label": "authenticated request + untrusted message", "points": [[335, 257], [380, 257], [380, 185], [815, 185], [815, 205]], "label_at": [600, 190]},
+    {"id": "task_to_specialist", "from": "task_gate", "from_port": "peer", "to": "specialist", "to_port": "in", "kind": "control", "label": "authorized SendMessage", "points": [[925, 257], [1035, 257]], "label_at": [980, 175]},
+    {"id": "specialist_to_task", "from": "specialist", "from_port": "out", "to": "task", "to_port": "in", "kind": "untrusted", "label": "typed task update", "points": [[1180, 310], [1180, 420]], "label_at": [1190, 365]},
+    {"id": "artifact_to_task_gate", "from": "task", "from_port": "out", "to": "task_gate", "to_port": "artifact", "kind": "untrusted", "label": "artifact admission", "points": [[1035, 480], [980, 480], [980, 300], [925, 300]], "label_at": [980, 390]},
+    {"id": "task_to_callback", "from": "task_gate", "from_port": "callback", "to": "callback_gate", "to_port": "in", "kind": "control", "label": "task-bound callback proposal", "points": [[815, 335], [815, 475]], "label_at": [825, 405]},
+    {"id": "callback_to_webhook", "from": "callback_gate", "from_port": "out", "to": "webhook", "to_port": "in", "kind": "enforcement", "label": "pinned-IP POST; no redirect", "points": [[925, 540], [975, 540], [975, 667], [1035, 667]], "label_at": [975, 600]},
+    {"id": "task_to_effect", "from": "task_gate", "from_port": "effect", "to": "effect", "to_port": "task", "kind": "control", "label": "owner + admitted artifact", "points": [[815, 335], [815, 755], [680, 755], [680, 910]], "label_at": [690, 770]},
+    {"id": "client_to_effect", "from": "client", "from_port": "effect", "to": "effect", "to_port": "client", "kind": "untrusted", "label": "effect proposal", "points": [[205, 310], [205, 360], [380, 360], [380, 975], [520, 975]], "label_at": [450, 890]},
+    {"id": "effect_to_receipts", "from": "effect", "from_port": "out", "to": "receipts", "to_port": "effect", "kind": "evidence", "label": "one exact effect", "points": [[840, 975], [920, 975]], "label_at": [880, 890]},
+    {"id": "controls_to_receipts", "from": "callback_gate", "from_port": "audit", "to": "receipts", "to_port": "control", "kind": "evidence", "label": "allow / deny / error", "points": [[815, 605], [815, 760], [1090, 760], [1090, 910]], "label_at": [955, 745]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "An enterprise agent and external Agent Card remain in the untrusted proposal plane. A trusted card-admission gate verifies signature, lifecycle, pinned peer registry data, and protocol version, then intersects advertised skills with local policy. A task resource monitor authorizes each SendMessage, Get, Cancel, message, artifact, and effect operation using authenticated identity, audience, tenant, owner, scope, replay, and task state. The external A2A specialist returns typed task updates and tainted artifacts. A separate callback egress gate requires HTTPS, an allowed hostname, public DNS answers, a pinned address, and no redirects before reaching the client webhook. A final idempotent effect gate and content-free receipts remain independent of peer prose."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
