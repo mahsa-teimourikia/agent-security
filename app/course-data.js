@@ -126,6 +126,12 @@ export const publishedLessons = [
     correct: 1,
     explanation: "Local retry policies compose multiplicatively across graph layers and fault domains. A trusted control plane must own transient-only retries, shared budgets, deadlines, isolation, and idempotent effects; SDK loop limits and backoff remain defense in depth.",
   }, "cascade_blast_radius"),
+  lesson("r-a04", "Advanced", "04", "Agent-to-agent (A2A) security", "Treat Agent Cards, task identifiers, peer messages, artifacts, and push callbacks as protocol data around an application-owned authorization boundary.", "Pin and admit an external peer, intersect advertised skills with local policy, reauthorize every task operation, contain hostile artifacts, block callback SSRF, exercise the official A2A Python SDK, and evaluate 20 valid, attack, and failure cases.", "roadmap/advanced/04-agent-to-agent-a2a-security", "lab", {
+    prompt: "A trusted key verifies the JWS on an Agent Card that advertises both research.summary and records.export. Does the signature authorize the caller to use both skills?",
+    options: ["Yes; signed discovery metadata is an authorization grant", "No; verify the card, then intersect advertised skills with current local policy and authorize each task operation", "Yes, if the protocol version is supported"],
+    correct: 1,
+    explanation: "A valid signature can establish card integrity and origin under a trusted key. It does not authenticate the current caller, grant a skill, prove tenant access, establish task ownership, or authorize a downstream effect.",
+  }, "a2a_security"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -185,7 +191,7 @@ export const publishedLessons = [
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
-  { level: "Distributed adversaries", range: "01–10", status: "3 published · 1 pilot · 6 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
+  { level: "Distributed adversaries", range: "01–10", status: "4 published · 1 pilot · 5 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
@@ -212,7 +218,7 @@ export const roadmapCourses = [
   road("A01", "01", "Distributed adversaries", "Multi-agent delegation security", "roadmap/advanced/01-multi-agent-delegation-security", "Published", "README · delegation lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint", "a2"),
   road("A02", "02", "Distributed adversaries", "Cross-agent injection and message poisoning", "roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning", "Published", "README · message-boundary lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint"),
   road("A03", "03", "Distributed adversaries", "Cascading failures and blast radius", "roadmap/advanced/03-cascading-failures-and-blast-radius-control", "Published", "README · cascade-control lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint", "r-a03"),
-  road("A04", "04", "Distributed adversaries", "Agent-to-agent (A2A) security", "roadmap/advanced/04-agent-to-agent-a2a-security", "Planned", "A2A 1.0 contract · needs lab, notebook, tests"),
+  road("A04", "04", "Distributed adversaries", "Agent-to-agent (A2A) security", "roadmap/advanced/04-agent-to-agent-a2a-security", "Published", "README · A2A resource-monitor lab · official A2A Python SDK adapter · notebook · diagram · tests · checkpoint", "r-a04"),
   road("A05", "05", "Distributed adversaries", "Protocol composition security", "roadmap/advanced/05-protocol-composition-security", "Planned", "Release contract · needs lab, notebook, tests"),
   road("A06", "06", "Distributed adversaries", "Agent supply-chain security", "roadmap/advanced/06-agent-supply-chain-security", "Planned", "SLSA-aligned contract · needs lab, notebook, tests"),
   road("A07", "07", "Distributed adversaries", "Agent security testing and fuzzing", "roadmap/advanced/07-agent-security-testing-and-fuzzing", "Planned", "Release contract · needs lab, notebook, tests"),

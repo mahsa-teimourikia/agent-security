@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1400" viewBox="0 0 1400 1400" role="img" aria-labelledby="title desc">
+<title id="title">A2A Discovery Describes; the Application Authorizes</title>
+<desc id="desc">An enterprise agent and external Agent Card remain in the untrusted proposal plane. A trusted card-admission gate verifies signature, lifecycle, pinned peer registry data, and protocol version, then intersects advertised skills with local policy. A task resource monitor authorizes each SendMessage, Get, Cancel, message, artifact, and effect operation using authenticated identity, audience, tenant, owner, scope, replay, and task state. The external A2A specialist returns typed task updates and tainted artifacts. A separate callback egress gate requires HTTPS, an allowed hostname, public DNS answers, a pinned address, and no redirects before reaching the client webhook. A final idempotent effect gate and content-free receipts remain independent of peer prose.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">A2A Discovery Describes; the Application Authorizes</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Authenticate transport identity, derive a local skill grant, authorize every task resource, and bind callbacks and effects independently</text>
+<rect x="40" y="135" width="330" height="600" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">UNTRUSTED ENTERPRISE CALLER</text>
+<rect x="405" y="135" width="560" height="600" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="421" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED A2A CONTROL PLANE</text>
+<rect x="1000" y="135" width="360" height="600" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="1016" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">EXTERNAL SPECIALIST BOUNDARY</text>
+<rect x="405" y="790" width="955" height="530" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="421" y="822" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">INDEPENDENT EFFECT + AUDIT EVIDENCE</text>
+<polyline points="335,537 445,537" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="335.25" y="442" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="390" y="455" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">discovery claim</text>
+<polyline points="552,320 552,475" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="494.25" y="384" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="562" y="397" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">trusted peer policy</text>
+<polyline points="660,540 680,540 680,270 705,270" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="628.75" y="377" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="690" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">local skill grant</text>
+<polyline points="335,257 380,257 380,185 815,185 815,205" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="460.75" y="177" width="278.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="600" y="190" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">authenticated request + untrusted message</text>
+<polyline points="925,257 1035,257" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="902.5" y="162" width="155.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="980" y="175" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">authorized SendMessage</text>
+<polyline points="1180,310 1180,420" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1128.75" y="352" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1190" y="365" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">typed task update</text>
+<polyline points="1035,480 980,480 980,300 925,300" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="915.5" y="377" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="980" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">artifact admission</text>
+<polyline points="815,335 815,475" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="728.0" y="392" width="194.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="825" y="405" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">task-bound callback proposal</text>
+<polyline points="925,540 975,540 975,667 1035,667" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="881.25" y="587" width="187.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="975" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">pinned-IP POST; no redirect</text>
+<polyline points="815,335 815,755 680,755 680,910" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="602.75" y="757" width="174.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="690" y="770" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">owner + admitted artifact</text>
+<polyline points="205,310 205,360 380,360 380,975 520,975" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="395.25" y="877" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="450" y="890" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">effect proposal</text>
+<polyline points="840,975 920,975" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="822.0" y="877" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="880" y="890" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">one exact effect</text>
+<polyline points="815,605 815,760 1090,760 1090,910" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="884.0" y="732" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="955" y="745" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">allow / deny / error</text>
+<rect x="75" y="205" width="260" height="105" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="205.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Enterprise agent</text>
+<text x="205.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticated workload;</text>
+<text x="205.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">proposes task content</text>
+<rect x="75" y="475" width="260" height="125" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="205.0" y="506" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Agent Card</text>
+<text x="205.0" y="530" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signed discovery metadata;</text>
+<text x="205.0" y="546" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">advertised skills are not</text>
+<text x="205.0" y="562" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">grants</text>
+<rect x="445" y="205" width="215" height="115" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="552.5" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Local peer registry</text>
+<text x="552.5" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">issuer • key • endpoint</text>
+<text x="552.5" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• tenant • allowed</text>
+<text x="552.5" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">skills</text>
+<rect x="445" y="475" width="215" height="130" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="552.5" y="506" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Card admission</text>
+<text x="552.5" y="530" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">JWS • lifecycle •</text>
+<text x="552.5" y="546" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">pinned endpoint •</text>
+<text x="552.5" y="562" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">protocol • skill</text>
+<text x="552.5" y="578" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">intersection</text>
+<rect x="705" y="205" width="220" height="130" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="815.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Task resource monitor</text>
+<text x="815.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identity • audience •</text>
+<text x="815.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant • owner • scope •</text>
+<text x="815.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">replay • state</text>
+<rect x="705" y="475" width="220" height="130" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="815.0" y="506" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Callback egress gate</text>
+<text x="815.0" y="530" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">HTTPS • host policy •</text>
+<text x="815.0" y="546" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">all DNS answers • pinned</text>
+<text x="815.0" y="562" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">IP • no redirects</text>
+<rect x="1035" y="205" width="290" height="105" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="1180.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">A2A 1.0 specialist</text>
+<text x="1180.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticated peer; opaque</text>
+<text x="1180.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">implementation</text>
+<rect x="1035" y="420" width="290" height="120" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1180.0" y="451" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Task + artifact</text>
+<text x="1180.0" y="475" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">task/context binding • typed</text>
+<text x="1180.0" y="491" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">state • tainted content</text>
+<rect x="1035" y="625" width="290" height="85" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1180.0" y="656" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Client webhook</text>
+<text x="1180.0" y="680" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">task-bound receiver;</text>
+<text x="1180.0" y="696" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticates notification</text>
+<rect x="520" y="910" width="320" height="130" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="680.0" y="941" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Idempotent effect gate</text>
+<text x="680.0" y="965" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">current owner • successful task •</text>
+<text x="680.0" y="981" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact artifact/action/target</text>
+<rect x="920" y="910" width="340" height="130" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1090.0" y="941" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Content-free receipts</text>
+<text x="1090.0" y="965" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stage • reason • policy • protocol •</text>
+<text x="1090.0" y="981" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stable IDs; no payloads or credentials</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
