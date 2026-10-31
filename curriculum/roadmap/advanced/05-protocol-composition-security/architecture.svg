@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1380" viewBox="0 0 1500 1380" role="img" aria-labelledby="title desc">
+<title id="title">Protocols Carry Messages; Composition Must Preserve Invariants</title>
+<desc id="desc">A user request enters an authenticated web boundary. Three trusted adapters translate web authority to an A2A 1.0 task, then to an MCP 2026-07-28 tool call, then to a records HTTP API request. Every adapter authenticates its translator and calls a policy and token-exchange control that preserves the semantic case.read authority while issuing a shorter-lived, single-audience protocol scope. A content-free hop ledger links the root request, parent receipt, subject, actor, tenant, resource, audience, policy, and trace without using trace context as authority. The records API returns untrusted JSON with provenance to an evidence-admission gate. A release gate requires complete correlated lineage and releases only a verified summary with evidence ID, source version, and trace ID.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Protocols Carry Messages; Composition Must Preserve Invariants</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Authenticate every translator, exchange audience-specific authority, keep trace context non-authoritative, and release only verified provenance</text>
+<rect x="40" y="135" width="300" height="510" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">AUTHENTICATED INGRESS</text>
+<rect x="375" y="135" width="1085" height="510" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="391" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">COMPOSED PROTOCOL CHAIN</text>
+<rect x="40" y="705" width="300" height="595" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="737" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">BOUNDED RELEASE</text>
+<rect x="375" y="705" width="1085" height="595" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="391" y="737" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED COMPOSITION CONTROL PLANE</text>
+<polyline points="190,330 190,430" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="176.25" y="367" width="57.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="205" y="380" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">request</text>
+<polyline points="305,497 360,497 360,282 410,282" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="303.75" y="377" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="365" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">authorized intent</text>
+<polyline points="585,282 625,282" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="550.25" y="182" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="605" y="195" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">A2A SendMessage</text>
+<polyline points="800,282 840,282" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="752.25" y="362" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="820" y="375" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">bounded task intent</text>
+<polyline points="1015,282 1055,282" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="983.5" y="182" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1035" y="195" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">MCP tools/call</text>
+<polyline points="1142,345 1142,450" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1084.0" y="384" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1155" y="397" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">server-owned case ID</text>
+<polyline points="1230,512 1265,512" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1182.5" y="597" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1247" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">audience-bound GET</text>
+<polyline points="927,345 927,680 572,680 572,810" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="638.25" y="652" width="213.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="745" y="665" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">same invariant at every adapter</text>
+<polyline points="715,880 785,880" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="653.0" y="777" width="194.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="750" y="790" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">allow / deny / error receipt</text>
+<polyline points="1347,575 1347,690 1275,690 1275,810" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1186.25" y="662" width="187.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1280" y="675" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">untrusted JSON + provenance</text>
+<polyline points="927,950 927,1080" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="846.25" y="1002" width="187.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="940" y="1015" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">complete correlated lineage</text>
+<polyline points="1275,950 1275,1150 1070,1150" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1110.75" y="1122" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1172" y="1135" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">verified evidence</text>
+<polyline points="785,1150 340,1150 340,1142 305,1142" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="466.25" y="1122" width="187.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="560" y="1135" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">summary + evidence metadata</text>
+<rect x="75" y="220" width="230" height="110" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="190.0" y="251" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">User request</text>
+<text x="190.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">business note + external</text>
+<text x="190.0" y="291" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">trace are untrusted data</text>
+<rect x="75" y="430" width="230" height="135" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="190.0" y="461" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Web boundary</text>
+<text x="190.0" y="485" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticate</text>
+<text x="190.0" y="501" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">subject/workload • tenant</text>
+<text x="190.0" y="517" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• resource • scope</text>
+<rect x="410" y="220" width="175" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="497.5" y="251" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Web → A2A adapter</text>
+<text x="497.5" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">case.read →</text>
+<text x="497.5" y="291" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">a2a:task:create</text>
+<rect x="625" y="220" width="175" height="125" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="712.5" y="251" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">A2A specialist</text>
+<text x="712.5" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">A2A 1.0 task;</text>
+<text x="712.5" y="291" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">content cannot set</text>
+<text x="712.5" y="307" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identity</text>
+<rect x="840" y="220" width="175" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="927.5" y="251" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">A2A → MCP adapter</text>
+<text x="927.5" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">case.read →</text>
+<text x="927.5" y="291" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">lookup_case call</text>
+<rect x="1055" y="220" width="175" height="125" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="1142.5" y="251" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">MCP server</text>
+<text x="1142.5" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">2026-07-28 tool</text>
+<text x="1142.5" y="291" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">request; arguments</text>
+<text x="1142.5" y="307" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stay narrow</text>
+<rect x="1055" y="450" width="175" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1142.5" y="481" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">MCP → API adapter</text>
+<text x="1142.5" y="505" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">case.read →</text>
+<text x="1142.5" y="521" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">records:case:read</text>
+<rect x="1265" y="450" width="165" height="125" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1347.5" y="481" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Records API</text>
+<text x="1347.5" y="505" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">fixed HTTPS</text>
+<text x="1347.5" y="521" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">resource; current</text>
+<text x="1347.5" y="537" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">case version</text>
+<rect x="430" y="810" width="285" height="140" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="572.5" y="841" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Policy + token exchange</text>
+<text x="572.5" y="865" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticate translator • exact</text>
+<text x="572.5" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">semantic map • one audience •</text>
+<text x="572.5" y="897" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">shorter TTL</text>
+<rect x="785" y="810" width="285" height="140" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="927.5" y="841" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Hop ledger</text>
+<text x="927.5" y="865" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">root • parent • subject • actor</text>
+<text x="927.5" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• audience • authority • trace •</text>
+<text x="927.5" y="897" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">reason</text>
+<rect x="1140" y="810" width="270" height="140" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1275.0" y="841" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Evidence admission</text>
+<text x="1275.0" y="865" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">producer •</text>
+<text x="1275.0" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">source/version/locator •</text>
+<text x="1275.0" y="897" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest • lineage • taint</text>
+<rect x="785" y="1080" width="285" height="140" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="927.5" y="1111" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Release gate</text>
+<text x="927.5" y="1135" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">current user • exact resource •</text>
+<text x="927.5" y="1151" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">complete lineage • summary only</text>
+<rect x="75" y="1070" width="230" height="145" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="190.0" y="1101" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Verified case summary</text>
+<text x="190.0" y="1125" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">one allowed field +</text>
+<text x="190.0" y="1141" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">evidence ID + source</text>
+<text x="190.0" y="1157" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">version + trace ID</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="1340" r="5" fill="#2F6BFF"/><text x="62" y="1344">trusted control</text><circle cx="190" cy="1340" r="5" fill="#7667E8"/><text x="202" y="1344">untrusted data/proposal</text><circle cx="385" cy="1340" r="5" fill="#16A3A5"/><text x="397" y="1344">decision/enforcement</text></g>
+</svg>

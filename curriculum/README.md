@@ -41,7 +41,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [09](roadmap/intermediate/09-mcp-security/) **Published** | modern MCP discovery and catalog pinning, authenticated connection identity, exact call grants, credential isolation, result admission, MCP Python SDK v2 adapter, notebook, diagram, and tests |
 | [10](roadmap/intermediate/10-human-in-the-loop-security/) **Published** | durable human review state, tenant-scoped queues, reviewer independence and quorum, exact one-use grants, resume reauthorization, ambiguous-outcome reconciliation, OpenAI Agents SDK adapter, notebook, diagram, and tests |
 
-## Advanced sequence (four published, one pilot, and five planned topics)
+## Advanced sequence (five published, one pilot, and four planned topics)
 
 | Course | Focus |
 | --- | --- |
@@ -49,7 +49,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [02](roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning/) **Published** | authenticated peer-message admission, source lineage, taint-preserving transformation, independent effect authorization, OpenAI Agents SDK adapter, notebook, diagram, and tests |
 | [03](roadmap/advanced/03-cascading-failures-and-blast-radius-control/) **Published** | shared cascade budgets, centralized transient-only retries, queue bulkheads, circuit isolation, poison containment, idempotent effects, OpenAI Agents SDK adapter, notebook, diagram, and tests |
 | [04](roadmap/advanced/04-agent-to-agent-a2a-security/) **Published** | Agent Card admission, local skill grants, per-operation task authorization, artifact containment, callback SSRF controls, official A2A Python SDK adapter, notebook, diagram, and tests |
-| [05](roadmap/advanced/05-protocol-composition-security/) | protocol composition security |
+| [05](roadmap/advanced/05-protocol-composition-security/) **Published** | identity- and authority-preserving web/A2A/MCP/API translation, audience-bound grants, hop ledger, provenance admission, official A2A/MCP/HTTPX adapter, notebook, diagram, and tests |
 | [06](roadmap/advanced/06-agent-supply-chain-security/) | agent supply-chain security |
 | [07](roadmap/advanced/07-agent-security-testing-and-fuzzing/) | security testing and fuzzing |
 | [08](roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation/) | red teaming and adversarial evaluation |
