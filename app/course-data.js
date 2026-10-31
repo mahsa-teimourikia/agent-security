@@ -138,6 +138,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "A string is not authenticated identity, and a bearer token for one audience must not be replayed to another. Each adapter must enforce the allowed transition and exchange a narrower audience-bound grant without widening semantic authority.",
   }, "protocol_composition_security"),
+  lesson("r-a06", "Advanced", "06", "Agent supply-chain security", "Treat prompts, policies, plugins, MCP servers, model adapters, artifacts, attestations, inventories, and scan reports as untrusted release inputs until an independent gate verifies their exact bindings.", "Verify immutable digests, real signatures, signer/issuer, SLSA provenance, builder/source/workflow, least privilege, CycloneDX inventory, risk evidence, staged rollout, and one-use rollback with the official Sigstore Python SDK.", "roadmap/advanced/06-agent-supply-chain-security", "lab", {
+    prompt: "A release candidate has a valid signed SLSA provenance statement and a CycloneDX SBOM. Is it ready for production activation?",
+    options: ["Yes; provenance and an SBOM prove the artifact is safe", "Yes, if the signature schema validates", "No; authenticate and bind the evidence to the exact digest, signer, builder, source, workflow, materials, scope, capabilities, risk and current policy, then stage and observe the rollout"],
+    correct: 2,
+    explanation: "Authenticated provenance explains production of an exact subject, and an SBOM describes inventory. Neither grants deployment authority or proves safety. Independent current policy and a separate staged promotion decision are still required.",
+  }, "agent_supply_chain_security"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -197,7 +203,7 @@ export const publishedLessons = [
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
-  { level: "Distributed adversaries", range: "01–10", status: "5 published · 1 pilot · 4 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
+  { level: "Distributed adversaries", range: "01–10", status: "6 published · 1 pilot · 3 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
@@ -226,7 +232,7 @@ export const roadmapCourses = [
   road("A03", "03", "Distributed adversaries", "Cascading failures and blast radius", "roadmap/advanced/03-cascading-failures-and-blast-radius-control", "Published", "README · cascade-control lab · OpenAI Agents SDK adapter · notebook · diagram · tests · checkpoint", "r-a03"),
   road("A04", "04", "Distributed adversaries", "Agent-to-agent (A2A) security", "roadmap/advanced/04-agent-to-agent-a2a-security", "Published", "README · A2A resource-monitor lab · official A2A Python SDK adapter · notebook · diagram · tests · checkpoint", "r-a04"),
   road("A05", "05", "Distributed adversaries", "Protocol composition security", "roadmap/advanced/05-protocol-composition-security", "Published", "README · composition gateway · official A2A/MCP/HTTPX adapter · notebook · diagram · tests · checkpoint", "r-a05"),
-  road("A06", "06", "Distributed adversaries", "Agent supply-chain security", "roadmap/advanced/06-agent-supply-chain-security", "Planned", "SLSA-aligned contract · needs lab, notebook, tests"),
+  road("A06", "06", "Distributed adversaries", "Agent supply-chain security", "roadmap/advanced/06-agent-supply-chain-security", "Published", "README · signed release gate · official Sigstore adapter · notebook · diagram · tests · checkpoint", "r-a06"),
   road("A07", "07", "Distributed adversaries", "Agent security testing and fuzzing", "roadmap/advanced/07-agent-security-testing-and-fuzzing", "Planned", "Release contract · needs lab, notebook, tests"),
   road("A08", "08", "Distributed adversaries", "Red teaming and adversarial evaluation", "roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation", "Pilot", "README · lab · notebook · needs deeper tests"),
   road("A09", "09", "Distributed adversaries", "Observability and runtime assurance", "roadmap/advanced/09-agent-security-observability-and-runtime-assurance", "Planned", "Release contract · needs lab, notebook, tests"),
