@@ -1,0 +1,51 @@
+{
+  "id": "advanced-07-agent-security-testing-and-fuzzing",
+  "version": "1.0",
+  "title": "Generate Broadly; Judge with Application-Owned Invariants",
+  "subtitle": "Keep generators untrusted, observe real state and effects, shrink without changing semantics, and retain every verified finding",
+  "canvas": {"width": 1500, "height": 1280, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "contract", "label": "SECURITY CONTRACT AND SEEDS", "x": 40, "y": 130, "w": 420, "h": 450},
+    {"id": "execution", "label": "BOUNDED FUZZ EXECUTION", "x": 500, "y": 130, "w": 960, "h": 450},
+    {"id": "triage", "label": "TRIAGE AND RETENTION", "x": 40, "y": 640, "w": 860, "h": 510},
+    {"id": "delivery", "label": "RELEASE AND OPERATIONS", "x": 940, "y": 640, "w": 520, "h": 510}
+  ],
+  "nodes": [
+    {"id": "invariants", "group": "contract", "type": "decision", "label": "Explicit invariants", "detail": "identity • tenant • transition • approval • replay • fail-closed", "x": 80, "y": 220, "w": 160, "h": 150, "padding": 16, "ports": {"out": "right"}},
+    {"id": "seeds", "group": "contract", "type": "state", "label": "Labelled seed corpus", "detail": "valid • attack • boundary • failure", "x": 270, "y": 220, "w": 150, "h": 150, "padding": 16, "ports": {"out": "right", "regression": "bottom"}},
+    {"id": "generator", "group": "execution", "type": "untrusted", "label": "Generators and mutators", "detail": "Hypothesis strategies • stateful rules • encoded variants", "x": 540, "y": 220, "w": 190, "h": 150, "padding": 16, "ports": {"seed": "left", "target": "right"}},
+    {"id": "target", "group": "execution", "type": "control", "label": "Typed action gateway", "detail": "strict parse • trusted actor • exact current authorization", "x": 780, "y": 220, "w": 190, "h": 150, "padding": 16, "ports": {"in": "left", "workflow": "right"}},
+    {"id": "workflow", "group": "execution", "type": "state", "label": "Durable workflow", "detail": "optimistic version • legal transitions • idempotent effect", "x": 1020, "y": 220, "w": 190, "h": 150, "padding": 16, "ports": {"in": "left", "trace": "right"}},
+    {"id": "trace", "group": "execution", "type": "state", "label": "Observable trace", "detail": "pre/post state • effect • reason • policy version", "x": 1260, "y": 220, "w": 160, "h": 150, "padding": 16, "ports": {"in": "left", "oracle": "bottom"}},
+    {"id": "oracle", "group": "execution", "type": "enforcement", "label": "Independent security oracle", "detail": "inspect state and effects; never trust a self-reported pass", "x": 900, "y": 415, "w": 240, "h": 125, "padding": 16, "ports": {"invariant": "left", "trace": "right", "finding": "bottom"}},
+    {"id": "family", "group": "triage", "type": "decision", "label": "Failure family", "detail": "invariant + command + pre-state; severe outcomes stay visible", "x": 90, "y": 760, "w": 210, "h": 145, "padding": 16, "ports": {"in": "top", "shrink": "right"}},
+    {"id": "shrinker", "group": "triage", "type": "control", "label": "Semantics-preserving shrink", "detail": "remove noise only while the same oracle failure reproduces", "x": 350, "y": 760, "w": 210, "h": 145, "padding": 16, "ports": {"in": "left", "repro": "right"}},
+    {"id": "reproducer", "group": "triage", "type": "state", "label": "Minimal reproducer", "detail": "exact input or sequence • seed • versions • environment", "x": 610, "y": 760, "w": 210, "h": 145, "padding": 16, "ports": {"in": "left", "regression": "bottom", "gate": "right"}},
+    {"id": "regression", "group": "triage", "type": "state", "label": "Versioned regression corpus", "detail": "owner • severity • expected result • retained lineage", "x": 355, "y": 970, "w": 250, "h": 135, "padding": 16, "ports": {"in": "top", "seeds": "left"}},
+    {"id": "gate", "group": "delivery", "type": "enforcement", "label": "Release decision", "detail": "zero severe forbidden outcomes • complete execution • utility bound", "x": 990, "y": 750, "w": 200, "h": 155, "padding": 16, "ports": {"in": "left", "continuous": "right"}},
+    {"id": "continuous", "group": "delivery", "type": "control", "label": "Continuous fuzzing", "detail": "bounded CI • longer scheduled runs • isolated target • alerts", "x": 1220, "y": 750, "w": 190, "h": 155, "padding": 16, "ports": {"in": "left", "finding": "bottom"}},
+    {"id": "operations", "group": "delivery", "type": "state", "label": "Operational evidence", "detail": "coverage trend • corpus health • flakiness • time-to-triage", "x": 1095, "y": 980, "w": 220, "h": 135, "padding": 16, "ports": {"in": "top"}}
+  ],
+  "edges": [
+    {"id": "seeds_to_generator", "from": "seeds", "from_port": "out", "to": "generator", "to_port": "seed", "kind": "untrusted", "label": "generate + mutate", "points": [[420, 295], [540, 295]], "label_at": [480, 195]},
+    {"id": "generator_to_target", "from": "generator", "from_port": "target", "to": "target", "to_port": "in", "kind": "untrusted", "label": "untrusted cases", "points": [[730, 295], [780, 295]], "label_at": [755, 195]},
+    {"id": "target_to_workflow", "from": "target", "from_port": "workflow", "to": "workflow", "to_port": "in", "kind": "control", "label": "authorized transition", "points": [[970, 295], [1020, 295]], "label_at": [995, 195]},
+    {"id": "workflow_to_trace", "from": "workflow", "from_port": "trace", "to": "trace", "to_port": "in", "kind": "evidence", "label": "state + effect", "points": [[1210, 295], [1260, 295]], "label_at": [1235, 195]},
+    {"id": "invariants_to_oracle", "from": "invariants", "from_port": "out", "to": "oracle", "to_port": "invariant", "kind": "enforcement", "label": "application-owned postconditions", "points": [[240, 295], [250, 450], [850, 450], [850, 477], [900, 477]], "label_at": [650, 435]},
+    {"id": "trace_to_oracle", "from": "trace", "from_port": "oracle", "to": "oracle", "to_port": "trace", "kind": "evidence", "label": "observed outcome", "points": [[1340, 370], [1340, 477], [1140, 477]], "label_at": [1240, 462]},
+    {"id": "oracle_to_family", "from": "oracle", "from_port": "finding", "to": "family", "to_port": "in", "kind": "enforcement", "label": "verified failure", "points": [[1020, 540], [1020, 610], [195, 610], [195, 760]], "label_at": [608, 595]},
+    {"id": "family_to_shrinker", "from": "family", "from_port": "shrink", "to": "shrinker", "to_port": "in", "kind": "control", "label": "preserve family", "points": [[300, 832], [350, 832]], "label_at": [325, 725]},
+    {"id": "shrinker_to_reproducer", "from": "shrinker", "from_port": "repro", "to": "reproducer", "to_port": "in", "kind": "control", "label": "smallest causal case", "points": [[560, 832], [610, 832]], "label_at": [585, 725]},
+    {"id": "reproducer_to_regression", "from": "reproducer", "from_port": "regression", "to": "regression", "to_port": "in", "kind": "evidence", "label": "retain with lineage", "points": [[715, 905], [715, 940], [480, 940], [480, 970]], "label_at": [598, 925]},
+    {"id": "regression_to_seeds", "from": "regression", "from_port": "seeds", "to": "seeds", "to_port": "regression", "kind": "evidence", "label": "future seed", "points": [[355, 1037], [325, 1037], [325, 600], [345, 600], [345, 370]], "label_at": [340, 1020]},
+    {"id": "reproducer_to_gate", "from": "reproducer", "from_port": "gate", "to": "gate", "to_port": "in", "kind": "enforcement", "label": "severity + completeness", "points": [[820, 832], [990, 832]], "label_at": [905, 725]},
+    {"id": "gate_to_continuous", "from": "gate", "from_port": "continuous", "to": "continuous", "to_port": "in", "kind": "control", "label": "promote or block", "points": [[1190, 827], [1220, 827]], "label_at": [1205, 720]},
+    {"id": "continuous_to_operations", "from": "continuous", "from_port": "finding", "to": "operations", "to_port": "in", "kind": "evidence", "label": "run telemetry", "points": [[1315, 905], [1315, 945], [1205, 945], [1205, 980]], "label_at": [1260, 930]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "Explicit application-owned invariants and a labelled seed corpus feed untrusted Hypothesis generators and mutators. Generated values and command sequences exercise a typed action gateway and durable workflow. An observable trace records pre-state, post-state, decisions, and effects. An independent security oracle compares those outcomes with invariants and groups verified failures. A shrinker removes noise only while preserving the same failure, producing a minimal versioned reproducer that enters the regression corpus and informs a release decision. Continuous isolated fuzzing reports coverage, corpus health, flakiness, and triage evidence back to operations."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
