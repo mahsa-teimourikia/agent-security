@@ -2,8 +2,8 @@
 
 This map defines the next 36-course learning path. Course numbers restart at
 `01` within each level; the Learning Hub prefixes them with `F`, `I`, `A`, or
-`E` when a globally unique label is useful. The currently published twenty-course
-path remains listed in the repository root and Learning Hub while the remaining
+`E` when a globally unique label is useful. The currently published course
+catalog remains listed in the repository root and Learning Hub while the remaining
 topics pass their delivery gates. The expansion follows one
 enterprise research-and-support scenario: an apparently helpful agent gains
 RAG, memory, tool access, a specialist, MCP, durable state, and eventually
@@ -41,12 +41,12 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [09](roadmap/intermediate/09-mcp-security/) **Published** | modern MCP discovery and catalog pinning, authenticated connection identity, exact call grants, credential isolation, result admission, MCP Python SDK v2 adapter, notebook, diagram, and tests |
 | [10](roadmap/intermediate/10-human-in-the-loop-security/) **Published** | durable human review state, tenant-scoped queues, reviewer independence and quorum, exact one-use grants, resume reauthorization, ambiguous-outcome reconciliation, OpenAI Agents SDK adapter, notebook, diagram, and tests |
 
-## Advanced sequence (one published, one pilot, and eight planned topics)
+## Advanced sequence (two published, one pilot, and seven planned topics)
 
 | Course | Focus |
 | --- | --- |
 | [01](advanced/02-multi-agent-security/) **Published** | authenticated multi-agent delegation, authority attenuation, current policy and revocation, registry-backed result provenance, OpenAI Agents SDK adapter, notebook, diagram, and tests |
-| [02](roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning/) | cross-agent injection and message poisoning |
+| [02](roadmap/advanced/02-cross-agent-prompt-injection-and-message-poisoning/) **Published** | authenticated peer-message admission, source lineage, taint-preserving transformation, independent effect authorization, OpenAI Agents SDK adapter, notebook, diagram, and tests |
 | [03](roadmap/advanced/03-cascading-failures-and-blast-radius-control/) | cascading failures and blast-radius control |
 | [04](roadmap/advanced/04-agent-to-agent-a2a-security/) | agent-to-agent (A2A) security |
 | [05](roadmap/advanced/05-protocol-composition-security/) | protocol composition security |

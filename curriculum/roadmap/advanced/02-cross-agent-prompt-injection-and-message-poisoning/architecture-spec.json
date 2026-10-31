@@ -1,0 +1,46 @@
+{
+  "id": "advanced-02-cross-agent-message-boundary",
+  "version": "1.0",
+  "title": "Authenticated Peer Messages Remain Untrusted Data",
+  "subtitle": "Identity attributes a message; provenance, taint, allowed use, and current authorization constrain what downstream agents may do",
+  "canvas": {"width": 1400, "height": 1400, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "producer", "label": "PEER PRODUCER — CONTENT IS UNTRUSTED", "x": 40, "y": 135, "w": 360, "h": 590},
+    {"id": "control", "label": "TRUSTED MESSAGE CONTROL PLANE", "x": 435, "y": 135, "w": 520, "h": 590},
+    {"id": "consumer", "label": "CONSUMER — DERIVATION, NOT AUTHORITY", "x": 990, "y": 135, "w": 370, "h": 590},
+    {"id": "outcomes", "label": "INDEPENDENT EFFECT DECISION + EVIDENCE", "x": 435, "y": 770, "w": 925, "h": 550}
+  ],
+  "nodes": [
+    {"id": "researcher", "group": "producer", "type": "untrusted", "label": "Researcher agent", "detail": "authenticated workload; fallible reasoning", "x": 80, "y": 205, "w": 280, "h": 105, "padding": 16, "ports": {"out": "bottom"}},
+    {"id": "message", "group": "producer", "type": "untrusted", "label": "Peer message proposal", "detail": "hostile prose + bounded summary; never a grant", "x": 80, "y": 435, "w": 280, "h": 120, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "registry", "group": "control", "type": "state", "label": "Source registry", "detail": "tenant • version • digest • taint • allowed use", "x": 475, "y": 205, "w": 200, "h": 110, "padding": 16, "ports": {"out": "bottom"}},
+    {"id": "gateway", "group": "control", "type": "enforcement", "label": "Peer message gateway", "detail": "identity • edge • tenant • type • replay • lifetime", "x": 475, "y": 435, "w": 200, "h": 120, "padding": 16, "ports": {"in": "left", "registry": "top", "out": "right", "audit": "bottom"}},
+    {"id": "admitted", "group": "control", "type": "state", "label": "Admitted envelope", "detail": "source refs • taint • allowed use • integrity binding", "x": 715, "y": 435, "w": 200, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right", "audit": "bottom"}},
+    {"id": "writer", "group": "consumer", "type": "untrusted", "label": "Writer agent", "detail": "receives minimized, admitted context", "x": 1030, "y": 205, "w": 290, "h": 105, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "transform", "group": "consumer", "type": "enforcement", "label": "Transformation gate", "detail": "preserve exact lineage, taint, and use ceiling", "x": 1030, "y": 435, "w": 290, "h": 120, "padding": 16, "ports": {"in": "top", "out": "bottom", "audit": "left"}},
+    {"id": "artifact", "group": "consumer", "type": "state", "label": "Derived artifact", "detail": "new prose; unchanged security metadata", "x": 1030, "y": 605, "w": 290, "h": 90, "padding": 16, "ports": {"in": "top", "out": "bottom"}},
+    {"id": "authorizer", "group": "outcomes", "type": "decision", "label": "Follow-on authorizer", "detail": "current actor • target • policy • artifact • taint", "x": 520, "y": 850, "w": 260, "h": 120, "padding": 16, "ports": {"in": "top", "out": "right", "audit": "bottom"}},
+    {"id": "effect", "group": "outcomes", "type": "enforcement", "label": "Narrow idempotent effect", "detail": "only the independently authorized operation", "x": 850, "y": 850, "w": 260, "h": 120, "padding": 16, "ports": {"in": "left", "audit": "bottom"}},
+    {"id": "audit", "group": "outcomes", "type": "state", "label": "Redacted decision receipts", "detail": "stage • reason • policy • source IDs • digests; no raw message or credentials", "x": 540, "y": 1110, "w": 700, "h": 120, "padding": 16, "ports": {"admission": "top", "transform": "top", "action": "top"}}
+  ],
+  "edges": [
+    {"id": "researcher_to_message", "from": "researcher", "from_port": "out", "to": "message", "to_port": "in", "kind": "untrusted", "label": "model-produced prose", "points": [[220, 310], [220, 435]], "label_at": [230, 372]},
+    {"id": "message_to_gateway", "from": "message", "from_port": "out", "to": "gateway", "to_port": "in", "kind": "untrusted", "label": "proposal, not authority", "points": [[360, 495], [475, 495]], "label_at": [418, 410]},
+    {"id": "registry_to_gateway", "from": "registry", "from_port": "out", "to": "gateway", "to_port": "registry", "kind": "control", "label": "current trusted lineage", "points": [[575, 315], [575, 435]], "label_at": [585, 375]},
+    {"id": "gateway_to_admitted", "from": "gateway", "from_port": "out", "to": "admitted", "to_port": "in", "kind": "enforcement", "label": "admit once", "points": [[675, 495], [715, 495]], "label_at": [695, 410]},
+    {"id": "admitted_to_writer", "from": "admitted", "from_port": "out", "to": "writer", "to_port": "in", "kind": "control", "label": "bounded data context", "points": [[915, 495], [970, 495], [970, 257], [1030, 257]], "label_at": [970, 380]},
+    {"id": "writer_to_transform", "from": "writer", "from_port": "out", "to": "transform", "to_port": "in", "kind": "untrusted", "label": "derived proposal", "points": [[1175, 310], [1175, 435]], "label_at": [1185, 375]},
+    {"id": "transform_to_artifact", "from": "transform", "from_port": "out", "to": "artifact", "to_port": "in", "kind": "enforcement", "label": "metadata preserved", "points": [[1175, 555], [1175, 605]], "label_at": [1185, 580]},
+    {"id": "artifact_to_authorizer", "from": "artifact", "from_port": "out", "to": "authorizer", "to_port": "in", "kind": "control", "label": "data-bound action proposal", "points": [[1175, 695], [1175, 800], [650, 800], [650, 850]], "label_at": [910, 825]},
+    {"id": "authorizer_to_effect", "from": "authorizer", "from_port": "out", "to": "effect", "to_port": "in", "kind": "enforcement", "label": "exact one-use decision", "points": [[780, 910], [850, 910]], "label_at": [815, 830]},
+    {"id": "gateway_to_audit", "from": "gateway", "from_port": "audit", "to": "audit", "to_port": "admission", "kind": "evidence", "label": "admission / consumption", "points": [[575, 555], [575, 740], [470, 740], [470, 1050], [700, 1050], [700, 1110]], "label_at": [585, 1035]},
+    {"id": "transform_to_audit", "from": "transform", "from_port": "audit", "to": "audit", "to_port": "transform", "kind": "evidence", "label": "lineage decision", "points": [[1030, 495], [970, 495], [970, 740], [1280, 740], [1280, 1050], [890, 1050], [890, 1110]], "label_at": [1100, 1035]},
+    {"id": "effect_to_audit", "from": "effect", "from_port": "audit", "to": "audit", "to_port": "action", "kind": "evidence", "label": "effect receipt", "points": [[980, 970], [980, 1050], [1080, 1050], [1080, 1110]], "label_at": [1030, 1040]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "A researcher agent produces a peer message whose prose remains untrusted. A trusted gateway authenticates the workload edge and checks tenant, type, source registry, replay, and lifetime before issuing an integrity-bound envelope containing source references, taint labels, and allowed uses. A writer receives minimized admitted context, while a transformation gate requires unchanged security metadata on the derived artifact. A separate authorizer validates the current actor, target, policy, artifact, and taint before one narrow idempotent effect. Every stage emits a redacted receipt without raw content or credentials."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
