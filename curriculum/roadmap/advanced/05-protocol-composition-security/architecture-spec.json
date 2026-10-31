@@ -1,0 +1,49 @@
+{
+  "id": "advanced-05-protocol-composition-security",
+  "version": "1.0",
+  "title": "Protocols Carry Messages; Composition Must Preserve Invariants",
+  "subtitle": "Authenticate every translator, exchange audience-specific authority, keep trace context non-authoritative, and release only verified provenance",
+  "canvas": {"width": 1500, "height": 1380, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "ingress", "label": "AUTHENTICATED INGRESS", "x": 40, "y": 135, "w": 300, "h": 510},
+    {"id": "chain", "label": "COMPOSED PROTOCOL CHAIN", "x": 375, "y": 135, "w": 1085, "h": 510},
+    {"id": "outcome", "label": "BOUNDED RELEASE", "x": 40, "y": 705, "w": 300, "h": 595},
+    {"id": "control", "label": "TRUSTED COMPOSITION CONTROL PLANE", "x": 375, "y": 705, "w": 1085, "h": 595}
+  ],
+  "nodes": [
+    {"id": "user", "group": "ingress", "type": "untrusted", "label": "User request", "detail": "business note + external trace are untrusted data", "x": 75, "y": 220, "w": 230, "h": 110, "padding": 16, "ports": {"out": "bottom"}},
+    {"id": "web", "group": "ingress", "type": "enforcement", "label": "Web boundary", "detail": "authenticate subject/workload • tenant • resource • scope", "x": 75, "y": 430, "w": 230, "h": 135, "padding": 16, "ports": {"in": "top", "out": "right", "audit": "bottom"}},
+    {"id": "web_a2a", "group": "chain", "type": "enforcement", "label": "Web → A2A adapter", "detail": "case.read → a2a:task:create", "x": 410, "y": 220, "w": 175, "h": 125, "padding": 16, "ports": {"in": "left", "out": "right", "control": "bottom"}},
+    {"id": "a2a", "group": "chain", "type": "control", "label": "A2A specialist", "detail": "A2A 1.0 task; content cannot set identity", "x": 625, "y": 220, "w": 175, "h": 125, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "a2a_mcp", "group": "chain", "type": "enforcement", "label": "A2A → MCP adapter", "detail": "case.read → lookup_case call", "x": 840, "y": 220, "w": 175, "h": 125, "padding": 16, "ports": {"in": "left", "out": "right", "control": "bottom"}},
+    {"id": "mcp", "group": "chain", "type": "control", "label": "MCP server", "detail": "2026-07-28 tool request; arguments stay narrow", "x": 1055, "y": 220, "w": 175, "h": 125, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "mcp_api", "group": "chain", "type": "enforcement", "label": "MCP → API adapter", "detail": "case.read → records:case:read", "x": 1055, "y": 450, "w": 175, "h": 125, "padding": 16, "ports": {"in": "top", "out": "right", "control": "bottom"}},
+    {"id": "api", "group": "chain", "type": "state", "label": "Records API", "detail": "fixed HTTPS resource; current case version", "x": 1265, "y": 450, "w": 165, "h": 125, "padding": 16, "ports": {"in": "left", "result": "bottom"}},
+    {"id": "exchange", "group": "control", "type": "decision", "label": "Policy + token exchange", "detail": "authenticate translator • exact semantic map • one audience • shorter TTL", "x": 430, "y": 810, "w": 285, "h": 140, "padding": 16, "ports": {"adapters": "top", "ledger": "right"}},
+    {"id": "ledger", "group": "control", "type": "state", "label": "Hop ledger", "detail": "root • parent • subject • actor • audience • authority • trace • reason", "x": 785, "y": 810, "w": 285, "h": 140, "padding": 16, "ports": {"exchange": "left", "release": "bottom"}},
+    {"id": "evidence", "group": "control", "type": "enforcement", "label": "Evidence admission", "detail": "producer • source/version/locator • digest • lineage • taint", "x": 1140, "y": 810, "w": 270, "h": 140, "padding": 16, "ports": {"result": "top", "release": "bottom"}},
+    {"id": "release", "group": "control", "type": "enforcement", "label": "Release gate", "detail": "current user • exact resource • complete lineage • summary only", "x": 785, "y": 1080, "w": 285, "h": 140, "padding": 16, "ports": {"ledger": "top", "evidence": "right", "out": "left"}},
+    {"id": "summary", "group": "outcome", "type": "state", "label": "Verified case summary", "detail": "one allowed field + evidence ID + source version + trace ID", "x": 75, "y": 1070, "w": 230, "h": 145, "padding": 16, "ports": {"in": "right"}}
+  ],
+  "edges": [
+    {"id": "user_to_web", "from": "user", "from_port": "out", "to": "web", "to_port": "in", "kind": "untrusted", "label": "request", "points": [[190, 330], [190, 430]], "label_at": [205, 380]},
+    {"id": "web_to_adapter", "from": "web", "from_port": "out", "to": "web_a2a", "to_port": "in", "kind": "control", "label": "authorized intent", "points": [[305, 497], [360, 497], [360, 282], [410, 282]], "label_at": [365, 390]},
+    {"id": "adapter_to_a2a", "from": "web_a2a", "from_port": "out", "to": "a2a", "to_port": "in", "kind": "control", "label": "A2A SendMessage", "points": [[585, 282], [625, 282]], "label_at": [605, 195]},
+    {"id": "a2a_to_adapter", "from": "a2a", "from_port": "out", "to": "a2a_mcp", "to_port": "in", "kind": "untrusted", "label": "bounded task intent", "points": [[800, 282], [840, 282]], "label_at": [820, 375]},
+    {"id": "adapter_to_mcp", "from": "a2a_mcp", "from_port": "out", "to": "mcp", "to_port": "in", "kind": "control", "label": "MCP tools/call", "points": [[1015, 282], [1055, 282]], "label_at": [1035, 195]},
+    {"id": "mcp_to_adapter", "from": "mcp", "from_port": "out", "to": "mcp_api", "to_port": "in", "kind": "untrusted", "label": "server-owned case ID", "points": [[1142, 345], [1142, 450]], "label_at": [1155, 397]},
+    {"id": "adapter_to_api", "from": "mcp_api", "from_port": "out", "to": "api", "to_port": "in", "kind": "control", "label": "audience-bound GET", "points": [[1230, 512], [1265, 512]], "label_at": [1247, 610]},
+    {"id": "adapters_to_exchange", "from": "a2a_mcp", "from_port": "control", "to": "exchange", "to_port": "adapters", "kind": "enforcement", "label": "same invariant at every adapter", "points": [[927, 345], [927, 680], [572, 680], [572, 810]], "label_at": [745, 665]},
+    {"id": "exchange_to_ledger", "from": "exchange", "from_port": "ledger", "to": "ledger", "to_port": "exchange", "kind": "evidence", "label": "allow / deny / error receipt", "points": [[715, 880], [785, 880]], "label_at": [750, 790]},
+    {"id": "api_to_evidence", "from": "api", "from_port": "result", "to": "evidence", "to_port": "result", "kind": "untrusted", "label": "untrusted JSON + provenance", "points": [[1347, 575], [1347, 690], [1275, 690], [1275, 810]], "label_at": [1280, 675]},
+    {"id": "ledger_to_release", "from": "ledger", "from_port": "release", "to": "release", "to_port": "ledger", "kind": "evidence", "label": "complete correlated lineage", "points": [[927, 950], [927, 1080]], "label_at": [940, 1015]},
+    {"id": "evidence_to_release", "from": "evidence", "from_port": "release", "to": "release", "to_port": "evidence", "kind": "evidence", "label": "verified evidence", "points": [[1275, 950], [1275, 1150], [1070, 1150]], "label_at": [1172, 1135]},
+    {"id": "release_to_summary", "from": "release", "from_port": "out", "to": "summary", "to_port": "in", "kind": "control", "label": "summary + evidence metadata", "points": [[785, 1150], [340, 1150], [340, 1142], [305, 1142]], "label_at": [560, 1135]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "A user request enters an authenticated web boundary. Three trusted adapters translate web authority to an A2A 1.0 task, then to an MCP 2026-07-28 tool call, then to a records HTTP API request. Every adapter authenticates its translator and calls a policy and token-exchange control that preserves the semantic case.read authority while issuing a shorter-lived, single-audience protocol scope. A content-free hop ledger links the root request, parent receipt, subject, actor, tenant, resource, audience, policy, and trace without using trace context as authority. The records API returns untrusted JSON with provenance to an evidence-admission gate. A release gate requires complete correlated lineage and releases only a verified summary with evidence ID, source version, and trace ID."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
