@@ -1,0 +1,47 @@
+{
+  "id": "advanced-03-cascade-containment",
+  "version": "1.0",
+  "title": "One Shared Cascade Budget Bounds the Entire Agent Graph",
+  "subtitle": "Workers propose outcomes; a trusted control plane owns dispatch, retry, containment, and every external effect",
+  "canvas": {"width": 1400, "height": 1400, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "proposal", "label": "UNTRUSTED ORCHESTRATION PROPOSALS", "x": 40, "y": 135, "w": 330, "h": 610},
+    {"id": "control", "label": "TRUSTED CASCADE CONTROL PLANE", "x": 405, "y": 135, "w": 545, "h": 610},
+    {"id": "workers", "label": "ISOLATED WORKER FAULT DOMAINS", "x": 985, "y": 135, "w": 375, "h": 610},
+    {"id": "outcomes", "label": "BOUNDED EFFECT + OPERATOR EVIDENCE", "x": 405, "y": 790, "w": 955, "h": 530}
+  ],
+  "nodes": [
+    {"id": "request", "group": "proposal", "type": "untrusted", "label": "Root request", "detail": "authenticated tenant + exact task type", "x": 75, "y": 205, "w": 260, "h": 100, "padding": 16, "ports": {"out": "bottom"}},
+    {"id": "supervisor", "group": "proposal", "type": "untrusted", "label": "Supervisor proposal", "detail": "worker • task • payload; never owns retry or effects", "x": 75, "y": 435, "w": 260, "h": 125, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "contracts", "group": "control", "type": "enforcement", "label": "Edge contract gate", "detail": "identity • tenant • parent • type • payload binding", "x": 445, "y": 205, "w": 215, "h": 120, "padding": 16, "ports": {"in": "left", "out": "bottom", "audit": "right"}},
+    {"id": "budget", "group": "control", "type": "decision", "label": "Shared cascade budget", "detail": "depth • fan-out • dispatch • affected components", "x": 445, "y": 435, "w": 215, "h": 125, "padding": 16, "ports": {"in": "top", "out": "right", "audit": "bottom"}},
+    {"id": "resilience", "group": "control", "type": "enforcement", "label": "Retry owner + isolation", "detail": "transient-only retry • circuit • queue bulkhead", "x": 700, "y": 435, "w": 210, "h": 125, "padding": 16, "ports": {"in": "left", "dispatch": "right", "feedback": "top", "audit": "bottom"}},
+    {"id": "containment", "group": "control", "type": "decision", "label": "Containment switch", "detail": "poison signal clears queues and blocks effects", "x": 700, "y": 205, "w": 210, "h": 120, "padding": 16, "ports": {"in": "right", "stop": "bottom", "audit": "left"}},
+    {"id": "research", "group": "workers", "type": "state", "label": "Research queue", "detail": "capacity 2 • isolated circuit", "x": 1025, "y": 195, "w": 295, "h": 100, "padding": 16, "ports": {"in": "left", "out": "left"}},
+    {"id": "billing", "group": "workers", "type": "state", "label": "Billing queue", "detail": "capacity 2 • isolated circuit", "x": 1025, "y": 405, "w": 295, "h": 100, "padding": 16, "ports": {"in": "left", "out": "left"}},
+    {"id": "ticket", "group": "workers", "type": "state", "label": "Ticket / message queue", "detail": "capacity 2 • narrow permissions", "x": 1025, "y": 615, "w": 295, "h": 100, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "effect", "group": "outcomes", "type": "enforcement", "label": "Idempotent effect gate", "detail": "successful attempt • exact target • atomic key", "x": 520, "y": 920, "w": 300, "h": 125, "padding": 16, "ports": {"in": "top", "out": "right", "audit": "bottom"}},
+    {"id": "receipts", "group": "outcomes", "type": "state", "label": "Redacted decision receipts", "detail": "stage • reason • policy • run/attempt IDs • logical step; no raw content", "x": 900, "y": 920, "w": 360, "h": 125, "padding": 16, "ports": {"effect": "left", "control": "top"}}
+  ],
+  "edges": [
+    {"id": "request_to_supervisor", "from": "request", "from_port": "out", "to": "supervisor", "to_port": "in", "kind": "untrusted", "label": "bounded root task", "points": [[205, 305], [205, 435]], "label_at": [215, 370]},
+    {"id": "supervisor_to_contracts", "from": "supervisor", "from_port": "out", "to": "contracts", "to_port": "in", "kind": "untrusted", "label": "dispatch proposal", "points": [[335, 497], [390, 497], [390, 265], [445, 265]], "label_at": [390, 385]},
+    {"id": "contracts_to_budget", "from": "contracts", "from_port": "out", "to": "budget", "to_port": "in", "kind": "enforcement", "label": "bound edge", "points": [[552, 325], [552, 435]], "label_at": [562, 380]},
+    {"id": "budget_to_resilience", "from": "budget", "from_port": "out", "to": "resilience", "to_port": "in", "kind": "enforcement", "label": "reserve once", "points": [[660, 497], [700, 497]], "label_at": [680, 415]},
+    {"id": "resilience_to_research", "from": "resilience", "from_port": "dispatch", "to": "research", "to_port": "in", "kind": "control", "label": "isolated enqueue", "points": [[910, 497], [970, 497], [970, 245], [1025, 245]], "label_at": [970, 355]},
+    {"id": "resilience_to_billing", "from": "resilience", "from_port": "dispatch", "to": "billing", "to_port": "in", "kind": "control", "label": "isolated enqueue", "points": [[910, 497], [970, 497], [970, 455], [1025, 455]], "label_at": [950, 440]},
+    {"id": "resilience_to_ticket", "from": "resilience", "from_port": "dispatch", "to": "ticket", "to_port": "in", "kind": "control", "label": "isolated enqueue", "points": [[910, 497], [970, 497], [970, 665], [1025, 665]], "label_at": [970, 585]},
+    {"id": "research_feedback", "from": "research", "from_port": "out", "to": "resilience", "to_port": "feedback", "kind": "evidence", "label": "typed outcome", "points": [[1025, 245], [935, 245], [935, 380], [805, 380], [805, 435]], "label_at": [855, 350]},
+    {"id": "billing_poison", "from": "billing", "from_port": "out", "to": "containment", "to_port": "in", "kind": "untrusted", "label": "poison signal", "points": [[1025, 455], [965, 455], [965, 265], [910, 265]], "label_at": [980, 365]},
+    {"id": "containment_to_resilience", "from": "containment", "from_port": "stop", "to": "resilience", "to_port": "feedback", "kind": "enforcement", "label": "stop + clear queues", "points": [[805, 325], [805, 435]], "label_at": [815, 380]},
+    {"id": "ticket_to_effect", "from": "ticket", "from_port": "out", "to": "effect", "to_port": "in", "kind": "control", "label": "successful attempt proposal", "points": [[1172, 715], [1172, 850], [670, 850], [670, 920]], "label_at": [920, 875]},
+    {"id": "effect_to_receipts", "from": "effect", "from_port": "out", "to": "receipts", "to_port": "effect", "kind": "evidence", "label": "atomic effect receipt", "points": [[820, 982], [900, 982]], "label_at": [860, 900]},
+    {"id": "controls_to_receipts", "from": "budget", "from_port": "audit", "to": "receipts", "to_port": "control", "kind": "evidence", "label": "allow / stop / error", "points": [[552, 560], [552, 770], [1080, 770], [1080, 920]], "label_at": [820, 755]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "A root request reaches an untrusted supervisor that may only propose a dispatch. A trusted control plane validates the workload edge and reserves from one shared depth, fan-out, dispatch, and affected-component budget. One retry owner admits only transient retries and combines per-component circuits with queue bulkheads. Research, billing, and ticket or messaging workers are isolated fault domains with no worker-to-worker edges. A poison signal activates a containment switch that clears queues and blocks effects. Only a successful bound attempt can reach the atomic idempotent effect gate, and all decisions emit content-free receipts."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}

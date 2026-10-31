@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1400" viewBox="0 0 1400 1400" role="img" aria-labelledby="title desc">
+<title id="title">One Shared Cascade Budget Bounds the Entire Agent Graph</title>
+<desc id="desc">A root request reaches an untrusted supervisor that may only propose a dispatch. A trusted control plane validates the workload edge and reserves from one shared depth, fan-out, dispatch, and affected-component budget. One retry owner admits only transient retries and combines per-component circuits with queue bulkheads. Research, billing, and ticket or messaging workers are isolated fault domains with no worker-to-worker edges. A poison signal activates a containment switch that clears queues and blocks effects. Only a successful bound attempt can reach the atomic idempotent effect gate, and all decisions emit content-free receipts.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">One Shared Cascade Budget Bounds the Entire Agent Graph</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Workers propose outcomes; a trusted control plane owns dispatch, retry, containment, and every external effect</text>
+<rect x="40" y="135" width="330" height="610" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">UNTRUSTED ORCHESTRATION PROPOSALS</text>
+<rect x="405" y="135" width="545" height="610" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="421" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED CASCADE CONTROL PLANE</text>
+<rect x="985" y="135" width="375" height="610" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="1001" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">ISOLATED WORKER FAULT DOMAINS</text>
+<rect x="405" y="790" width="955" height="530" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="421" y="822" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">BOUNDED EFFECT + OPERATOR EVIDENCE</text>
+<polyline points="205,305 205,435" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="153.75" y="357" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="215" y="370" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">bounded root task</text>
+<polyline points="335,497 390,497 390,265 445,265" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="328.75" y="372" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="390" y="385" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">dispatch proposal</text>
+<polyline points="552,325 552,435" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="523.5" y="367" width="77.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="562" y="380" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">bound edge</text>
+<polyline points="660,497 700,497" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="635.0" y="402" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="680" y="415" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">reserve once</text>
+<polyline points="910,497 970,497 970,245 1025,245" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="912.0" y="342" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="970" y="355" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">isolated enqueue</text>
+<polyline points="910,497 970,497 970,455 1025,455" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="892.0" y="427" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="950" y="440" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">isolated enqueue</text>
+<polyline points="910,497 970,497 970,665 1025,665" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="912.0" y="572" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="970" y="585" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">isolated enqueue</text>
+<polyline points="1025,245 935,245 935,380 805,380 805,435" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="806.75" y="337" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="855" y="350" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">typed outcome</text>
+<polyline points="1025,455 965,455 965,265 910,265" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="931.75" y="352" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="980" y="365" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">poison signal</text>
+<polyline points="805,325 805,435" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="747.25" y="367" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="815" y="380" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">stop + clear queues</text>
+<polyline points="1172,715 1172,850 670,850 670,920" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="826.25" y="862" width="187.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="920" y="875" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">successful attempt proposal</text>
+<polyline points="820,982 900,982" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="785.75" y="887" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="860" y="900" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">atomic effect receipt</text>
+<polyline points="552,560 552,770 1080,770 1080,920" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="749.0" y="742" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="820" y="755" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">allow / stop / error</text>
+<rect x="75" y="205" width="260" height="100" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="205.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Root request</text>
+<text x="205.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticated tenant + exact</text>
+<text x="205.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">task type</text>
+<rect x="75" y="435" width="260" height="125" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="205.0" y="466" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Supervisor proposal</text>
+<text x="205.0" y="490" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">worker • task • payload;</text>
+<text x="205.0" y="506" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">never owns retry or effects</text>
+<rect x="445" y="205" width="215" height="120" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="552.5" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Edge contract gate</text>
+<text x="552.5" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identity • tenant •</text>
+<text x="552.5" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">parent • type • payload</text>
+<text x="552.5" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">binding</text>
+<rect x="445" y="435" width="215" height="125" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="552.5" y="466" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Shared cascade budget</text>
+<text x="552.5" y="490" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">depth • fan-out •</text>
+<text x="552.5" y="506" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">dispatch • affected</text>
+<text x="552.5" y="522" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">components</text>
+<rect x="700" y="435" width="210" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="805.0" y="466" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Retry owner + isolation</text>
+<text x="805.0" y="490" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">transient-only retry •</text>
+<text x="805.0" y="506" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">circuit • queue</text>
+<text x="805.0" y="522" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">bulkhead</text>
+<rect x="700" y="205" width="210" height="120" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="805.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Containment switch</text>
+<text x="805.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">poison signal clears</text>
+<text x="805.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">queues and blocks</text>
+<text x="805.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">effects</text>
+<rect x="1025" y="195" width="295" height="100" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1172.5" y="226" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Research queue</text>
+<text x="1172.5" y="250" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">capacity 2 • isolated circuit</text>
+<rect x="1025" y="405" width="295" height="100" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1172.5" y="436" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Billing queue</text>
+<text x="1172.5" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">capacity 2 • isolated circuit</text>
+<rect x="1025" y="615" width="295" height="100" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1172.5" y="646" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Ticket / message queue</text>
+<text x="1172.5" y="670" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">capacity 2 • narrow permissions</text>
+<rect x="520" y="920" width="300" height="125" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="670.0" y="951" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Idempotent effect gate</text>
+<text x="670.0" y="975" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">successful attempt • exact target</text>
+<text x="670.0" y="991" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• atomic key</text>
+<rect x="900" y="920" width="360" height="125" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1080.0" y="951" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Redacted decision receipts</text>
+<text x="1080.0" y="975" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stage • reason • policy • run/attempt IDs</text>
+<text x="1080.0" y="991" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• logical step; no raw content</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
