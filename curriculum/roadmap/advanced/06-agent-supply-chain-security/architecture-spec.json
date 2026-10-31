@@ -1,0 +1,51 @@
+{
+  "id": "advanced-06-agent-supply-chain-security",
+  "version": "1.0",
+  "title": "Verify Before Activation; Recover by Immutable Digest",
+  "subtitle": "Treat provenance as authenticated evidence, apply independent release policy, stage the rollout, and consume an exact rollback guard",
+  "canvas": {"width": 1500, "height": 1380, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "build", "label": "SOURCE AND BUILD BOUNDARY", "x": 40, "y": 135, "w": 430, "h": 500},
+    {"id": "evidence", "label": "IMMUTABLE RELEASE EVIDENCE", "x": 505, "y": 135, "w": 955, "h": 500},
+    {"id": "release", "label": "TRUSTED RELEASE CONTROL PLANE", "x": 40, "y": 700, "w": 940, "h": 600},
+    {"id": "runtime", "label": "RUNTIME AND RECOVERY", "x": 1015, "y": 700, "w": 445, "h": 600}
+  ],
+  "nodes": [
+    {"id": "source", "group": "build", "type": "state", "label": "Pinned source + workflow", "detail": "repository • commit • reviewed workflow digest", "x": 80, "y": 225, "w": 180, "h": 130, "padding": 16, "ports": {"out": "right"}},
+    {"id": "builder", "group": "build", "type": "control", "label": "Isolated builder", "detail": "builder identity • resolved materials", "x": 285, "y": 225, "w": 150, "h": 130, "padding": 16, "ports": {"in": "left", "artifact": "right", "evidence": "bottom"}},
+    {"id": "artifact", "group": "evidence", "type": "state", "label": "Artifact by digest", "detail": "prompt • policy • plugin • MCP server • adapter", "x": 545, "y": 215, "w": 205, "h": 140, "padding": 16, "ports": {"in": "left", "verify": "bottom"}},
+    {"id": "provenance", "group": "evidence", "type": "state", "label": "Signed provenance", "detail": "in-toto Statement v1 • SLSA provenance v1 • signer", "x": 790, "y": 215, "w": 205, "h": 140, "padding": 16, "ports": {"in": "left", "verify": "bottom"}},
+    {"id": "inventory", "group": "evidence", "type": "state", "label": "Inventory + risk evidence", "detail": "CycloneDX 1.7 • pinned dependencies • digest-bound scan", "x": 1035, "y": 215, "w": 205, "h": 140, "padding": 16, "ports": {"in": "left", "verify": "bottom"}},
+    {"id": "candidate", "group": "evidence", "type": "untrusted", "label": "Release candidate", "detail": "structured bundle is untrusted until every claim is checked", "x": 1280, "y": 410, "w": 145, "h": 145, "padding": 16, "ports": {"evidence": "top", "verify": "bottom"}},
+    {"id": "policy", "group": "release", "type": "decision", "label": "Trust + release policy", "detail": "signer/issuer • builder/source • capabilities • lifecycle • risk", "x": 90, "y": 810, "w": 250, "h": 150, "padding": 16, "ports": {"gate": "right"}},
+    {"id": "gate", "group": "release", "type": "enforcement", "label": "Verification gate", "detail": "signature • digest • provenance • inventory • scan • replay", "x": 410, "y": 810, "w": 220, "h": 150, "padding": 16, "ports": {"policy": "left", "candidate": "top", "canary": "right", "audit": "bottom"}},
+    {"id": "canary", "group": "release", "type": "control", "label": "Canary deployment", "detail": "verified digest only • narrow exposure • no direct promotion", "x": 700, "y": 810, "w": 220, "h": 150, "padding": 16, "ports": {"gate": "left", "observation": "bottom", "promote": "right"}},
+    {"id": "observation", "group": "release", "type": "state", "label": "Bounded observation", "detail": "sample count • errors • forbidden actions • provenance failures", "x": 405, "y": 1085, "w": 245, "h": 145, "padding": 16, "ports": {"canary": "top", "promote": "right"}},
+    {"id": "promotion", "group": "runtime", "type": "enforcement", "label": "Promotion gate", "detail": "current policy • exact digest • healthy canary evidence", "x": 1060, "y": 790, "w": 170, "h": 145, "padding": 16, "ports": {"canary": "left", "observation": "bottom", "active": "right"}},
+    {"id": "active", "group": "runtime", "type": "state", "label": "Active release", "detail": "production points to one verified immutable digest", "x": 1265, "y": 790, "w": 160, "h": 145, "padding": 16, "ports": {"in": "left", "rollback": "bottom"}},
+    {"id": "rollback", "group": "runtime", "type": "enforcement", "label": "One-use rollback guard", "detail": "incident • failed digest • last-known-good digest • expiry", "x": 1060, "y": 1080, "w": 175, "h": 150, "padding": 16, "ports": {"active": "top", "restore": "right"}},
+    {"id": "known_good", "group": "runtime", "type": "state", "label": "Last known good", "detail": "restored by digest; guard consumed atomically", "x": 1270, "y": 1080, "w": 155, "h": 150, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "source_to_builder", "from": "source", "from_port": "out", "to": "builder", "to_port": "in", "kind": "control", "label": "immutable inputs", "points": [[260, 290], [285, 290]], "label_at": [272, 190]},
+    {"id": "builder_to_artifact", "from": "builder", "from_port": "artifact", "to": "artifact", "to_port": "in", "kind": "control", "label": "digest-addressed output", "points": [[435, 290], [545, 290]], "label_at": [490, 190]},
+    {"id": "builder_to_provenance", "from": "builder", "from_port": "evidence", "to": "provenance", "to_port": "in", "kind": "evidence", "label": "authenticated build facts", "points": [[360, 355], [360, 410], [770, 410], [770, 285], [790, 285]], "label_at": [570, 395]},
+    {"id": "artifact_to_inventory", "from": "artifact", "from_port": "verify", "to": "inventory", "to_port": "in", "kind": "evidence", "label": "digest-bound inventory + scan", "points": [[647, 355], [647, 470], [1015, 470], [1015, 285], [1035, 285]], "label_at": [830, 455]},
+    {"id": "evidence_to_candidate", "from": "inventory", "from_port": "verify", "to": "candidate", "to_port": "evidence", "kind": "untrusted", "label": "claims bundled", "points": [[1137, 355], [1137, 390], [1352, 390], [1352, 410]], "label_at": [1245, 375]},
+    {"id": "candidate_to_gate", "from": "candidate", "from_port": "verify", "to": "gate", "to_port": "candidate", "kind": "untrusted", "label": "verify, never trust by presence", "points": [[1352, 555], [1352, 665], [520, 665], [520, 810]], "label_at": [930, 650]},
+    {"id": "policy_to_gate", "from": "policy", "from_port": "gate", "to": "gate", "to_port": "policy", "kind": "enforcement", "label": "independent acceptance policy", "points": [[340, 885], [410, 885]], "label_at": [375, 780]},
+    {"id": "gate_to_canary", "from": "gate", "from_port": "canary", "to": "canary", "to_port": "gate", "kind": "control", "label": "verified release receipt", "points": [[630, 885], [700, 885]], "label_at": [665, 780]},
+    {"id": "canary_to_observation", "from": "canary", "from_port": "observation", "to": "observation", "to_port": "canary", "kind": "evidence", "label": "runtime evidence", "points": [[810, 960], [810, 1035], [527, 1035], [527, 1085]], "label_at": [668, 1020]},
+    {"id": "canary_to_promotion", "from": "canary", "from_port": "promote", "to": "promotion", "to_port": "canary", "kind": "control", "label": "exact deployment", "points": [[920, 885], [1060, 885]], "label_at": [990, 780]},
+    {"id": "observation_to_promotion", "from": "observation", "from_port": "promote", "to": "promotion", "to_port": "observation", "kind": "evidence", "label": "threshold evidence", "points": [[650, 1157], [1010, 1157], [1010, 1000], [1145, 1000], [1145, 935]], "label_at": [830, 1142]},
+    {"id": "promotion_to_active", "from": "promotion", "from_port": "active", "to": "active", "to_port": "in", "kind": "control", "label": "activate digest", "points": [[1230, 862], [1265, 862]], "label_at": [1247, 755]},
+    {"id": "active_to_rollback", "from": "active", "from_port": "rollback", "to": "rollback", "to_port": "active", "kind": "enforcement", "label": "health incident", "points": [[1345, 935], [1345, 1030], [1147, 1030], [1147, 1080]], "label_at": [1245, 1015]},
+    {"id": "rollback_to_good", "from": "rollback", "from_port": "restore", "to": "known_good", "to_port": "in", "kind": "control", "label": "restore + consume", "points": [[1235, 1155], [1270, 1155]], "label_at": [1252, 1050]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "Pinned source and workflow inputs enter an isolated builder, which produces a digest-addressed agent component, signed in-toto and SLSA provenance, and digest-bound inventory and scan evidence. The bundled release candidate remains untrusted until an independent verification gate checks signature, signer, issuer, builder, source, digest, dependencies, capability manifest, lifecycle, risk, and replay state against trusted policy. A verified receipt permits only a canary deployment. A promotion gate binds healthy runtime observations to the exact deployment before production activation. A health incident can issue a short-lived one-use rollback guard binding the failed digest to a last-known-good immutable digest, and successful restoration consumes the guard."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}

@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1380" viewBox="0 0 1500 1380" role="img" aria-labelledby="title desc">
+<title id="title">Verify Before Activation; Recover by Immutable Digest</title>
+<desc id="desc">Pinned source and workflow inputs enter an isolated builder, which produces a digest-addressed agent component, signed in-toto and SLSA provenance, and digest-bound inventory and scan evidence. The bundled release candidate remains untrusted until an independent verification gate checks signature, signer, issuer, builder, source, digest, dependencies, capability manifest, lifecycle, risk, and replay state against trusted policy. A verified receipt permits only a canary deployment. A promotion gate binds healthy runtime observations to the exact deployment before production activation. A health incident can issue a short-lived one-use rollback guard binding the failed digest to a last-known-good immutable digest, and successful restoration consumes the guard.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Verify Before Activation; Recover by Immutable Digest</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Treat provenance as authenticated evidence, apply independent release policy, stage the rollout, and consume an exact rollback guard</text>
+<rect x="40" y="135" width="430" height="500" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">SOURCE AND BUILD BOUNDARY</text>
+<rect x="505" y="135" width="955" height="500" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="521" y="167" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">IMMUTABLE RELEASE EVIDENCE</text>
+<rect x="40" y="700" width="940" height="600" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="732" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED RELEASE CONTROL PLANE</text>
+<rect x="1015" y="700" width="445" height="600" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="1031" y="732" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">RUNTIME AND RECOVERY</text>
+<polyline points="260,290 285,290" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="214.0" y="177" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="272" y="190" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">immutable inputs</text>
+<polyline points="435,290 545,290" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="409.25" y="177" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="490" y="190" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">digest-addressed output</text>
+<polyline points="360,355 360,410 770,410 770,285 790,285" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="482.75" y="382" width="174.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="570" y="395" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">authenticated build facts</text>
+<polyline points="647,355 647,470 1015,470 1015,285 1035,285" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="729.75" y="442" width="200.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="830" y="455" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">digest-bound inventory + scan</text>
+<polyline points="1137,355 1137,390 1352,390 1352,410" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1193.5" y="362" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1245" y="375" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">claims bundled</text>
+<polyline points="1352,555 1352,665 520,665 520,810" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="823.25" y="637" width="213.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="930" y="650" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">verify, never trust by presence</text>
+<polyline points="340,885 410,885" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="274.75" y="767" width="200.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="375" y="780" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">independent acceptance policy</text>
+<polyline points="630,885 700,885" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="581.0" y="767" width="168.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="665" y="780" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">verified release receipt</text>
+<polyline points="810,960 810,1035 527,1035 527,1085" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="610.0" y="1007" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="668" y="1020" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">runtime evidence</text>
+<polyline points="920,885 1060,885" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="932.0" y="767" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="990" y="780" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">exact deployment</text>
+<polyline points="650,1157 1010,1157 1010,1000 1145,1000 1145,935" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="765.5" y="1129" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="830" y="1142" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">threshold evidence</text>
+<polyline points="1230,862 1265,862" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1192.25" y="742" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1247" y="755" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">activate digest</text>
+<polyline points="1345,935 1345,1030 1147,1030 1147,1080" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1190.25" y="1002" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1245" y="1015" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">health incident</text>
+<polyline points="1235,1155 1270,1155" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1190.75" y="1037" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1252" y="1050" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">restore + consume</text>
+<rect x="80" y="225" width="180" height="130" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="170.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Pinned source +</text>
+<text x="170.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">workflow</text>
+<text x="170.0" y="299" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">repository • commit</text>
+<text x="170.0" y="315" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• reviewed workflow</text>
+<text x="170.0" y="331" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest</text>
+<rect x="285" y="225" width="150" height="130" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="360.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Isolated</text>
+<text x="360.0" y="275" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">builder</text>
+<text x="360.0" y="299" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">builder</text>
+<text x="360.0" y="315" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identity •</text>
+<text x="360.0" y="331" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">resolved</text>
+<text x="360.0" y="347" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">materials</text>
+<rect x="545" y="215" width="205" height="140" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="647.5" y="246" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Artifact by digest</text>
+<text x="647.5" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">prompt • policy •</text>
+<text x="647.5" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">plugin • MCP server •</text>
+<text x="647.5" y="302" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">adapter</text>
+<rect x="790" y="215" width="205" height="140" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="892.5" y="246" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Signed provenance</text>
+<text x="892.5" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">in-toto Statement v1 •</text>
+<text x="892.5" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">SLSA provenance v1 •</text>
+<text x="892.5" y="302" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signer</text>
+<rect x="1035" y="215" width="205" height="140" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1137.5" y="246" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Inventory + risk</text>
+<text x="1137.5" y="265" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">evidence</text>
+<text x="1137.5" y="289" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">CycloneDX 1.7 • pinned</text>
+<text x="1137.5" y="305" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">dependencies • digest-</text>
+<text x="1137.5" y="321" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">bound scan</text>
+<rect x="1280" y="410" width="145" height="145" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="1352.5" y="441" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Release</text>
+<text x="1352.5" y="460" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">candidate</text>
+<text x="1352.5" y="484" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">structured</text>
+<text x="1352.5" y="500" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">bundle is</text>
+<text x="1352.5" y="516" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">untrusted until</text>
+<text x="1352.5" y="532" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">every claim is</text>
+<text x="1352.5" y="548" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">checked</text>
+<rect x="90" y="810" width="250" height="150" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="215.0" y="841" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trust + release policy</text>
+<text x="215.0" y="865" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signer/issuer •</text>
+<text x="215.0" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">builder/source •</text>
+<text x="215.0" y="897" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">capabilities • lifecycle •</text>
+<text x="215.0" y="913" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">risk</text>
+<rect x="410" y="810" width="220" height="150" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="520.0" y="841" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Verification gate</text>
+<text x="520.0" y="865" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signature • digest •</text>
+<text x="520.0" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">provenance • inventory •</text>
+<text x="520.0" y="897" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">scan • replay</text>
+<rect x="700" y="810" width="220" height="150" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="810.0" y="841" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Canary deployment</text>
+<text x="810.0" y="865" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">verified digest only •</text>
+<text x="810.0" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">narrow exposure • no</text>
+<text x="810.0" y="897" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">direct promotion</text>
+<rect x="405" y="1085" width="245" height="145" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="527.5" y="1116" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Bounded observation</text>
+<text x="527.5" y="1140" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">sample count • errors •</text>
+<text x="527.5" y="1156" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">forbidden actions •</text>
+<text x="527.5" y="1172" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">provenance failures</text>
+<rect x="1060" y="790" width="170" height="145" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1145.0" y="821" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Promotion gate</text>
+<text x="1145.0" y="845" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">current policy •</text>
+<text x="1145.0" y="861" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact digest •</text>
+<text x="1145.0" y="877" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">healthy canary</text>
+<text x="1145.0" y="893" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">evidence</text>
+<rect x="1265" y="790" width="160" height="145" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1345.0" y="821" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Active release</text>
+<text x="1345.0" y="845" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">production points</text>
+<text x="1345.0" y="861" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">to one verified</text>
+<text x="1345.0" y="877" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">immutable digest</text>
+<rect x="1060" y="1080" width="175" height="150" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1147.5" y="1111" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">One-use rollback</text>
+<text x="1147.5" y="1130" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">guard</text>
+<text x="1147.5" y="1154" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">incident • failed</text>
+<text x="1147.5" y="1170" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest • last-</text>
+<text x="1147.5" y="1186" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">known-good digest</text>
+<text x="1147.5" y="1202" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• expiry</text>
+<rect x="1270" y="1080" width="155" height="150" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1347.5" y="1111" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Last known good</text>
+<text x="1347.5" y="1135" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">restored by</text>
+<text x="1347.5" y="1151" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest; guard</text>
+<text x="1347.5" y="1167" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">consumed</text>
+<text x="1347.5" y="1183" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">atomically</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="1340" r="5" fill="#2F6BFF"/><text x="62" y="1344">trusted control</text><circle cx="190" cy="1340" r="5" fill="#7667E8"/><text x="202" y="1344">untrusted data/proposal</text><circle cx="385" cy="1340" r="5" fill="#16A3A5"/><text x="397" y="1344">decision/enforcement</text></g>
+</svg>
