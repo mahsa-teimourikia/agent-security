@@ -53,7 +53,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [06](roadmap/advanced/06-agent-supply-chain-security/) **Published** | signed SLSA/in-toto provenance, immutable artifacts and dependencies, least-privilege manifests, CycloneDX inventory, risk evidence, Sigstore adapter, staged rollout, one-use rollback, notebook, diagram, and tests |
 | [07](roadmap/advanced/07-agent-security-testing-and-fuzzing/) **Published** | application-owned security oracles, labelled valid/attack/boundary/failure corpora, Hypothesis properties and state machines, semantic shrinking, replay and race testing, notebook, diagram, and tests |
 | [08](roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation/) **Published** | version-bound red-team campaigns, independent effect verification, PyRIT adapter, disjoint security/utility metrics, finding regressions, notebook, diagram, and tests |
-| [09](roadmap/advanced/09-agent-security-observability-and-runtime-assurance/) | observability and runtime assurance |
+| [09](roadmap/advanced/09-agent-security-observability-and-runtime-assurance/) **Published** | authoritative event admission, privacy minimization, trace completeness, policy/effect/approval/budget monitors, explicit healthy/degraded/violated/unknown states, real OpenTelemetry Python SDK adapter, notebook, diagram, and tests |
 | [10](roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection/) | threat hunting and anomaly detection |
 
 ## Production / enterprise sequence (pilot labs and planned topics)

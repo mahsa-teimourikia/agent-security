@@ -156,6 +156,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "Target text cannot erase a host-observed unauthorized effect. Verified harm blocks release; missing measurement evidence remains visible but does not weaken that blocker.",
   }, "adversarial_evaluation"),
+  lesson("r-a09", "Advanced", "09", "Agent security observability and runtime assurance", "Turn minimized runtime observations into evidence-backed assurance by authenticating producers, binding events to exact identity and versions, checking trace completeness, and monitoring real policy and effect boundaries.", "Use a real OpenTelemetry SDK adapter without granting telemetry authority; distinguish healthy, degraded, violated, and unknown states; detect orphan and cross-tenant effects; preserve privacy; compute exact metrics; and issue bounded idempotent response receipts.", "roadmap/advanced/09-agent-security-observability-and-runtime-assurance", "runtime_assurance", {
+    prompt: "An agent reports that it refused an action, but the collector was unavailable, the policy decision is missing, and no independent effect receipt is present. What should runtime assurance conclude?",
+    options: ["HEALTHY because the agent refused", "VIOLATED because missing telemetry proves an attack", "UNKNOWN because neither authorization nor effect evidence is complete; alert and reconcile authoritative state"],
+    correct: 2,
+    explanation: "Agent text is an untrusted self-report, while missing policy and effect evidence prevents proof of either safety or harm. Runtime assurance must preserve UNKNOWN, alert on the visibility failure, and reconcile authoritative state before retry or closure.",
+  }, "runtime_assurance"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -215,7 +221,7 @@ export const publishedLessons = [
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
-  { level: "Distributed adversaries", range: "01–10", status: "8 published · 2 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
+  { level: "Distributed adversaries", range: "01–10", status: "9 published · 1 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, runtime assurance, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
@@ -247,7 +253,7 @@ export const roadmapCourses = [
   road("A06", "06", "Distributed adversaries", "Agent supply-chain security", "roadmap/advanced/06-agent-supply-chain-security", "Published", "README · signed release gate · official Sigstore adapter · notebook · diagram · tests · checkpoint", "r-a06"),
   road("A07", "07", "Distributed adversaries", "Agent security testing and fuzzing", "roadmap/advanced/07-agent-security-testing-and-fuzzing", "Published", "README · security oracle lab · Hypothesis adapter · notebook · diagram · tests · checkpoint", "r-a07"),
   road("A08", "08", "Distributed adversaries", "Red teaming and adversarial evaluation", "roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation", "Published", "README · campaign lab · PyRIT adapter · notebook · diagram · tests · checkpoint", "r-a08"),
-  road("A09", "09", "Distributed adversaries", "Observability and runtime assurance", "roadmap/advanced/09-agent-security-observability-and-runtime-assurance", "Planned", "Release contract · needs lab, notebook, tests"),
+  road("A09", "09", "Distributed adversaries", "Observability and runtime assurance", "roadmap/advanced/09-agent-security-observability-and-runtime-assurance", "Published", "README · runtime-assurance lab · OpenTelemetry adapter · notebook · diagram · tests · checkpoint", "r-a09"),
   road("A10", "10", "Distributed adversaries", "Threat hunting and anomaly detection", "roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection", "Planned", "Release contract · needs lab, notebook, tests"),
   road("E01", "01", "Enterprise operations", "Secure long-running agents", "roadmap/enterprise/01-secure-long-running-agents", "Planned", "Release contract · needs lab, notebook, tests"),
   road("E02", "02", "Enterprise operations", "Kill switches and safe degradation", "roadmap/enterprise/02-kill-switches-revocation-and-safe-degradation", "Pilot", "README · notebook · needs course adapter and tests"),
