@@ -1,0 +1,50 @@
+{
+  "id": "advanced-10-threat-hunting-behavioral-anomaly-detection",
+  "version": "1.0",
+  "title": "Threat Hunting Produces Evidence-Linked Hypotheses, Not Response Authority",
+  "subtitle": "Partition admitted evidence, apply explicit windows and baselines, preserve UNKNOWN, and authorize response separately",
+  "canvas": {"width": 1500, "height": 1260, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "evidence", "label": "ADMITTED RUNTIME EVIDENCE", "x": 40, "y": 130, "w": 1420, "h": 290},
+    {"id": "hunt", "label": "TENANT-SCOPED HUNT PIPELINE", "x": 40, "y": 480, "w": 1420, "h": 320},
+    {"id": "operations", "label": "ACCOUNTABLE INVESTIGATION AND RESPONSE", "x": 40, "y": 860, "w": 1420, "h": 300}
+  ],
+  "nodes": [
+    {"id": "agent", "group": "evidence", "type": "untrusted", "label": "Agent and model", "detail": "proposals • summaries • scores; never identity or authority", "x": 90, "y": 220, "w": 210, "h": 130, "padding": 16, "ports": {"out": "right"}},
+    {"id": "runtime", "group": "evidence", "type": "state", "label": "A09 evidence admission", "detail": "authenticated producer • minimized fields • version binding", "x": 360, "y": 220, "w": 250, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "store", "group": "evidence", "type": "state", "label": "Protected evidence store", "detail": "stable event IDs • tenant • subject • case • event time", "x": 670, "y": 220, "w": 250, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "health", "group": "evidence", "type": "decision", "label": "Evidence health", "detail": "complete • gap • duplicate • malformed • dependency failure", "x": 980, "y": 220, "w": 280, "h": 130, "padding": 16, "ports": {"in": "left", "hunt": "bottom", "unknown": "right"}},
+    {"id": "unknown", "group": "evidence", "type": "enforcement", "label": "UNKNOWN", "detail": "visibility failure is not safety; alert and reconcile", "x": 1310, "y": 220, "w": 110, "h": 130, "padding": 12, "ports": {"in": "left", "record": "bottom"}},
+
+    {"id": "partition", "group": "hunt", "type": "control", "label": "Partition and window", "detail": "one tenant + subject + case • 15-minute event-time window", "x": 100, "y": 580, "w": 250, "h": 140, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "features", "group": "hunt", "type": "state", "label": "Deterministic features", "detail": "resource breadth • peer fan-out • denial order • canonical host", "x": 410, "y": 580, "w": 250, "h": 140, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "detectors", "group": "hunt", "type": "decision", "label": "Versioned detectors", "detail": "rules • Sigma • statistics • graph • model candidates", "x": 720, "y": 580, "w": 250, "h": 140, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "hypothesis", "group": "hunt", "type": "enforcement", "label": "Evidence-linked hypothesis", "detail": "rule + feature + baseline versions • evidence IDs • event-time latency", "x": 1030, "y": 580, "w": 280, "h": 140, "padding": 16, "ports": {"in": "left", "analyst": "bottom"}},
+
+    {"id": "analyst", "group": "operations", "type": "control", "label": "Analyst investigation", "detail": "tenant-authorized access • confirm / benign / inconclusive", "x": 200, "y": 960, "w": 250, "h": 135, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "authorize", "group": "operations", "type": "enforcement", "label": "Separate response authorization", "detail": "current role • exact scope • policy • expiry • idempotency", "x": 520, "y": 960, "w": 280, "h": 135, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "execute", "group": "operations", "type": "control", "label": "Bounded executor", "detail": "one approved operation • no model-selected authority", "x": 870, "y": 960, "w": 230, "h": 135, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "verify", "group": "operations", "type": "state", "label": "Effect verification and record", "detail": "receipt • postcondition • recovery • tuning regression", "x": 1170, "y": 960, "w": 250, "h": 135, "padding": 16, "ports": {"in": "left", "unknown": "top"}}
+  ],
+  "edges": [
+    {"id": "agent_to_admission", "from": "agent", "from_port": "out", "to": "runtime", "to_port": "in", "kind": "untrusted", "label": "untrusted claims", "points": [[300, 285], [360, 285]], "label_at": [330, 200]},
+    {"id": "admission_to_store", "from": "runtime", "from_port": "out", "to": "store", "to_port": "in", "kind": "evidence", "label": "admitted events", "points": [[610, 285], [670, 285]], "label_at": [640, 200]},
+    {"id": "store_to_health", "from": "store", "from_port": "out", "to": "health", "to_port": "in", "kind": "evidence", "label": "bound evidence", "points": [[920, 285], [980, 285]], "label_at": [950, 200]},
+    {"id": "health_to_unknown", "from": "health", "from_port": "unknown", "to": "unknown", "to_port": "in", "kind": "enforcement", "label": "incomplete", "points": [[1260, 285], [1310, 285]], "label_at": [1285, 200]},
+    {"id": "health_to_partition", "from": "health", "from_port": "hunt", "to": "partition", "to_port": "in", "kind": "evidence", "label": "complete admitted evidence", "points": [[1120, 350], [1120, 450], [225, 450], [225, 580]], "label_at": [670, 435]},
+    {"id": "partition_to_features", "from": "partition", "from_port": "out", "to": "features", "to_port": "in", "kind": "control", "label": "isolated window", "points": [[350, 650], [410, 650]], "label_at": [380, 555]},
+    {"id": "features_to_detectors", "from": "features", "from_port": "out", "to": "detectors", "to_port": "in", "kind": "evidence", "label": "explainable features", "points": [[660, 650], [720, 650]], "label_at": [690, 555]},
+    {"id": "detectors_to_hypothesis", "from": "detectors", "from_port": "out", "to": "hypothesis", "to_port": "in", "kind": "enforcement", "label": "candidate, not verdict", "points": [[970, 650], [1030, 650]], "label_at": [1000, 555]},
+    {"id": "hypothesis_to_analyst", "from": "hypothesis", "from_port": "analyst", "to": "analyst", "to_port": "in", "kind": "evidence", "label": "evidence IDs + versions", "points": [[1170, 720], [1170, 830], [325, 830], [325, 960]], "label_at": [747, 815]},
+    {"id": "analyst_to_authorize", "from": "analyst", "from_port": "out", "to": "authorize", "to_port": "in", "kind": "control", "label": "bounded response proposal", "points": [[450, 1027], [520, 1027]], "label_at": [485, 935]},
+    {"id": "authorize_to_execute", "from": "authorize", "from_port": "out", "to": "execute", "to_port": "in", "kind": "enforcement", "label": "one-use authority", "points": [[800, 1027], [870, 1027]], "label_at": [835, 935]},
+    {"id": "execute_to_verify", "from": "execute", "from_port": "out", "to": "verify", "to_port": "in", "kind": "evidence", "label": "effect receipt", "points": [[1100, 1027], [1170, 1027]], "label_at": [1135, 935]},
+    {"id": "unknown_to_record", "from": "unknown", "from_port": "record", "to": "verify", "to_port": "unknown", "kind": "evidence", "label": "gap / outage record", "points": [[1365, 350], [1365, 900], [1295, 900], [1295, 960]], "label_at": [1330, 885]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "Agent and model claims first pass through the prior course's authenticated evidence admission and a protected evidence store. Evidence health checks route incomplete data to UNKNOWN. Complete evidence is partitioned by tenant, subject, case, and a 15-minute event-time window. Deterministic features feed versioned rule, Sigma, statistical, graph, or model detectors that produce evidence-linked hypotheses, not verdicts. An authorized analyst dispositions a hypothesis, after which a separate policy authorizes one bounded response. An executor performs it and an independent verifier records the effect."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
