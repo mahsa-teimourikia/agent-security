@@ -1,0 +1,47 @@
+{
+  "id": "advanced-09-agent-security-observability-runtime-assurance",
+  "version": "1.0",
+  "title": "Telemetry Becomes Assurance Only After Trusted Admission and Monitoring",
+  "subtitle": "Minimize data, bind every event, distinguish violations from missing proof, and keep response authority outside the agent",
+  "canvas": {"width": 1500, "height": 1260, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "runtime", "label": "RUNTIME AND AUTHORITATIVE BOUNDARIES", "x": 40, "y": 130, "w": 1420, "h": 350},
+    {"id": "assurance", "label": "ASSURANCE PIPELINE", "x": 40, "y": 540, "w": 1420, "h": 300},
+    {"id": "operations", "label": "BOUNDED OPERATIONS AND EVIDENCE", "x": 40, "y": 900, "w": 1420, "h": 260}
+  ],
+  "nodes": [
+    {"id": "agent", "group": "runtime", "type": "untrusted", "label": "Agent and model", "detail": "proposals • model spans • reason codes; never authority", "x": 80, "y": 225, "w": 190, "h": 145, "padding": 16, "ports": {"out": "right"}},
+    {"id": "tools", "group": "runtime", "type": "untrusted", "label": "Tools and peers", "detail": "MCP • A2A • RAG • memory • workflow signals", "x": 310, "y": 225, "w": 190, "h": 145, "padding": 16, "ports": {"out": "right"}},
+    {"id": "application", "group": "runtime", "type": "control", "label": "Trusted application", "detail": "authenticated identity • run binding • terminal state", "x": 540, "y": 225, "w": 200, "h": 145, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "policy", "group": "runtime", "type": "enforcement", "label": "Policy and approval", "detail": "allow / deny receipt • exact proposal • single-use consume", "x": 780, "y": 225, "w": 200, "h": 145, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "effect", "group": "runtime", "type": "enforcement", "label": "Effect observer", "detail": "provider receipt • idempotency • actual postcondition", "x": 1020, "y": 225, "w": 200, "h": 145, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "collector", "group": "runtime", "type": "state", "label": "Telemetry ingress", "detail": "OTel or equivalent • authenticated producer • bounded queue", "x": 1260, "y": 225, "w": 160, "h": 145, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "admission", "group": "assurance", "type": "control", "label": "Admission and minimization", "detail": "allowlist • redact • deduplicate • tenant + version binding", "x": 100, "y": 635, "w": 230, "h": 145, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "assembly", "group": "assurance", "type": "state", "label": "Trace assembly", "detail": "sequence • time • required events • gaps • replay", "x": 390, "y": 635, "w": 230, "h": 145, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "monitors", "group": "assurance", "type": "decision", "label": "Deterministic monitors", "detail": "tenant • decision/effect • approval • budget • versions", "x": 680, "y": 635, "w": 230, "h": 145, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "state", "group": "assurance", "type": "enforcement", "label": "Assurance state", "detail": "HEALTHY • DEGRADED • VIOLATED • UNKNOWN", "x": 970, "y": 635, "w": 210, "h": 145, "padding": 16, "ports": {"in": "left", "response": "right", "evidence": "bottom"}},
+    {"id": "response", "group": "assurance", "type": "control", "label": "Bounded response", "detail": "observe • alert • quarantine • contain; idempotent", "x": 1240, "y": 635, "w": 180, "h": 145, "padding": 16, "ports": {"in": "left", "archive": "bottom"}},
+    {"id": "evidence", "group": "operations", "type": "state", "label": "Protected assurance evidence", "detail": "findings • exact denominators • latency • owners • retention", "x": 520, "y": 970, "w": 250, "h": 135, "padding": 16, "ports": {"in": "top"}},
+    {"id": "archive", "group": "operations", "type": "state", "label": "Operations record", "detail": "response receipt • incident link • recovery proof • audit access", "x": 1030, "y": 970, "w": 250, "h": 135, "padding": 16, "ports": {"in": "top"}}
+  ],
+  "edges": [
+    {"id": "agent_to_application", "from": "agent", "from_port": "out", "to": "application", "to_port": "in", "kind": "untrusted", "label": "proposal + span", "points": [[270, 297], [540, 297]], "label_at": [405, 282]},
+    {"id": "tools_to_application", "from": "tools", "from_port": "out", "to": "application", "to_port": "in", "kind": "untrusted", "label": "untrusted results", "points": [[500, 340], [520, 340], [520, 330], [540, 330]], "label_at": [500, 390]},
+    {"id": "application_to_policy", "from": "application", "from_port": "out", "to": "policy", "to_port": "in", "kind": "control", "label": "bound request", "points": [[740, 297], [780, 297]], "label_at": [760, 205]},
+    {"id": "policy_to_effect", "from": "policy", "from_port": "out", "to": "effect", "to_port": "in", "kind": "enforcement", "label": "authorized execution", "points": [[980, 297], [1020, 297]], "label_at": [1000, 205]},
+    {"id": "effect_to_collector", "from": "effect", "from_port": "out", "to": "collector", "to_port": "in", "kind": "evidence", "label": "actual effect", "points": [[1220, 297], [1260, 297]], "label_at": [1240, 205]},
+    {"id": "collector_to_admission", "from": "collector", "from_port": "out", "to": "admission", "to_port": "in", "kind": "evidence", "label": "observations, not authority", "points": [[1340, 370], [1340, 510], [215, 510], [215, 635]], "label_at": [780, 495]},
+    {"id": "admission_to_assembly", "from": "admission", "from_port": "out", "to": "assembly", "to_port": "in", "kind": "control", "label": "admitted events", "points": [[330, 707], [390, 707]], "label_at": [360, 610]},
+    {"id": "assembly_to_monitors", "from": "assembly", "from_port": "out", "to": "monitors", "to_port": "in", "kind": "evidence", "label": "complete or gapped trace", "points": [[620, 707], [680, 707]], "label_at": [650, 610]},
+    {"id": "monitors_to_state", "from": "monitors", "from_port": "out", "to": "state", "to_port": "in", "kind": "enforcement", "label": "findings + proof status", "points": [[910, 707], [970, 707]], "label_at": [940, 610]},
+    {"id": "state_to_response", "from": "state", "from_port": "response", "to": "response", "to_port": "in", "kind": "control", "label": "bounded action", "points": [[1180, 707], [1240, 707]], "label_at": [1210, 610]},
+    {"id": "state_to_evidence", "from": "state", "from_port": "evidence", "to": "evidence", "to_port": "in", "kind": "evidence", "label": "state + denominators", "points": [[1075, 780], [1075, 870], [645, 870], [645, 970]], "label_at": [860, 855]},
+    {"id": "response_to_archive", "from": "response", "from_port": "archive", "to": "archive", "to_port": "in", "kind": "evidence", "label": "idempotent receipt", "points": [[1330, 780], [1330, 870], [1155, 870], [1155, 970]], "label_at": [1242, 855]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "An enterprise agent, tools, trusted application, policy enforcer, effect observer, and telemetry ingress produce observations. Admission minimizes data and verifies tenant and version bindings before trace assembly checks sequence, required events, gaps, and replay. Deterministic monitors evaluate tenant isolation, decision-to-effect order, approvals, budgets, and versions. The state machine returns healthy, degraded, violated, or unknown; missing proof becomes unknown. A bounded, idempotent response and protected evidence archive remain under application and operations authority."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}

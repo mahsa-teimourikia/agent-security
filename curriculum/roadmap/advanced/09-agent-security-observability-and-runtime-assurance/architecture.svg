@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1260" viewBox="0 0 1500 1260" role="img" aria-labelledby="title desc">
+<title id="title">Telemetry Becomes Assurance Only After Trusted Admission and Monitoring</title>
+<desc id="desc">An enterprise agent, tools, trusted application, policy enforcer, effect observer, and telemetry ingress produce observations. Admission minimizes data and verifies tenant and version bindings before trace assembly checks sequence, required events, gaps, and replay. Deterministic monitors evaluate tenant isolation, decision-to-effect order, approvals, budgets, and versions. The state machine returns healthy, degraded, violated, or unknown; missing proof becomes unknown. A bounded, idempotent response and protected evidence archive remain under application and operations authority.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Telemetry Becomes Assurance Only After Trusted Admission and Monitoring</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Minimize data, bind every event, distinguish violations from missing proof, and keep response authority outside the agent</text>
+<rect x="40" y="130" width="1420" height="350" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">RUNTIME AND AUTHORITATIVE BOUNDARIES</text>
+<rect x="40" y="540" width="1420" height="300" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="572" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">ASSURANCE PIPELINE</text>
+<rect x="40" y="900" width="1420" height="260" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="932" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">BOUNDED OPERATIONS AND EVIDENCE</text>
+<polyline points="270,297 540,297" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="350.25" y="269" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="405" y="282" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">proposal + span</text>
+<polyline points="500,340 520,340 520,330 540,330" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="438.75" y="377" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="500" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">untrusted results</text>
+<polyline points="740,297 780,297" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="711.75" y="192" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="760" y="205" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">bound request</text>
+<polyline points="980,297 1020,297" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="929.0" y="192" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1000" y="205" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">authorized execution</text>
+<polyline points="1220,297 1260,297" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1191.75" y="192" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1240" y="205" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">actual effect</text>
+<polyline points="1340,370 1340,510 215,510 215,635" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="686.25" y="482" width="187.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="780" y="495" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">observations, not authority</text>
+<polyline points="330,707 390,707" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="305.25" y="597" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="360" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">admitted events</text>
+<polyline points="620,707 680,707" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="566.0" y="597" width="168.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="650" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">complete or gapped trace</text>
+<polyline points="910,707 970,707" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="859.25" y="597" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="940" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">findings + proof status</text>
+<polyline points="1180,707 1240,707" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1158.5" y="597" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1210" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">bounded action</text>
+<polyline points="1075,780 1075,870 645,870 645,970" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="789.0" y="842" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="860" y="855" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">state + denominators</text>
+<polyline points="1330,780 1330,870 1155,870 1155,970" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1177.5" y="842" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1242" y="855" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">idempotent receipt</text>
+<rect x="80" y="225" width="190" height="145" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="175.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Agent and model</text>
+<text x="175.0" y="280" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">proposals • model</text>
+<text x="175.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">spans • reason</text>
+<text x="175.0" y="312" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">codes; never</text>
+<text x="175.0" y="328" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authority</text>
+<rect x="310" y="225" width="190" height="145" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="405.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Tools and peers</text>
+<text x="405.0" y="280" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">MCP • A2A • RAG •</text>
+<text x="405.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">memory • workflow</text>
+<text x="405.0" y="312" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signals</text>
+<rect x="540" y="225" width="200" height="145" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="640.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trusted application</text>
+<text x="640.0" y="280" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticated identity</text>
+<text x="640.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• run binding •</text>
+<text x="640.0" y="312" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">terminal state</text>
+<rect x="780" y="225" width="200" height="145" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="880.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Policy and approval</text>
+<text x="880.0" y="280" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">allow / deny receipt •</text>
+<text x="880.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact proposal •</text>
+<text x="880.0" y="312" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">single-use consume</text>
+<rect x="1020" y="225" width="200" height="145" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1120.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Effect observer</text>
+<text x="1120.0" y="280" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">provider receipt •</text>
+<text x="1120.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">idempotency • actual</text>
+<text x="1120.0" y="312" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">postcondition</text>
+<rect x="1260" y="225" width="160" height="145" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1340.0" y="256" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Telemetry ingress</text>
+<text x="1340.0" y="280" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">OTel or</text>
+<text x="1340.0" y="296" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">equivalent •</text>
+<text x="1340.0" y="312" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticated</text>
+<text x="1340.0" y="328" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">producer •</text>
+<text x="1340.0" y="344" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">bounded queue</text>
+<rect x="100" y="635" width="230" height="145" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="215.0" y="666" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Admission and</text>
+<text x="215.0" y="685" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">minimization</text>
+<text x="215.0" y="709" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">allowlist • redact •</text>
+<text x="215.0" y="725" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">deduplicate • tenant +</text>
+<text x="215.0" y="741" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">version binding</text>
+<rect x="390" y="635" width="230" height="145" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="505.0" y="666" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Trace assembly</text>
+<text x="505.0" y="690" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">sequence • time •</text>
+<text x="505.0" y="706" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">required events • gaps •</text>
+<text x="505.0" y="722" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">replay</text>
+<rect x="680" y="635" width="230" height="145" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="795.0" y="666" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Deterministic monitors</text>
+<text x="795.0" y="690" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant • decision/effect</text>
+<text x="795.0" y="706" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• approval • budget •</text>
+<text x="795.0" y="722" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">versions</text>
+<rect x="970" y="635" width="210" height="145" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1075.0" y="666" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Assurance state</text>
+<text x="1075.0" y="690" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">HEALTHY • DEGRADED •</text>
+<text x="1075.0" y="706" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">VIOLATED • UNKNOWN</text>
+<rect x="1240" y="635" width="180" height="145" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="1330.0" y="666" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Bounded response</text>
+<text x="1330.0" y="690" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">observe • alert •</text>
+<text x="1330.0" y="706" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">quarantine •</text>
+<text x="1330.0" y="722" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">contain; idempotent</text>
+<rect x="520" y="970" width="250" height="135" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="645.0" y="1001" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Protected assurance evidence</text>
+<text x="645.0" y="1025" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">findings • exact</text>
+<text x="645.0" y="1041" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">denominators • latency •</text>
+<text x="645.0" y="1057" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">owners • retention</text>
+<rect x="1030" y="970" width="250" height="135" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1155.0" y="1001" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Operations record</text>
+<text x="1155.0" y="1025" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">response receipt • incident</text>
+<text x="1155.0" y="1041" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">link • recovery proof •</text>
+<text x="1155.0" y="1057" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">audit access</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="1205" r="5" fill="#2F6BFF"/><text x="62" y="1209">trusted control</text><circle cx="190" cy="1205" r="5" fill="#7667E8"/><text x="202" y="1209">untrusted data/proposal</text><circle cx="385" cy="1205" r="5" fill="#16A3A5"/><text x="397" y="1209">decision/enforcement</text></g>
+</svg>
