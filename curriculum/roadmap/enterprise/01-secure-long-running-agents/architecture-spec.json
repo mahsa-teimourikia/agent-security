@@ -1,0 +1,43 @@
+{
+  "id": "enterprise-01-secure-long-running-agents",
+  "version": "1.0",
+  "title": "Durable State Resumes Only Under Fresh, Bounded Authority",
+  "subtitle": "Verify the checkpoint, revalidate current authority, fence one owner, and reconcile external outcomes before retry",
+  "canvas": {"width": 1500, "height": 1180, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "wake", "label": "UNTRUSTED WAKE AND DURABLE EVIDENCE", "x": 40, "y": 130, "w": 1420, "h": 260},
+    {"id": "authority", "label": "TRUSTED CURRENT-AUTHORITY CONTROL PLANE", "x": 40, "y": 450, "w": 1420, "h": 300},
+    {"id": "effect", "label": "BOUNDED EFFECT AND AUTHORITATIVE VERIFICATION", "x": 40, "y": 810, "w": 1420, "h": 260}
+  ],
+  "nodes": [
+    {"id": "wake_event", "group": "wake", "type": "untrusted", "label": "Wake event / agent", "detail": "document arrived • timer • model proposal; claims only", "x": 90, "y": 205, "w": 230, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "checkpoint", "group": "wake", "type": "state", "label": "Server-owned checkpoint", "detail": "state + digest • chain • old versions • pending effect", "x": 390, "y": 205, "w": 270, "h": 120, "padding": 16, "ports": {"wake": "left", "out": "right"}},
+    {"id": "verify", "group": "wake", "type": "decision", "label": "Integrity and lifecycle gate", "detail": "signature • tenant namespace • supported version • resumable state", "x": 730, "y": 205, "w": 280, "h": 120, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+
+    {"id": "current", "group": "authority", "type": "control", "label": "Current authority services", "detail": "identity • policy • intent • credential • budget • approval", "x": 110, "y": 545, "w": 280, "h": 130, "padding": 16, "ports": {"out": "right"}},
+    {"id": "reauthorize", "group": "authority", "type": "enforcement", "label": "Resume reauthorization", "detail": "fail closed / UNKNOWN • exact state and effect bindings", "x": 470, "y": 545, "w": 280, "h": 130, "padding": 16, "ports": {"state": "top", "authority": "left", "out": "right"}},
+    {"id": "lease", "group": "authority", "type": "state", "label": "Single-owner lease", "detail": "compare-and-set • expiry • heartbeat deadline • fencing", "x": 830, "y": 545, "w": 260, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right", "orphan": "bottom"}},
+    {"id": "orphan", "group": "authority", "type": "decision", "label": "Orphan / stale owner", "detail": "release ownership; require full reauthorization", "x": 1170, "y": 545, "w": 230, "h": 130, "padding": 16, "ports": {"in": "left", "sweep": "bottom"}},
+
+    {"id": "executor", "group": "effect", "type": "control", "label": "Bounded executor", "detail": "one logical operation • one-use approval and budget", "x": 180, "y": 885, "w": 260, "h": 120, "padding": 16, "ports": {"lease": "top", "out": "right"}},
+    {"id": "provider", "group": "effect", "type": "untrusted", "label": "External provider", "detail": "idempotency key • commit may outlive response", "x": 610, "y": 885, "w": 250, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "reconcile", "group": "effect", "type": "enforcement", "label": "Outcome verifier", "detail": "receipt lookup • postcondition • UNKNOWN before retry", "x": 1030, "y": 885, "w": 280, "h": 120, "padding": 16, "ports": {"in": "left", "record": "right"}}
+  ],
+  "edges": [
+    {"id": "wake_to_checkpoint", "from": "wake_event", "from_port": "out", "to": "checkpoint", "to_port": "wake", "kind": "untrusted", "label": "wake claim", "points": [[320, 265], [390, 265]], "label_at": [355, 180]},
+    {"id": "checkpoint_to_verify", "from": "checkpoint", "from_port": "out", "to": "verify", "to_port": "in", "kind": "evidence", "label": "stored evidence", "points": [[660, 265], [730, 265]], "label_at": [695, 180]},
+    {"id": "verify_to_reauthorize", "from": "verify", "from_port": "out", "to": "reauthorize", "to_port": "state", "kind": "evidence", "label": "verified state; no authority", "points": [[870, 325], [870, 420], [610, 420], [610, 545]], "label_at": [740, 405]},
+    {"id": "current_to_reauthorize", "from": "current", "from_port": "out", "to": "reauthorize", "to_port": "authority", "kind": "control", "label": "current versions", "points": [[390, 610], [470, 610]], "label_at": [430, 515]},
+    {"id": "reauthorize_to_lease", "from": "reauthorize", "from_port": "out", "to": "lease", "to_port": "in", "kind": "enforcement", "label": "short bounded authority", "points": [[750, 610], [830, 610]], "label_at": [790, 515]},
+    {"id": "lease_to_orphan", "from": "lease", "from_port": "out", "to": "orphan", "to_port": "in", "kind": "control", "label": "heartbeat", "points": [[1090, 610], [1170, 610]], "label_at": [1130, 515]},
+    {"id": "lease_to_executor", "from": "lease", "from_port": "orphan", "to": "executor", "to_port": "lease", "kind": "enforcement", "label": "live exact-effect lease", "points": [[960, 675], [960, 780], [310, 780], [310, 885]], "label_at": [635, 765]},
+    {"id": "executor_to_provider", "from": "executor", "from_port": "out", "to": "provider", "to_port": "in", "kind": "control", "label": "stable logical operation ID", "points": [[440, 945], [610, 945]], "label_at": [525, 860]},
+    {"id": "provider_to_reconcile", "from": "provider", "from_port": "out", "to": "reconcile", "to_port": "in", "kind": "evidence", "label": "receipt or ambiguous timeout", "points": [[860, 945], [1030, 945]], "label_at": [945, 860]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "An untrusted wake event points to a server-owned checkpoint. Integrity and lifecycle checks produce verified state without authority. Current identity, policy, intent, credential, budget, and approval services feed a trusted resume reauthorization gate. A compare-and-set creates one short lease with a separate heartbeat deadline; stale owners are released and must reauthorize. A bounded executor consumes the lease for one logical operation, an external provider may commit despite a lost response, and an outcome verifier queries authoritative receipts before any retry."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
