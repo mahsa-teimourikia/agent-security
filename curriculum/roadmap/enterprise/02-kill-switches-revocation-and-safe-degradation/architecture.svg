@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1180" viewBox="0 0 1500 1180" role="img" aria-labelledby="title desc">
+<title id="title">Containment Is an Independent, Versioned Authority Change</title>
+<desc id="desc">An independent incident operator sends an authenticated containment command. A trusted gate validates tenant, incident, signature, and exact next epoch, producing an immutable snapshot. Authenticated distribution feeds both a scheduling gate and an effect gateway with freshness and propagation SLO checks. Queue and agent proposals remain untrusted. Safe degradation denies consequential actions while preserving governed diagnostics. External provider effects are classified by an outcome reconciler as canceled, committed, or unknown. Recovery requires a different approver, an expiring single-use plan, and a new epoch, with receipts preserving evidence.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Containment Is an Independent, Versioned Authority Change</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Authenticate commands, propagate a monotonic epoch, enforce twice, reconcile effects, and recover under separate approval</text>
+<rect x="40" y="130" width="1420" height="260" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">INDEPENDENT INCIDENT CONTROL PLANE</text>
+<rect x="40" y="450" width="1420" height="300" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="482" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">TRUSTED DATA-PLANE ENFORCEMENT</text>
+<rect x="40" y="810" width="1420" height="260" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="842" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">EXTERNAL OUTCOME AND SEPARATELY APPROVED RECOVERY</text>
+<polyline points="340,265 430,265" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="323.75" y="167" width="122.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="385" y="180" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">proposed response</text>
+<polyline points="710,265 800,265" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="690.5" y="167" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="755" y="180" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">activate epoch N+1</text>
+<polyline points="1090,265 1180,265" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1090.0" y="167" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1135" y="180" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">signed state</text>
+<polyline points="945,325 945,420 265,420 265,545" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="530.75" y="392" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="605" y="405" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">latest accepted epoch</text>
+<polyline points="1295,325 1295,420 990,420 990,545" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1088.5" y="392" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1140" y="405" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">fresh snapshot</text>
+<polyline points="400,610 500,610" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="405.0" y="502" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="450" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">bounded work</text>
+<polyline points="750,610 850,610" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="732.25" y="502" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="800" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">re-authorize effect</text>
+<polyline points="1130,610 1210,610" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1095.75" y="502" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1170" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">deny or governed read</text>
+<polyline points="1315,675 1315,780 285,780 285,885" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="712.75" y="752" width="174.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="800" y="765" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">only allowed exact effect</text>
+<polyline points="420,945 530,945" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="404.0" y="847" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="475" y="860" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">receipt or ambiguity</text>
+<polyline points="810,945 930,945" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="789.25" y="847" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="870" y="860" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">verified incident state</text>
+<polyline points="1200,945 1280,945" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1172.25" y="847" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1240" y="860" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">new epoch or denial</text>
+<rect x="90" y="205" width="250" height="120" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="215.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Detection / operator</text>
+<text x="215.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signal is evidence;</text>
+<text x="215.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticated operator</text>
+<text x="215.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">proposes containment</text>
+<rect x="430" y="205" width="280" height="120" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="570.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Command gate</text>
+<text x="570.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">signature • tenant • incident •</text>
+<text x="570.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact next epoch • deny priority</text>
+<rect x="800" y="205" width="290" height="120" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="945.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Immutable snapshot</text>
+<text x="945.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">mode • revoked capabilities •</text>
+<text x="945.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">blocked destinations • activation</text>
+<text x="945.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">time</text>
+<rect x="1180" y="205" width="230" height="120" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1295.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Authenticated</text>
+<text x="1295.0" y="255" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">distribution</text>
+<text x="1295.0" y="279" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">per-point observation •</text>
+<text x="1295.0" y="295" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">freshness budget •</text>
+<text x="1295.0" y="311" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">propagation SLO</text>
+<rect x="130" y="545" width="270" height="130" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="265.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Scheduling gate</text>
+<text x="265.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">deny disabled agent and</text>
+<text x="265.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">revoked scheduling before</text>
+<text x="265.0" y="632" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">queueing</text>
+<rect x="500" y="545" width="250" height="130" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="625.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Queue / agent proposal</text>
+<text x="625.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">request to reconsider; never</text>
+<text x="625.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">durable authority</text>
+<rect x="850" y="545" width="280" height="130" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="990.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Effect gateway</text>
+<text x="990.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">fresh epoch • identity • tenant</text>
+<text x="990.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• scope • policy • destination</text>
+<rect x="1210" y="545" width="210" height="130" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="1315.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Safe degradation</text>
+<text x="1315.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">deny consequential</text>
+<text x="1315.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">effects; retain</text>
+<text x="1315.0" y="632" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">governed diagnostics</text>
+<rect x="150" y="885" width="270" height="120" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="285.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">External provider</text>
+<text x="285.0" y="940" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">cancelable, committed, or</text>
+<text x="285.0" y="956" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">response lost after dispatch</text>
+<rect x="530" y="885" width="280" height="120" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="670.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Outcome reconciler</text>
+<text x="670.0" y="940" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stable operation ID • canceled /</text>
+<text x="670.0" y="956" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">committed / UNKNOWN</text>
+<rect x="930" y="885" width="270" height="120" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1065.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Recovery gate</text>
+<text x="1065.0" y="940" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">different approver • expiring</text>
+<text x="1065.0" y="956" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">single-use plan • new epoch</text>
+<rect x="1280" y="885" width="150" height="120" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1355.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Evidence</text>
+<text x="1355.0" y="935" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">receipt</text>
+<text x="1355.0" y="959" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">activation •</text>
+<text x="1355.0" y="975" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">propagation •</text>
+<text x="1355.0" y="991" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">decisions •</text>
+<text x="1355.0" y="1007" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">outcome •</text>
+<text x="1355.0" y="1023" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">recovery</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
