@@ -27,6 +27,7 @@ LABS = [
     "curriculum/roadmap/intermediate/09-mcp-security/lab.py",
     "curriculum/roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation/lab.py",
     "curriculum/roadmap/advanced/09-agent-security-observability-and-runtime-assurance/lab.py",
+    "curriculum/roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection/lab.py",
     "curriculum/roadmap/enterprise/06-agent-security-governance/lab.py",
     "curriculum/roadmap/enterprise/09-production-secure-agent-capstone/lab.py",
 ]

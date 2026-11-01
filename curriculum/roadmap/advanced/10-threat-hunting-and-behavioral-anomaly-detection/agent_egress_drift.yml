@@ -1,0 +1,19 @@
+title: Agent Egress Destination Outside Tenant Baseline
+id: 418b7d3f-b536-45ad-a896-8df45f7617dd
+status: experimental
+description: Detects an admitted agent egress event whose canonical destination is not present in the authenticated tenant baseline.
+author: One+i Agent Security Curriculum
+date: 2026-10-31
+logsource:
+  category: application
+  product: agent_security
+detection:
+  selection:
+    event_type: egress
+    destination_trust: unknown
+  condition: selection
+falsepositives:
+  - A newly approved integration has not yet been added to the tenant baseline.
+level: high
+tags:
+  - attack.exfiltration
