@@ -144,6 +144,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "Authenticated provenance explains production of an exact subject, and an SBOM describes inventory. Neither grants deployment authority or proves safety. Independent current policy and a separate staged promotion decision are still required.",
   }, "agent_supply_chain_security"),
+  lesson("r-a07", "Advanced", "07", "Agent security testing and fuzzing", "Generate structured values and workflow sequences around explicit security invariants, then observe real state and effects instead of trusting target self-reports.", "Use real Hypothesis strategies, find, shrinking, and rule-based state machines to discover parser, identity, approval, replay, concurrency, and failure-handling defects; retain minimal semantic regressions and evaluate safety plus utility with correct denominators.", "roadmap/advanced/07-agent-security-testing-and-fuzzing", "lab", {
+    prompt: "A property-based test generates thousands of malformed commands, reaches high line coverage, and the gateway reports every one as denied. What evidence is still required before treating the campaign as security assurance?",
+    options: ["None; generation volume, coverage, and deny labels are sufficient", "Only a smaller random seed", "An independent oracle over real state and effects, reachable valid and adversarial populations, explicit harness errors, semantics-preserving minimized reproducers, and valid-task utility evidence"],
+    correct: 2,
+    explanation: "Coverage and target reason strings guide investigation but do not establish authorization correctness. Security evidence needs observable forbidden-outcome checks, meaningful reachability, separate utility and error populations, and reproducible retained failures.",
+  }, "agent_security_testing_and_fuzzing"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -203,7 +209,7 @@ export const publishedLessons = [
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
-  { level: "Distributed adversaries", range: "01–10", status: "6 published · 1 pilot · 3 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
+  { level: "Distributed adversaries", range: "01–10", status: "7 published · 1 pilot · 2 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
@@ -233,7 +239,7 @@ export const roadmapCourses = [
   road("A04", "04", "Distributed adversaries", "Agent-to-agent (A2A) security", "roadmap/advanced/04-agent-to-agent-a2a-security", "Published", "README · A2A resource-monitor lab · official A2A Python SDK adapter · notebook · diagram · tests · checkpoint", "r-a04"),
   road("A05", "05", "Distributed adversaries", "Protocol composition security", "roadmap/advanced/05-protocol-composition-security", "Published", "README · composition gateway · official A2A/MCP/HTTPX adapter · notebook · diagram · tests · checkpoint", "r-a05"),
   road("A06", "06", "Distributed adversaries", "Agent supply-chain security", "roadmap/advanced/06-agent-supply-chain-security", "Published", "README · signed release gate · official Sigstore adapter · notebook · diagram · tests · checkpoint", "r-a06"),
-  road("A07", "07", "Distributed adversaries", "Agent security testing and fuzzing", "roadmap/advanced/07-agent-security-testing-and-fuzzing", "Planned", "Release contract · needs lab, notebook, tests"),
+  road("A07", "07", "Distributed adversaries", "Agent security testing and fuzzing", "roadmap/advanced/07-agent-security-testing-and-fuzzing", "Published", "README · security oracle lab · Hypothesis adapter · notebook · diagram · tests · checkpoint", "r-a07"),
   road("A08", "08", "Distributed adversaries", "Red teaming and adversarial evaluation", "roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation", "Pilot", "README · lab · notebook · needs deeper tests"),
   road("A09", "09", "Distributed adversaries", "Observability and runtime assurance", "roadmap/advanced/09-agent-security-observability-and-runtime-assurance", "Planned", "Release contract · needs lab, notebook, tests"),
   road("A10", "10", "Distributed adversaries", "Threat hunting and anomaly detection", "roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection", "Planned", "Release contract · needs lab, notebook, tests"),
