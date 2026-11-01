@@ -1,0 +1,51 @@
+{
+  "id": "advanced-08-agent-red-teaming-and-adversarial-evaluation",
+  "version": "1.0",
+  "title": "Red-Team Broadly; Release Only from Independently Verified Evidence",
+  "subtitle": "Bind every fixture and target version, observe effects outside the agent, preserve utility, and retain findings as regressions",
+  "canvas": {"width": 1500, "height": 1280, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "plan", "label": "CAMPAIGN CONTRACT", "x": 40, "y": 130, "w": 420, "h": 450},
+    {"id": "exercise", "label": "ISOLATED ADVERSARIAL EXECUTION", "x": 500, "y": 130, "w": 960, "h": 450},
+    {"id": "verify", "label": "INDEPENDENT VERIFICATION", "x": 40, "y": 640, "w": 860, "h": 510},
+    {"id": "govern", "label": "FINDINGS AND RELEASE", "x": 940, "y": 640, "w": 520, "h": 510}
+  ],
+  "nodes": [
+    {"id": "invariants", "group": "plan", "type": "decision", "label": "Security invariants", "detail": "tenant • approval • memory • protocol • budget • fail-closed", "x": 80, "y": 220, "w": 160, "h": 150, "padding": 16, "ports": {"out": "right"}},
+    {"id": "suite", "group": "plan", "type": "state", "label": "Versioned fixture suite", "detail": "valid + attack • boundary + failure • severity + control", "x": 270, "y": 220, "w": 150, "h": 150, "padding": 16, "ports": {"out": "right", "regression": "bottom"}},
+    {"id": "orchestrator", "group": "exercise", "type": "untrusted", "label": "Red-team orchestrator", "detail": "PyRIT or equivalent • adaptive turns • bounded attempts", "x": 540, "y": 220, "w": 190, "h": 150, "padding": 16, "ports": {"in": "left", "target": "right"}},
+    {"id": "target", "group": "exercise", "type": "untrusted", "label": "Enterprise support agent", "detail": "RAG • memory • MCP • A2A • durable state", "x": 780, "y": 220, "w": 190, "h": 150, "padding": 16, "ports": {"in": "left", "effects": "right"}},
+    {"id": "sandbox", "group": "exercise", "type": "control", "label": "Isolated target boundary", "detail": "synthetic tenants • no production secrets • bounded tools and cost", "x": 1020, "y": 220, "w": 190, "h": 150, "padding": 16, "ports": {"in": "left", "observe": "right"}},
+    {"id": "observer", "group": "exercise", "type": "state", "label": "Host-side observer", "detail": "policy receipts • tool effects • state transitions • errors", "x": 1260, "y": 220, "w": 160, "h": 150, "padding": 16, "ports": {"in": "left", "oracle": "bottom"}},
+    {"id": "oracle", "group": "exercise", "type": "enforcement", "label": "Independent oracle", "detail": "compare actual effect and trace with invariant; target text is not proof", "x": 900, "y": 415, "w": 240, "h": 125, "padding": 16, "ports": {"invariant": "left", "trace": "right", "report": "bottom"}},
+    {"id": "admission", "group": "verify", "type": "control", "label": "Evidence admission", "detail": "campaign • suite • target • policy • catalog • environment • time", "x": 90, "y": 760, "w": 210, "h": 145, "padding": 16, "ports": {"in": "top", "metrics": "right"}},
+    {"id": "metrics", "group": "verify", "type": "decision", "label": "Disjoint metrics", "detail": "attack success • valid blocks • failure containment • coverage", "x": 350, "y": 760, "w": 210, "h": 145, "padding": 16, "ports": {"in": "left", "finding": "right"}},
+    {"id": "finding", "group": "verify", "type": "state", "label": "Verified finding", "detail": "severity • owner • remediation • exact reproducer • evidence", "x": 610, "y": 760, "w": 210, "h": 145, "padding": 16, "ports": {"in": "left", "regression": "bottom", "gate": "right"}},
+    {"id": "regression", "group": "verify", "type": "state", "label": "Regression lifecycle", "detail": "open → mitigated only after exact fixture passes with complete evidence", "x": 355, "y": 970, "w": 250, "h": 135, "padding": 16, "ports": {"in": "top", "suite": "left"}},
+    {"id": "gate", "group": "govern", "type": "enforcement", "label": "Release gate", "detail": "BLOCKED for verified harm • INCOMPLETE for missing proof • READY otherwise", "x": 990, "y": 750, "w": 200, "h": 155, "padding": 16, "ports": {"in": "left", "decision": "right"}},
+    {"id": "operations", "group": "govern", "type": "control", "label": "Continuous program", "detail": "CI regressions • scheduled campaigns • scoped human exploration • trend review", "x": 1220, "y": 750, "w": 190, "h": 155, "padding": 16, "ports": {"in": "left", "evidence": "bottom"}},
+    {"id": "archive", "group": "govern", "type": "state", "label": "Protected evidence archive", "detail": "manifests • redacted traces • receipts • decisions • owners", "x": 1095, "y": 980, "w": 220, "h": 135, "padding": 16, "ports": {"in": "top"}}
+  ],
+  "edges": [
+    {"id": "suite_to_orchestrator", "from": "suite", "from_port": "out", "to": "orchestrator", "to_port": "in", "kind": "untrusted", "label": "bounded objectives", "points": [[420, 295], [540, 295]], "label_at": [480, 195]},
+    {"id": "orchestrator_to_target", "from": "orchestrator", "from_port": "target", "to": "target", "to_port": "in", "kind": "untrusted", "label": "adversarial turns", "points": [[730, 295], [780, 295]], "label_at": [755, 195]},
+    {"id": "target_to_sandbox", "from": "target", "from_port": "effects", "to": "sandbox", "to_port": "in", "kind": "control", "label": "proposed actions", "points": [[970, 295], [1020, 295]], "label_at": [995, 195]},
+    {"id": "sandbox_to_observer", "from": "sandbox", "from_port": "observe", "to": "observer", "to_port": "in", "kind": "evidence", "label": "actual state + effects", "points": [[1210, 295], [1260, 295]], "label_at": [1235, 195]},
+    {"id": "invariants_to_oracle", "from": "invariants", "from_port": "out", "to": "oracle", "to_port": "invariant", "kind": "enforcement", "label": "trusted postconditions", "points": [[240, 295], [250, 450], [850, 450], [850, 477], [900, 477]], "label_at": [650, 435]},
+    {"id": "observer_to_oracle", "from": "observer", "from_port": "oracle", "to": "oracle", "to_port": "trace", "kind": "evidence", "label": "redacted evidence", "points": [[1340, 370], [1340, 477], [1140, 477]], "label_at": [1240, 462]},
+    {"id": "oracle_to_admission", "from": "oracle", "from_port": "report", "to": "admission", "to_port": "in", "kind": "enforcement", "label": "observations", "points": [[1020, 540], [1020, 610], [195, 610], [195, 760]], "label_at": [608, 595]},
+    {"id": "admission_to_metrics", "from": "admission", "from_port": "metrics", "to": "metrics", "to_port": "in", "kind": "control", "label": "bound evidence only", "points": [[300, 832], [350, 832]], "label_at": [325, 725]},
+    {"id": "metrics_to_finding", "from": "metrics", "from_port": "finding", "to": "finding", "to_port": "in", "kind": "evidence", "label": "failure + denominator", "points": [[560, 832], [610, 832]], "label_at": [585, 725]},
+    {"id": "finding_to_regression", "from": "finding", "from_port": "regression", "to": "regression", "to_port": "in", "kind": "evidence", "label": "owner + remediation", "points": [[715, 905], [715, 940], [480, 940], [480, 970]], "label_at": [598, 925]},
+    {"id": "regression_to_suite", "from": "regression", "from_port": "suite", "to": "suite", "to_port": "regression", "kind": "evidence", "label": "retain exact fixture", "points": [[355, 1037], [325, 1037], [325, 600], [345, 600], [345, 370]], "label_at": [340, 1020]},
+    {"id": "finding_to_gate", "from": "finding", "from_port": "gate", "to": "gate", "to_port": "in", "kind": "enforcement", "label": "severity + completeness", "points": [[820, 832], [990, 832]], "label_at": [905, 725]},
+    {"id": "gate_to_operations", "from": "gate", "from_port": "decision", "to": "operations", "to_port": "in", "kind": "control", "label": "ready / blocked / incomplete", "points": [[1190, 827], [1220, 827]], "label_at": [1205, 720]},
+    {"id": "operations_to_archive", "from": "operations", "from_port": "evidence", "to": "archive", "to_port": "in", "kind": "evidence", "label": "retained decision record", "points": [[1315, 905], [1315, 945], [1205, 945], [1205, 980]], "label_at": [1260, 930]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "A versioned red-team suite with valid, attack, boundary, and failure fixtures drives a bounded orchestrator against an isolated enterprise support agent. A host-side observer records actual policy decisions, state changes, and effects. An independent oracle compares those observations with application-owned invariants. Only evidence bound to the exact campaign, target, policy, tool catalog, environment, and time enters disjoint security, utility, failure-containment, and coverage metrics. Verified findings receive severity, ownership, remediation, and an exact regression fixture before the release gate returns ready, blocked, or incomplete and archives the decision evidence."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
