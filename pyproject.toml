@@ -25,6 +25,9 @@ contributor = [
     "nbclient",
     "nbformat",
 ]
+redteam = [
+    "pyrit>=1.1,<1.2",
+]
 
 [tool.setuptools]
 py-modules = []

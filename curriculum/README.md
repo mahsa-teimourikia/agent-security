@@ -41,7 +41,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [09](roadmap/intermediate/09-mcp-security/) **Published** | modern MCP discovery and catalog pinning, authenticated connection identity, exact call grants, credential isolation, result admission, MCP Python SDK v2 adapter, notebook, diagram, and tests |
 | [10](roadmap/intermediate/10-human-in-the-loop-security/) **Published** | durable human review state, tenant-scoped queues, reviewer independence and quorum, exact one-use grants, resume reauthorization, ambiguous-outcome reconciliation, OpenAI Agents SDK adapter, notebook, diagram, and tests |
 
-## Advanced sequence (seven published, one pilot, and two planned topics)
+## Advanced sequence (eight published and two planned topics)
 
 | Course | Focus |
 | --- | --- |
@@ -52,7 +52,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [05](roadmap/advanced/05-protocol-composition-security/) **Published** | identity- and authority-preserving web/A2A/MCP/API translation, audience-bound grants, hop ledger, provenance admission, official A2A/MCP/HTTPX adapter, notebook, diagram, and tests |
 | [06](roadmap/advanced/06-agent-supply-chain-security/) **Published** | signed SLSA/in-toto provenance, immutable artifacts and dependencies, least-privilege manifests, CycloneDX inventory, risk evidence, Sigstore adapter, staged rollout, one-use rollback, notebook, diagram, and tests |
 | [07](roadmap/advanced/07-agent-security-testing-and-fuzzing/) **Published** | application-owned security oracles, labelled valid/attack/boundary/failure corpora, Hypothesis properties and state machines, semantic shrinking, replay and race testing, notebook, diagram, and tests |
-| [08](roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation/) | red teaming and adversarial evaluation |
+| [08](roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation/) **Published** | version-bound red-team campaigns, independent effect verification, PyRIT adapter, disjoint security/utility metrics, finding regressions, notebook, diagram, and tests |
 | [09](roadmap/advanced/09-agent-security-observability-and-runtime-assurance/) | observability and runtime assurance |
 | [10](roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection/) | threat hunting and anomaly detection |
 

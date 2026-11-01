@@ -150,6 +150,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "Coverage and target reason strings guide investigation but do not establish authorization correctness. Security evidence needs observable forbidden-outcome checks, meaningful reachability, separate utility and error populations, and reproducible retained failures.",
   }, "agent_security_testing_and_fuzzing"),
+  lesson("r-a08", "Advanced", "08", "Agent red teaming and adversarial evaluation", "Turn an adversary model into a version-bound campaign that tests complete trajectories and admits independently observed policy, state, and effect evidence.", "Run valid, attack, boundary, and failure populations; integrate a real PyRIT target; distinguish blocked from incomplete evidence; compute correct metrics; and retain verified findings as owned regressions.", "roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation", "campaign", {
+    prompt: "A target returns a safe refusal for every attack, but one verifier is unavailable and a provider receipt shows a cross-tenant tool effect. What should the release gate decide?",
+    options: ["READY because the target refused", "INCOMPLETE because the verifier is unavailable", "BLOCKED because verified harm is non-averagable, while retaining the missing verifier as an incomplete-evidence reason"],
+    correct: 2,
+    explanation: "Target text cannot erase a host-observed unauthorized effect. Verified harm blocks release; missing measurement evidence remains visible but does not weaken that blocker.",
+  }, "adversarial_evaluation"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -209,7 +215,7 @@ export const publishedLessons = [
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
-  { level: "Distributed adversaries", range: "01–10", status: "7 published · 1 pilot · 2 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
+  { level: "Distributed adversaries", range: "01–10", status: "8 published · 2 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, and detection." },
   { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
@@ -240,7 +246,7 @@ export const roadmapCourses = [
   road("A05", "05", "Distributed adversaries", "Protocol composition security", "roadmap/advanced/05-protocol-composition-security", "Published", "README · composition gateway · official A2A/MCP/HTTPX adapter · notebook · diagram · tests · checkpoint", "r-a05"),
   road("A06", "06", "Distributed adversaries", "Agent supply-chain security", "roadmap/advanced/06-agent-supply-chain-security", "Published", "README · signed release gate · official Sigstore adapter · notebook · diagram · tests · checkpoint", "r-a06"),
   road("A07", "07", "Distributed adversaries", "Agent security testing and fuzzing", "roadmap/advanced/07-agent-security-testing-and-fuzzing", "Published", "README · security oracle lab · Hypothesis adapter · notebook · diagram · tests · checkpoint", "r-a07"),
-  road("A08", "08", "Distributed adversaries", "Red teaming and adversarial evaluation", "roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation", "Pilot", "README · lab · notebook · needs deeper tests"),
+  road("A08", "08", "Distributed adversaries", "Red teaming and adversarial evaluation", "roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation", "Published", "README · campaign lab · PyRIT adapter · notebook · diagram · tests · checkpoint", "r-a08"),
   road("A09", "09", "Distributed adversaries", "Observability and runtime assurance", "roadmap/advanced/09-agent-security-observability-and-runtime-assurance", "Planned", "Release contract · needs lab, notebook, tests"),
   road("A10", "10", "Distributed adversaries", "Threat hunting and anomaly detection", "roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection", "Planned", "Release contract · needs lab, notebook, tests"),
   road("E01", "01", "Enterprise operations", "Secure long-running agents", "roadmap/enterprise/01-secure-long-running-agents", "Planned", "Release contract · needs lab, notebook, tests"),
