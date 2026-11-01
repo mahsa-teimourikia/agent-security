@@ -60,7 +60,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 
 | Course | Focus |
 | --- | --- |
-| [01](roadmap/enterprise/01-secure-long-running-agents/) | secure long-running agents |
+| [01](roadmap/enterprise/01-secure-long-running-agents/) **Published** | checkpoint integrity vs current authority, short version-bound resume leases, one-owner fencing, heartbeat/orphan handling, unknown-effect reconciliation, OpenAI Agents SDK RunState bridge, notebook, diagram, and tests |
 | [02](roadmap/enterprise/02-kill-switches-revocation-and-safe-degradation/) | kill switches, revocation, and safe degradation |
 | [03](roadmap/enterprise/03-agent-incident-detection-and-containment/) | incident detection and containment |
 | [04](roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay/) | forensics, recovery, and safe replay |

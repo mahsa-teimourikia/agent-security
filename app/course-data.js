@@ -168,6 +168,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "An anomaly score and model summary are candidate evidence, not proof of intent or response authority. Analysts need exact tenant-bound events, features, windows, baselines, and rule/model versions; trusted application policy must then authorize, execute, and verify a narrowly scoped response independently.",
   }, "threat_hunting"),
+  lesson("r-e01", "Enterprise", "01", "Secure long-running agents", "Resume durable agent state only under a fresh, current, short-lived authority lease bound to identity, tenant, intent, policy, credentials, budget, state, time, and one exact effect.", "Enforce one resume owner, heartbeat without extending authority, reject stale leases, detect orphans, preserve unknown provider outcomes, reconcile before retry, and place a real OpenAI Agents SDK RunState behind the application gate.", "roadmap/enterprise/01-secure-long-running-agents", "secure_long_running_agents", {
+    prompt: "A checkpoint signature is valid, but the policy and credential versions stored in it are old and the prior provider call may have committed. What should resume do?",
+    options: ["Reuse the checkpoint approval because its integrity is valid", "Issue a new operation ID and retry so the old call cannot interfere", "Revalidate current identity, policy, intent, credential, budget, and approval; acquire one short lease; then reconcile the original logical operation before any retry"],
+    correct: 2,
+    explanation: "Integrity proves what was stored, not that old authority is current or that an external effect failed. The trusted application must renew present authority, fence one owner, retain the stable logical operation ID, and reconcile authoritative provider state before retry.",
+  }, "secure_long_running_agents"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -227,8 +233,8 @@ export const publishedLessons = [
 export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
-  { level: "Distributed adversaries", range: "01–10", status: "9 published · 1 planned", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, runtime assurance, and detection." },
-  { level: "Enterprise operations", range: "01–09", status: "Pilot labs", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
+  { level: "Distributed adversaries", range: "01–10", status: "10 published", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, runtime assurance, and detection." },
+  { level: "Enterprise operations", range: "01–09", status: "1 published · 4 pilot · 4 planned", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
 const road = (code, number, level, title, folder, status, evidence, lessonId = null) => ({ code, number, level, title, folder, status, evidence, lessonId });
@@ -261,7 +267,7 @@ export const roadmapCourses = [
   road("A08", "08", "Distributed adversaries", "Red teaming and adversarial evaluation", "roadmap/advanced/08-agent-red-teaming-and-adversarial-evaluation", "Published", "README · campaign lab · PyRIT adapter · notebook · diagram · tests · checkpoint", "r-a08"),
   road("A09", "09", "Distributed adversaries", "Observability and runtime assurance", "roadmap/advanced/09-agent-security-observability-and-runtime-assurance", "Published", "README · runtime-assurance lab · OpenTelemetry adapter · notebook · diagram · tests · checkpoint", "r-a09"),
   road("A10", "10", "Distributed adversaries", "Threat hunting and anomaly detection", "roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection", "Published", "README · sequence-hunting lab · pySigma 2 adapter · Sigma rule · notebook · diagram · tests · checkpoint", "r-a10"),
-  road("E01", "01", "Enterprise operations", "Secure long-running agents", "roadmap/enterprise/01-secure-long-running-agents", "Planned", "Release contract · needs lab, notebook, tests"),
+  road("E01", "01", "Enterprise operations", "Secure long-running agents", "roadmap/enterprise/01-secure-long-running-agents", "Published", "README · authority-lease lab · OpenAI Agents SDK RunState adapter · notebook · diagram · tests · checkpoint", "r-e01"),
   road("E02", "02", "Enterprise operations", "Kill switches and safe degradation", "roadmap/enterprise/02-kill-switches-revocation-and-safe-degradation", "Pilot", "README · notebook · needs course adapter and tests"),
   road("E03", "03", "Enterprise operations", "Incident detection and containment", "roadmap/enterprise/03-agent-incident-detection-and-containment", "Pilot", "README · notebook · needs course adapter and tests"),
   road("E04", "04", "Enterprise operations", "Forensics, recovery, and safe replay", "roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay", "Planned", "Release contract · needs lab, notebook, tests"),
