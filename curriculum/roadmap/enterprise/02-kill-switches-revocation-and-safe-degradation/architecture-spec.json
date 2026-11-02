@@ -1,0 +1,48 @@
+{
+  "id": "enterprise-02-kill-switches",
+  "version": "1.0",
+  "title": "Containment Is an Independent, Versioned Authority Change",
+  "subtitle": "Authenticate commands, propagate a monotonic epoch, enforce twice, reconcile effects, and recover under separate approval",
+  "canvas": {"width": 1500, "height": 1180, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "control", "label": "INDEPENDENT INCIDENT CONTROL PLANE", "x": 40, "y": 130, "w": 1420, "h": 260},
+    {"id": "enforcement", "label": "TRUSTED DATA-PLANE ENFORCEMENT", "x": 40, "y": 450, "w": 1420, "h": 300},
+    {"id": "outcome", "label": "EXTERNAL OUTCOME AND SEPARATELY APPROVED RECOVERY", "x": 40, "y": 810, "w": 1420, "h": 260}
+  ],
+  "nodes": [
+    {"id": "detection", "group": "control", "type": "untrusted", "label": "Detection / operator", "detail": "signal is evidence; authenticated operator proposes containment", "x": 90, "y": 205, "w": 250, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "command", "group": "control", "type": "control", "label": "Command gate", "detail": "signature • tenant • incident • exact next epoch • deny priority", "x": 430, "y": 205, "w": 280, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "snapshot", "group": "control", "type": "state", "label": "Immutable snapshot", "detail": "mode • revoked capabilities • blocked destinations • activation time", "x": 800, "y": 205, "w": 290, "h": 120, "padding": 16, "ports": {"in": "left", "schedule": "bottom", "effect": "right"}},
+    {"id": "distribution", "group": "control", "type": "decision", "label": "Authenticated distribution", "detail": "per-point observation • freshness budget • propagation SLO", "x": 1180, "y": 205, "w": 230, "h": 120, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+
+    {"id": "scheduler", "group": "enforcement", "type": "enforcement", "label": "Scheduling gate", "detail": "deny disabled agent and revoked scheduling before queueing", "x": 130, "y": 545, "w": 270, "h": 130, "padding": 16, "ports": {"control": "top", "out": "right"}},
+    {"id": "queue", "group": "enforcement", "type": "untrusted", "label": "Queue / agent proposal", "detail": "request to reconsider; never durable authority", "x": 500, "y": 545, "w": 250, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "gateway", "group": "enforcement", "type": "enforcement", "label": "Effect gateway", "detail": "fresh epoch • identity • tenant • scope • policy • destination", "x": 850, "y": 545, "w": 280, "h": 130, "padding": 16, "ports": {"in": "left", "control": "top", "out": "right"}},
+    {"id": "degrade", "group": "enforcement", "type": "control", "label": "Safe degradation", "detail": "deny consequential effects; retain governed diagnostics", "x": 1210, "y": 545, "w": 210, "h": 130, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+
+    {"id": "provider", "group": "outcome", "type": "untrusted", "label": "External provider", "detail": "cancelable, committed, or response lost after dispatch", "x": 150, "y": 885, "w": 270, "h": 120, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "reconcile", "group": "outcome", "type": "enforcement", "label": "Outcome reconciler", "detail": "stable operation ID • canceled / committed / UNKNOWN", "x": 530, "y": 885, "w": 280, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "recovery", "group": "outcome", "type": "decision", "label": "Recovery gate", "detail": "different approver • expiring single-use plan • new epoch", "x": 930, "y": 885, "w": 270, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "receipt", "group": "outcome", "type": "state", "label": "Evidence receipt", "detail": "activation • propagation • decisions • outcome • recovery", "x": 1280, "y": 885, "w": 150, "h": 120, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "detection_command", "from": "detection", "from_port": "out", "to": "command", "to_port": "in", "kind": "untrusted", "label": "proposed response", "points": [[340, 265], [430, 265]], "label_at": [385, 180]},
+    {"id": "command_snapshot", "from": "command", "from_port": "out", "to": "snapshot", "to_port": "in", "kind": "control", "label": "activate epoch N+1", "points": [[710, 265], [800, 265]], "label_at": [755, 180]},
+    {"id": "snapshot_distribution", "from": "snapshot", "from_port": "effect", "to": "distribution", "to_port": "in", "kind": "control", "label": "signed state", "points": [[1090, 265], [1180, 265]], "label_at": [1135, 180]},
+    {"id": "snapshot_scheduler", "from": "snapshot", "from_port": "schedule", "to": "scheduler", "to_port": "control", "kind": "control", "label": "latest accepted epoch", "points": [[945, 325], [945, 420], [265, 420], [265, 545]], "label_at": [605, 405]},
+    {"id": "distribution_gateway", "from": "distribution", "from_port": "out", "to": "gateway", "to_port": "control", "kind": "control", "label": "fresh snapshot", "points": [[1295, 325], [1295, 420], [990, 420], [990, 545]], "label_at": [1140, 405]},
+    {"id": "scheduler_queue", "from": "scheduler", "from_port": "out", "to": "queue", "to_port": "in", "kind": "enforcement", "label": "bounded work", "points": [[400, 610], [500, 610]], "label_at": [450, 515]},
+    {"id": "queue_gateway", "from": "queue", "from_port": "out", "to": "gateway", "to_port": "in", "kind": "untrusted", "label": "re-authorize effect", "points": [[750, 610], [850, 610]], "label_at": [800, 515]},
+    {"id": "gateway_degrade", "from": "gateway", "from_port": "out", "to": "degrade", "to_port": "in", "kind": "enforcement", "label": "deny or governed read", "points": [[1130, 610], [1210, 610]], "label_at": [1170, 515]},
+    {"id": "degrade_provider", "from": "degrade", "from_port": "out", "to": "provider", "to_port": "in", "kind": "control", "label": "only allowed exact effect", "points": [[1315, 675], [1315, 780], [285, 780], [285, 885]], "label_at": [800, 765]},
+    {"id": "provider_reconcile", "from": "provider", "from_port": "out", "to": "reconcile", "to_port": "in", "kind": "evidence", "label": "receipt or ambiguity", "points": [[420, 945], [530, 945]], "label_at": [475, 860]},
+    {"id": "reconcile_recovery", "from": "reconcile", "from_port": "out", "to": "recovery", "to_port": "in", "kind": "evidence", "label": "verified incident state", "points": [[810, 945], [930, 945]], "label_at": [870, 860]},
+    {"id": "recovery_receipt", "from": "recovery", "from_port": "out", "to": "receipt", "to_port": "in", "kind": "control", "label": "new epoch or denial", "points": [[1200, 945], [1280, 945]], "label_at": [1240, 860]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "An independent incident operator sends an authenticated containment command. A trusted gate validates tenant, incident, signature, and exact next epoch, producing an immutable snapshot. Authenticated distribution feeds both a scheduling gate and an effect gateway with freshness and propagation SLO checks. Queue and agent proposals remain untrusted. Safe degradation denies consequential actions while preserving governed diagnostics. External provider effects are classified by an outcome reconciler as canceled, committed, or unknown. Recovery requires a different approver, an expiring single-use plan, and a new epoch, with receipts preserving evidence."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}

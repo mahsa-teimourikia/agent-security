@@ -56,12 +56,12 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [09](roadmap/advanced/09-agent-security-observability-and-runtime-assurance/) **Published** | authoritative event admission, privacy minimization, trace completeness, policy/effect/approval/budget monitors, explicit healthy/degraded/violated/unknown states, real OpenTelemetry Python SDK adapter, notebook, diagram, and tests |
 | [10](roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection/) | threat hunting and anomaly detection |
 
-## Production / enterprise sequence (pilot labs and planned topics)
+## Production / enterprise sequence (two published topics, pilots, and planned topics)
 
 | Course | Focus |
 | --- | --- |
 | [01](roadmap/enterprise/01-secure-long-running-agents/) **Published** | checkpoint integrity vs current authority, short version-bound resume leases, one-owner fencing, heartbeat/orphan handling, unknown-effect reconciliation, OpenAI Agents SDK RunState bridge, notebook, diagram, and tests |
-| [02](roadmap/enterprise/02-kill-switches-revocation-and-safe-degradation/) | kill switches, revocation, and safe degradation |
+| [02](roadmap/enterprise/02-kill-switches-revocation-and-safe-degradation/) **Published** | independently operated signed control commands, monotonic epochs, scheduling/effect enforcement, stale-state denial, governed diagnostics, in-flight reconciliation, separately approved recovery, OpenFeature adapter, notebook, diagram, and tests |
 | [03](roadmap/enterprise/03-agent-incident-detection-and-containment/) | incident detection and containment |
 | [04](roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay/) | forensics, recovery, and safe replay |
 | [05](roadmap/enterprise/05-security-release-gates-and-production-readiness/) | release gates and production readiness |
