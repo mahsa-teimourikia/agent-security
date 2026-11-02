@@ -1,0 +1,47 @@
+{
+  "id": "enterprise-04-forensics-recovery",
+  "version": "1.0",
+  "title": "Evidence Becomes Recovery Only Through Reconciliation and Current Authority",
+  "subtitle": "Authenticate chronology, validate the checkpoint, reconcile original operation IDs, approve exact replay, and verify provider state",
+  "canvas": {"width": 1500, "height": 1180, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "preserve", "label": "SIGNED EVIDENCE, CHRONOLOGY, AND CHECKPOINT VALIDATION", "x": 40, "y": 130, "w": 1420, "h": 260},
+    {"id": "plan", "label": "PROVIDER RECONCILIATION AND EXACT RECOVERY AUTHORITY", "x": 40, "y": 450, "w": 1420, "h": 300},
+    {"id": "execute", "label": "BOUNDED EFFECT EXECUTION, POSTCONDITIONS, AND HONEST STATE", "x": 40, "y": 810, "w": 1420, "h": 260}
+  ],
+  "nodes": [
+    {"id": "events", "group": "preserve", "type": "untrusted", "label": "Runtime evidence", "detail": "events, timestamps, model summaries, and checkpoints are inputs", "x": 80, "y": 205, "w": 250, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "admission", "group": "preserve", "type": "enforcement", "label": "Evidence admission", "detail": "producer • tenant • Ed25519 • time • sequence • previous digest", "x": 420, "y": 205, "w": 270, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "chronology", "group": "preserve", "type": "decision", "label": "Chronology verifier", "detail": "required IDs • source high-watermarks • gaps • tamper • digest", "x": 780, "y": 205, "w": 270, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "checkpoint", "group": "preserve", "type": "state", "label": "Validated checkpoint", "detail": "case • state • code • containment • effects • chronology binding", "x": 1140, "y": 205, "w": 270, "h": 120, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+
+    {"id": "provider_query", "group": "plan", "type": "untrusted", "label": "Provider query", "detail": "original logical operation ID • committed • failed • absent • unknown", "x": 90, "y": 545, "w": 280, "h": 130, "padding": 16, "ports": {"checkpoint": "top", "out": "right"}},
+    {"id": "classification", "group": "plan", "type": "decision", "label": "Replay classifier", "detail": "skip • allow • reconcile • review • deny; identical intent required", "x": 450, "y": 545, "w": 280, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "approval", "group": "plan", "type": "enforcement", "label": "Exact approval gate", "detail": "plan digest • case version • tenant • policy • subject • expiry • single use", "x": 810, "y": 545, "w": 290, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "authorization", "group": "plan", "type": "control", "label": "Current authorization", "detail": "authenticated actor • current resource • operation • target • policy", "x": 1180, "y": 545, "w": 240, "h": 130, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+
+    {"id": "dispatch", "group": "execute", "type": "untrusted", "label": "Provider effect", "detail": "same logical ID • new attempt ID • may commit then time out", "x": 120, "y": 885, "w": 280, "h": 120, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "verify", "group": "execute", "type": "enforcement", "label": "Postcondition query", "detail": "authoritative state + identical intent; UNKNOWN remains explicit", "x": 520, "y": 885, "w": 260, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "outcome", "group": "execute", "type": "state", "label": "Recovery outcome", "detail": "recovered or recovery-incomplete; model text cannot decide", "x": 900, "y": 885, "w": 290, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "replan", "group": "execute", "type": "decision", "label": "Reconcile + replan", "detail": "new case version and approval; never blind retry", "x": 1290, "y": 885, "w": 140, "h": 120, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "events_admission", "from": "events", "from_port": "out", "to": "admission", "to_port": "in", "kind": "untrusted", "label": "raw evidence", "points": [[330, 265], [420, 265]], "label_at": [375, 180]},
+    {"id": "admission_chronology", "from": "admission", "from_port": "out", "to": "chronology", "to_port": "in", "kind": "evidence", "label": "admitted chain", "points": [[690, 265], [780, 265]], "label_at": [735, 180]},
+    {"id": "chronology_checkpoint", "from": "chronology", "from_port": "out", "to": "checkpoint", "to_port": "in", "kind": "control", "label": "complete digest", "points": [[1050, 265], [1140, 265]], "label_at": [1095, 180]},
+    {"id": "checkpoint_provider", "from": "checkpoint", "from_port": "out", "to": "provider_query", "to_port": "checkpoint", "kind": "control", "label": "exact pending effects", "points": [[1275, 325], [1275, 420], [230, 420], [230, 545]], "label_at": [750, 405]},
+    {"id": "provider_classification", "from": "provider_query", "from_port": "out", "to": "classification", "to_port": "in", "kind": "evidence", "label": "authoritative state", "points": [[370, 610], [450, 610]], "label_at": [410, 515]},
+    {"id": "classification_approval", "from": "classification", "from_port": "out", "to": "approval", "to_port": "in", "kind": "control", "label": "exact plan", "points": [[730, 610], [810, 610]], "label_at": [770, 515]},
+    {"id": "approval_authorization", "from": "approval", "from_port": "out", "to": "authorization", "to_port": "in", "kind": "enforcement", "label": "single-use authority", "points": [[1100, 610], [1180, 610]], "label_at": [1140, 515]},
+    {"id": "authorization_dispatch", "from": "authorization", "from_port": "out", "to": "dispatch", "to_port": "in", "kind": "control", "label": "allowed original intent", "points": [[1300, 675], [1300, 780], [260, 780], [260, 885]], "label_at": [780, 765]},
+    {"id": "dispatch_verify", "from": "dispatch", "from_port": "out", "to": "verify", "to_port": "in", "kind": "untrusted", "label": "response / timeout", "points": [[400, 945], [520, 945]], "label_at": [460, 860]},
+    {"id": "verify_outcome", "from": "verify", "from_port": "out", "to": "outcome", "to_port": "in", "kind": "evidence", "label": "verified receipt", "points": [[780, 945], [900, 945]], "label_at": [840, 860]},
+    {"id": "outcome_replan", "from": "outcome", "from_port": "out", "to": "replan", "to_port": "in", "kind": "control", "label": "unknown / incomplete", "points": [[1190, 945], [1290, 945]], "label_at": [1240, 860]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "Runtime events, timestamps, summaries, and checkpoints begin as untrusted evidence. Admission authenticates producer and tenant, verifies an Ed25519 signature, time, sequence, and previous digest. A chronology verifier checks required IDs, source high-watermarks, gaps, tampering, and creates a digest bound into the validated checkpoint. The provider is queried with each original logical operation ID. A classifier skips committed effects, permits authoritative absence, or retains reconcile, review, and denial states. An exact single-use approval and current authorization gate precede provider dispatch. The provider may commit then time out, so a separate postcondition query verifies identical intent and authoritative state. Recovery ends recovered or recovery-incomplete; incomplete state requires reconciliation and a new versioned plan rather than blind retry."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}

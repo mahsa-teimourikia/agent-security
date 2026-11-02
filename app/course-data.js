@@ -186,6 +186,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "Approval authorizes exact attempts; it does not prove their effects. Connector responses and model summaries are evidence inputs. Every required postcondition must be independently verified, and unknown outcomes must remain explicit before recovery can proceed.",
   }, "incident_containment"),
+  lesson("r-e04", "Enterprise", "04", "Agent forensics, recovery, and safe replay", "Reconstruct a signed chronology, validate a checkpoint against exact evidence, reconcile ambiguous provider effects, and recover through current authorization and an exact single-use approval.", "Use real Ed25519 signatures, detect source gaps and storage tampering, distinguish workflow replay from effect replay, retain unresolved states, reuse stable logical operation IDs, prevent duplicate timeout-after-commit effects, and verify recovery postconditions.", "roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay", "lab", {
+    prompt: "A prior effect timed out, the provider query is unavailable, and the old policy allowed it. A recovery approver signs a plan using a newly generated idempotency key. What should the boundary do?",
+    options: ["Execute because approval and old policy establish authority", "Retry with the new key because the old outcome is unknown", "Reject the plan, retain reconciliation-required for the original logical ID, restore authoritative evidence, and reauthorize an exact current plan before any dispatch"],
+    correct: 2,
+    explanation: "Unavailable provider state leaves the old effect ambiguous, and a new key can duplicate a commit. Old policy is evidence rather than current authority, while approval cannot repair an unsafe plan or replace provider reconciliation.",
+  }, "forensic_recovery"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -246,7 +252,7 @@ export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "10 published", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, runtime assurance, and detection." },
-  { level: "Enterprise operations", range: "01–09", status: "3 published · 2 pilot · 4 planned", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
+  { level: "Enterprise operations", range: "01–09", status: "4 published · 2 pilot · 3 planned", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
 const road = (code, number, level, title, folder, status, evidence, lessonId = null) => ({ code, number, level, title, folder, status, evidence, lessonId });
@@ -282,7 +288,7 @@ export const roadmapCourses = [
   road("E01", "01", "Enterprise operations", "Secure long-running agents", "roadmap/enterprise/01-secure-long-running-agents", "Published", "README · authority-lease lab · OpenAI Agents SDK RunState adapter · notebook · diagram · tests · checkpoint", "r-e01"),
   road("E02", "02", "Enterprise operations", "Kill switches and safe degradation", "roadmap/enterprise/02-kill-switches-revocation-and-safe-degradation", "Published", "README · versioned control-plane lab · OpenFeature Python SDK adapter · notebook · diagram · tests · checkpoint", "r-e02"),
   road("E03", "03", "Enterprise operations", "Incident detection and containment", "roadmap/enterprise/03-agent-incident-detection-and-containment", "Published", "README · incident control-plane lab · OpenTelemetry Python SDK adapter · notebook · diagram · tests · checkpoint", "r-e03"),
-  road("E04", "04", "Enterprise operations", "Forensics, recovery, and safe replay", "roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay", "Planned", "Release contract · needs lab, notebook, tests"),
+  road("E04", "04", "Enterprise operations", "Forensics, recovery, and safe replay", "roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay", "Published", "README · forensic recovery lab · cryptography Ed25519 adapter · notebook · diagram · tests · checkpoint", "r-e04"),
   road("E05", "05", "Enterprise operations", "Release gates and production readiness", "roadmap/enterprise/05-security-release-gates-and-production-readiness", "Planned", "Release contract · needs lab, notebook, tests"),
   road("E06", "06", "Enterprise operations", "Agent security governance", "roadmap/enterprise/06-agent-security-governance", "Pilot", "README · lab · notebook · needs deeper tests"),
   road("E07", "07", "Enterprise operations", "Enterprise security architecture", "roadmap/enterprise/07-enterprise-agent-security-architecture", "Planned", "Release contract · needs lab, notebook, tests"),
