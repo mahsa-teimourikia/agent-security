@@ -1,0 +1,47 @@
+{
+  "id": "enterprise-03-incident-response",
+  "version": "1.0",
+  "title": "Observable Evidence Becomes Containment Only Through Trusted Gates",
+  "subtitle": "Authenticate signals, version detections, scope the incident, authorize exact actions, verify postconditions, and preserve recovery evidence",
+  "canvas": {"width": 1500, "height": 1180, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "detect", "label": "UNTRUSTED OBSERVATIONS AND TRUSTED EVIDENCE ADMISSION", "x": 40, "y": 130, "w": 1420, "h": 260},
+    {"id": "respond", "label": "TENANT-BOUND INCIDENT AND AUTHORIZED CONTAINMENT", "x": 40, "y": 450, "w": 1420, "h": 300},
+    {"id": "verify", "label": "POSTCONDITION EVIDENCE AND GOVERNED RECOVERY HANDOFF", "x": 40, "y": 810, "w": 1420, "h": 260}
+  ],
+  "nodes": [
+    {"id": "producer", "group": "detect", "type": "untrusted", "label": "Agent / telemetry", "detail": "span attributes and model summary are observations, not authority", "x": 80, "y": 205, "w": 250, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "admission", "group": "detect", "type": "enforcement", "label": "Evidence admission", "detail": "producer • tenant • signature • freshness • schema • dedup", "x": 420, "y": 205, "w": 270, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "detection", "group": "detect", "type": "decision", "label": "Versioned detection", "detail": "rule ID/version • exact evidence IDs • stable fingerprint", "x": 780, "y": 205, "w": 270, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "incident", "group": "detect", "type": "state", "label": "Deduplicated incident", "detail": "accountable state/version • model summary kept non-authoritative", "x": 1140, "y": 205, "w": 270, "h": 120, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+
+    {"id": "scope", "group": "respond", "type": "control", "label": "Asset scope gate", "detail": "tenant • run • agent • credential • queue • destination • complete?", "x": 90, "y": 545, "w": 280, "h": 130, "padding": 16, "ports": {"incident": "top", "out": "right"}},
+    {"id": "plan", "group": "respond", "type": "decision", "label": "Exact plan approval", "detail": "incident version • scope digest • policy • approver • expiry", "x": 450, "y": 545, "w": 280, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "connectors", "group": "respond", "type": "untrusted", "label": "Containment connectors", "detail": "agent • write • credential • destination • queue; may fail or time out", "x": 810, "y": 545, "w": 290, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "postcondition", "group": "respond", "type": "enforcement", "label": "Postcondition verifier", "detail": "success + independent current state; preserve UNKNOWN", "x": 1180, "y": 545, "w": 240, "h": 130, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+
+    {"id": "outcome", "group": "verify", "type": "state", "label": "Incident outcome", "detail": "contained or containment-incomplete; never fabricated success", "x": 120, "y": 885, "w": 280, "h": 120, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "vault", "group": "verify", "type": "state", "label": "Digest-linked evidence", "detail": "admitted signals • decisions • receipts • versions", "x": 520, "y": 885, "w": 260, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "recovery", "group": "verify", "type": "decision", "label": "Recovery handoff gate", "detail": "separate role • root cause • remediation • regression • current policy", "x": 900, "y": 885, "w": 290, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "ready", "group": "verify", "type": "control", "label": "Recovery-ready", "detail": "not resumed; not replayed; not resolved", "x": 1290, "y": 885, "w": 140, "h": 120, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "producer_admission", "from": "producer", "from_port": "out", "to": "admission", "to_port": "in", "kind": "untrusted", "label": "raw signal", "points": [[330, 265], [420, 265]], "label_at": [375, 180]},
+    {"id": "admission_detection", "from": "admission", "from_port": "out", "to": "detection", "to_port": "in", "kind": "evidence", "label": "admitted evidence", "points": [[690, 265], [780, 265]], "label_at": [735, 180]},
+    {"id": "detection_incident", "from": "detection", "from_port": "out", "to": "incident", "to_port": "in", "kind": "control", "label": "versioned alert", "points": [[1050, 265], [1140, 265]], "label_at": [1095, 180]},
+    {"id": "incident_scope", "from": "incident", "from_port": "out", "to": "scope", "to_port": "incident", "kind": "control", "label": "incident ID/version", "points": [[1275, 325], [1275, 420], [230, 420], [230, 545]], "label_at": [750, 405]},
+    {"id": "scope_plan", "from": "scope", "from_port": "out", "to": "plan", "to_port": "in", "kind": "control", "label": "complete exact scope", "points": [[370, 610], [450, 610]], "label_at": [410, 515]},
+    {"id": "plan_connectors", "from": "plan", "from_port": "out", "to": "connectors", "to_port": "in", "kind": "enforcement", "label": "single-use plan", "points": [[730, 610], [810, 610]], "label_at": [770, 515]},
+    {"id": "connectors_postcondition", "from": "connectors", "from_port": "out", "to": "postcondition", "to_port": "in", "kind": "untrusted", "label": "response / timeout", "points": [[1100, 610], [1180, 610]], "label_at": [1140, 515]},
+    {"id": "postcondition_outcome", "from": "postcondition", "from_port": "out", "to": "outcome", "to_port": "in", "kind": "evidence", "label": "verified receipts", "points": [[1300, 675], [1300, 780], [260, 780], [260, 885]], "label_at": [780, 765]},
+    {"id": "outcome_vault", "from": "outcome", "from_port": "out", "to": "vault", "to_port": "in", "kind": "evidence", "label": "state + receipts", "points": [[400, 945], [520, 945]], "label_at": [460, 860]},
+    {"id": "vault_recovery", "from": "vault", "from_port": "out", "to": "recovery", "to_port": "in", "kind": "evidence", "label": "root cause + regression", "points": [[780, 945], [900, 945]], "label_at": [840, 860]},
+    {"id": "recovery_ready", "from": "recovery", "from_port": "out", "to": "ready", "to_port": "in", "kind": "control", "label": "bounded handoff", "points": [[1190, 945], [1290, 945]], "label_at": [1240, 860]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "Agent telemetry and model summaries enter as untrusted observations. An evidence admission gate authenticates the producer and tenant, verifies integrity and freshness, and deduplicates signals. A versioned detector binds exact evidence to a stable alert, and a trusted application opens one versioned incident. An asset gate computes tenant-bounded run, agent, credential, queue, and destination scope. A signed single-use plan authorizes five exact containment connectors. Their responses remain untrusted until independent postconditions produce a contained or containment-incomplete state. A digest-linked vault preserves evidence. A separate recovery role requires root cause, remediation, regression, and current policy to issue a recovery-ready handoff that does not itself resume, replay, or resolve the incident."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}

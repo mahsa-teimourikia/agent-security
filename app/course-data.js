@@ -180,6 +180,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "Queued work is a request, not durable authority. Consequential effects require fresh control state and current authorization at the effect boundary; already dispatched work needs provider-specific cancellation or authoritative reconciliation and may remain unknown.",
   }, "kill_switches"),
+  lesson("r-e03", "Enterprise", "03", "Agent incident detection and containment", "Turn observable agent events into admitted evidence, versioned detection, one tenant-bound incident, exact authorized containment, independently verified postconditions, and a governed recovery handoff.", "Authenticate OpenTelemetry producers without trusting span attributes, reject tamper and delivery conflicts, preserve incomplete scope and connector outcomes, deduplicate incidents, protect an evidence chain, and keep model summaries and recovery readiness from becoming response authority.", "roadmap/enterprise/03-agent-incident-detection-and-containment", "incident_response", {
+    prompt: "A SOAR connector reports success after a signed containment plan runs, but the credential remains usable and the egress postcondition cannot be queried. What incident state is justified?",
+    options: ["Contained because the plan and connector response were valid", "Resolved because the agent also summarized that the threat stopped", "Containment incomplete because required postconditions are unverified; preserve the successful controls and reconcile authoritative state before recovery"],
+    correct: 2,
+    explanation: "Approval authorizes exact attempts; it does not prove their effects. Connector responses and model summaries are evidence inputs. Every required postcondition must be independently verified, and unknown outcomes must remain explicit before recovery can proceed.",
+  }, "incident_containment"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -240,7 +246,7 @@ export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "10 published", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, runtime assurance, and detection." },
-  { level: "Enterprise operations", range: "01–09", status: "2 published · 3 pilot · 4 planned", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
+  { level: "Enterprise operations", range: "01–09", status: "3 published · 2 pilot · 4 planned", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
 const road = (code, number, level, title, folder, status, evidence, lessonId = null) => ({ code, number, level, title, folder, status, evidence, lessonId });
@@ -275,7 +281,7 @@ export const roadmapCourses = [
   road("A10", "10", "Distributed adversaries", "Threat hunting and anomaly detection", "roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection", "Published", "README · sequence-hunting lab · pySigma 2 adapter · Sigma rule · notebook · diagram · tests · checkpoint", "r-a10"),
   road("E01", "01", "Enterprise operations", "Secure long-running agents", "roadmap/enterprise/01-secure-long-running-agents", "Published", "README · authority-lease lab · OpenAI Agents SDK RunState adapter · notebook · diagram · tests · checkpoint", "r-e01"),
   road("E02", "02", "Enterprise operations", "Kill switches and safe degradation", "roadmap/enterprise/02-kill-switches-revocation-and-safe-degradation", "Published", "README · versioned control-plane lab · OpenFeature Python SDK adapter · notebook · diagram · tests · checkpoint", "r-e02"),
-  road("E03", "03", "Enterprise operations", "Incident detection and containment", "roadmap/enterprise/03-agent-incident-detection-and-containment", "Pilot", "README · notebook · needs course adapter and tests"),
+  road("E03", "03", "Enterprise operations", "Incident detection and containment", "roadmap/enterprise/03-agent-incident-detection-and-containment", "Published", "README · incident control-plane lab · OpenTelemetry Python SDK adapter · notebook · diagram · tests · checkpoint", "r-e03"),
   road("E04", "04", "Enterprise operations", "Forensics, recovery, and safe replay", "roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay", "Planned", "Release contract · needs lab, notebook, tests"),
   road("E05", "05", "Enterprise operations", "Release gates and production readiness", "roadmap/enterprise/05-security-release-gates-and-production-readiness", "Planned", "Release contract · needs lab, notebook, tests"),
   road("E06", "06", "Enterprise operations", "Agent security governance", "roadmap/enterprise/06-agent-security-governance", "Pilot", "README · lab · notebook · needs deeper tests"),
