@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1180" viewBox="0 0 1500 1180" role="img" aria-labelledby="title desc">
+<title id="title">Production Authority Requires Exact Evidence and Verified Outcomes</title>
+<desc id="desc">Release artifacts begin as hostile inputs. Pydantic validates shape but does not grant trust. Evidence admission authenticates producer, key, tenant, evidence kind, proof, counts, owner, and time. The exact dossier binds release digest, environment, policy, sources, freshness, and coverage. The release gate distinguishes ready, blocked, and incomplete states and keeps severe failures outside averages. Exceptions are exact, owned, expiring, and cannot cross the non-waivable floor. A plan and separate single-use approval bind the evidence digest, stable target, thresholds, and record version before current authorization permits a canary. Provider state and canary metrics are independently verified. Passing thresholds lead to a verified promotion; failure leads to a verified stable rollback, while uncertain outcomes remain explicit and require reconciliation and a new plan rather than blind retry.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Production Authority Requires Exact Evidence and Verified Outcomes</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Authenticate the dossier, preserve hard blockers, bind exact approval, canary safely, and prove promotion or rollback</text>
+<rect x="40" y="130" width="1420" height="260" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">HOSTILE INPUT, AUTHENTICATED EVIDENCE, AND EXACT DOSSIER</text>
+<rect x="40" y="450" width="1420" height="300" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="482" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">NON-COMPENSABLE GATE, EXACT PLAN, AND CURRENT AUTHORITY</text>
+<rect x="40" y="810" width="1420" height="260" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="842" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">PROGRESSIVE DELIVERY, POSTCONDITIONS, AND VERIFIED ROLLBACK</text>
+<polyline points="330,265 410,265" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="325.0" y="167" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="370" y="180" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">hostile JSON</text>
+<polyline points="670,265 750,265" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="668.25" y="167" width="83.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="710" y="180" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">typed input</text>
+<polyline points="1030,265 1120,265" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="997.5" y="167" width="155.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1075" y="180" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">authenticated artifact</text>
+<polyline points="1265,325 1265,420 240,420 240,545" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="685.5" y="392" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="750" y="405" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">exact evidence set</text>
+<polyline points="380,610 450,610" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="363.5" y="502" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="415" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">named blockers</text>
+<polyline points="730,610 800,610" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="726.5" y="502" width="77.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="765" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">READY only</text>
+<polyline points="1100,610 1170,610" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1060.75" y="502" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1135" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">exact single-use plan</text>
+<polyline points="1295,675 1295,780 270,780 270,885" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="725.25" y="752" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="780" y="765" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">bounded rollout</text>
+<polyline points="420,945 520,945" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="405.5" y="847" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="470" y="860" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">response / timeout</text>
+<polyline points="800,920 850,920 850,900 900,900" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="782.25" y="822" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="850" y="835" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">all thresholds pass</text>
+<polyline points="800,970 850,970 850,1020 900,1020" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="779.0" y="1072" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="850" y="1085" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">failure / incomplete</text>
+<polyline points="1160,1020 1250,1020" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1150.25" y="1072" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1205" y="1085" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">unknown outcome</text>
+<rect x="80" y="205" width="250" height="120" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="205.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Release artifacts</text>
+<text x="205.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">CI JSON • attestations •</text>
+<text x="205.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">evaluations • approvals •</text>
+<text x="205.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">model summaries</text>
+<rect x="410" y="205" width="260" height="120" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="540.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Pydantic adapter</text>
+<text x="540.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">strict fields • enum parsing</text>
+<text x="540.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• extra fields denied; shape</text>
+<text x="540.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">is not trust</text>
+<rect x="750" y="205" width="280" height="120" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="890.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Evidence admission</text>
+<text x="890.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">producer • key • tenant • kind •</text>
+<text x="890.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">proof • counts • owner • time</text>
+<rect x="1120" y="205" width="290" height="120" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1265.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Exact dossier</text>
+<text x="1265.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">release digest • environment •</text>
+<text x="1265.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">policy • sources • freshness •</text>
+<text x="1265.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">coverage</text>
+<rect x="100" y="545" width="280" height="130" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="240.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Release gate</text>
+<text x="240.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">READY • BLOCKED • INCOMPLETE;</text>
+<text x="240.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">severe failures never averaged</text>
+<rect x="450" y="545" width="280" height="130" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="590.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Bounded exception</text>
+<text x="590.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact blocker • release • owner</text>
+<text x="590.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• authority • expiry • non-</text>
+<text x="590.0" y="632" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">waivable floor</text>
+<rect x="800" y="545" width="300" height="130" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="950.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Plan + approval</text>
+<text x="950.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">evidence digest • stable target •</text>
+<text x="950.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">thresholds • version • separation</text>
+<text x="950.0" y="632" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• single use</text>
+<rect x="1170" y="545" width="250" height="130" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="1295.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Current authorization</text>
+<text x="1295.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">operator • tenant •</text>
+<text x="1295.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">environment • autonomy •</text>
+<text x="1295.0" y="632" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">current policy</text>
+<rect x="120" y="885" width="300" height="120" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="270.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Canary provider</text>
+<text x="270.0" y="940" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stable operation ID • response or</text>
+<text x="270.0" y="956" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">timeout •</text>
+<text x="270.0" y="972" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">safety/utility/latency/cost</text>
+<rect x="520" y="885" width="280" height="120" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="660.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Postcondition verifier</text>
+<text x="660.0" y="940" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authoritative candidate and</text>
+<text x="660.0" y="956" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stable digests • exact provider</text>
+<text x="660.0" y="972" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">state</text>
+<rect x="900" y="850" width="260" height="100" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1030.0" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Promoted</text>
+<text x="1030.0" y="905" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">thresholds pass and candidate</text>
+<text x="1030.0" y="921" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest is independently</text>
+<text x="1030.0" y="937" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">verified</text>
+<rect x="900" y="970" width="260" height="100" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1030.0" y="1001" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Rolled back / unknown</text>
+<text x="1030.0" y="1025" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">stable digest verified, or</text>
+<text x="1030.0" y="1041" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">uncertainty retained for</text>
+<text x="1030.0" y="1057" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">reconciliation</text>
+<rect x="1250" y="970" width="180" height="100" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1340.0" y="1001" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Reconcile + replan</text>
+<text x="1340.0" y="1025" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">new evidence,</text>
+<text x="1340.0" y="1041" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">version, plan, and</text>
+<text x="1340.0" y="1057" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">approval; never</text>
+<text x="1340.0" y="1073" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">blind retry</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
