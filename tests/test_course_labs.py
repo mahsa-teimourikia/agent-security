@@ -31,6 +31,7 @@ LABS = [
     "curriculum/roadmap/enterprise/01-secure-long-running-agents/lab.py",
     "curriculum/roadmap/enterprise/02-kill-switches-revocation-and-safe-degradation/lab.py",
     "curriculum/roadmap/enterprise/03-agent-incident-detection-and-containment/lab.py",
+    "curriculum/roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay/lab.py",
     "curriculum/roadmap/enterprise/06-agent-security-governance/lab.py",
     "curriculum/roadmap/enterprise/09-production-secure-agent-capstone/lab.py",
 ]

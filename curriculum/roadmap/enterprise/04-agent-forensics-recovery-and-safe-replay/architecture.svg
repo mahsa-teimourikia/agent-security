@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1180" viewBox="0 0 1500 1180" role="img" aria-labelledby="title desc">
+<title id="title">Evidence Becomes Recovery Only Through Reconciliation and Current Authority</title>
+<desc id="desc">Runtime events, timestamps, summaries, and checkpoints begin as untrusted evidence. Admission authenticates producer and tenant, verifies an Ed25519 signature, time, sequence, and previous digest. A chronology verifier checks required IDs, source high-watermarks, gaps, tampering, and creates a digest bound into the validated checkpoint. The provider is queried with each original logical operation ID. A classifier skips committed effects, permits authoritative absence, or retains reconcile, review, and denial states. An exact single-use approval and current authorization gate precede provider dispatch. The provider may commit then time out, so a separate postcondition query verifies identical intent and authoritative state. Recovery ends recovered or recovery-incomplete; incomplete state requires reconciliation and a new versioned plan rather than blind retry.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Evidence Becomes Recovery Only Through Reconciliation and Current Authority</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Authenticate chronology, validate the checkpoint, reconcile original operation IDs, approve exact replay, and verify provider state</text>
+<rect x="40" y="130" width="1420" height="260" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">SIGNED EVIDENCE, CHRONOLOGY, AND CHECKPOINT VALIDATION</text>
+<rect x="40" y="450" width="1420" height="300" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="482" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">PROVIDER RECONCILIATION AND EXACT RECOVERY AUTHORITY</text>
+<rect x="40" y="810" width="1420" height="260" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="842" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">BOUNDED EFFECT EXECUTION, POSTCONDITIONS, AND HONEST STATE</text>
+<polyline points="330,265 420,265" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="330.0" y="167" width="90.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="375" y="180" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">raw evidence</text>
+<polyline points="690,265 780,265" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="683.5" y="167" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="735" y="180" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">admitted chain</text>
+<polyline points="1050,265 1140,265" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1040.25" y="167" width="109.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1095" y="180" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">complete digest</text>
+<polyline points="1275,325 1275,420 230,420 230,545" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="675.75" y="392" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="750" y="405" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">exact pending effects</text>
+<polyline points="370,610 450,610" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="342.25" y="502" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="410" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">authoritative state</text>
+<polyline points="730,610 810,610" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="731.5" y="502" width="77.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="770" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">exact plan</text>
+<polyline points="1100,610 1180,610" fill="none" stroke="#0B7A75" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1069.0" y="502" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1140" y="515" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#0B7A75">single-use authority</text>
+<polyline points="1300,675 1300,780 260,780 260,885" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="699.25" y="752" width="161.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="780" y="765" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">allowed original intent</text>
+<polyline points="400,945 520,945" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="395.5" y="847" width="129.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="460" y="860" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">response / timeout</text>
+<polyline points="780,945 900,945" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="782.0" y="847" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="840" y="860" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">verified receipt</text>
+<polyline points="1190,945 1290,945" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1169.0" y="847" width="142.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1240" y="860" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">unknown / incomplete</text>
+<rect x="80" y="205" width="250" height="120" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="205.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Runtime evidence</text>
+<text x="205.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">events, timestamps, model</text>
+<text x="205.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">summaries, and checkpoints</text>
+<text x="205.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">are inputs</text>
+<rect x="420" y="205" width="270" height="120" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="555.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Evidence admission</text>
+<text x="555.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">producer • tenant • Ed25519 •</text>
+<text x="555.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">time • sequence • previous</text>
+<text x="555.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest</text>
+<rect x="780" y="205" width="270" height="120" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="915.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Chronology verifier</text>
+<text x="915.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">required IDs • source high-</text>
+<text x="915.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">watermarks • gaps • tamper •</text>
+<text x="915.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">digest</text>
+<rect x="1140" y="205" width="270" height="120" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1275.0" y="236" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Validated checkpoint</text>
+<text x="1275.0" y="260" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">case • state • code •</text>
+<text x="1275.0" y="276" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">containment • effects •</text>
+<text x="1275.0" y="292" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">chronology binding</text>
+<rect x="90" y="545" width="280" height="130" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="230.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Provider query</text>
+<text x="230.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">original logical operation ID •</text>
+<text x="230.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">committed • failed • absent •</text>
+<text x="230.0" y="632" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">unknown</text>
+<rect x="450" y="545" width="280" height="130" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="590.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Replay classifier</text>
+<text x="590.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">skip • allow • reconcile •</text>
+<text x="590.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">review • deny; identical intent</text>
+<text x="590.0" y="632" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">required</text>
+<rect x="810" y="545" width="290" height="130" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="955.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Exact approval gate</text>
+<text x="955.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">plan digest • case version •</text>
+<text x="955.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">tenant • policy • subject •</text>
+<text x="955.0" y="632" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">expiry • single use</text>
+<rect x="1180" y="545" width="240" height="130" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="1300.0" y="576" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Current authorization</text>
+<text x="1300.0" y="600" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authenticated actor •</text>
+<text x="1300.0" y="616" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">current resource •</text>
+<text x="1300.0" y="632" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">operation • target • policy</text>
+<rect x="120" y="885" width="280" height="120" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="260.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Provider effect</text>
+<text x="260.0" y="940" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">same logical ID • new attempt ID</text>
+<text x="260.0" y="956" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• may commit then time out</text>
+<rect x="520" y="885" width="260" height="120" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="650.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Postcondition query</text>
+<text x="650.0" y="940" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authoritative state +</text>
+<text x="650.0" y="956" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">identical intent; UNKNOWN</text>
+<text x="650.0" y="972" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">remains explicit</text>
+<rect x="900" y="885" width="290" height="120" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="1045.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Recovery outcome</text>
+<text x="1045.0" y="940" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">recovered or recovery-incomplete;</text>
+<text x="1045.0" y="956" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">model text cannot decide</text>
+<rect x="1290" y="885" width="140" height="120" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1360.0" y="916" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Reconcile +</text>
+<text x="1360.0" y="935" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">replan</text>
+<text x="1360.0" y="959" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">new case</text>
+<text x="1360.0" y="975" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">version and</text>
+<text x="1360.0" y="991" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">approval;</text>
+<text x="1360.0" y="1007" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">never blind</text>
+<text x="1360.0" y="1023" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">retry</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>
