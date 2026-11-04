@@ -198,6 +198,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "Provenance establishes artifact history, not safe behavior, and reviewer seniority cannot widen the policy floor. A verified cross-tenant effect remains an explicit hard blocker outside averages and requires fresh evidence, plan, and approval after remediation.",
   }, "release_readiness"),
+  lesson("r-e06", "Enterprise", "06", "Agent security governance", "Treat governance as an authenticated lifecycle control plane that binds one exact agent revision, risk tier, evidence set, policy, exception scope, and decision authority.", "Use a strict Pydantic v2 intake adapter, authenticate producer-scoped evidence, invalidate proof after material changes, preserve non-waivable severe blockers, enforce separation and single-use approval, reject stale writers, and make retirement terminal.", "roadmap/enterprise/06-agent-security-governance", "lab", {
+    prompt: "A complete catalog row calls an agent low risk, but deployment discovery finds a new payment tool and production identity. All security evidence predates those changes. May the catalog owner approve production?",
+    options: ["Yes, because inventory completeness and ownership establish governance", "Yes, if the owner documents the new tool after deployment", "No; reconcile the actual authority surface, create a new record revision, reclassify it, collect exact-revision evidence, and require a separate current approval"],
+    correct: 2,
+    explanation: "A catalog row is a claim, not production authority. Material authority changes invalidate the old classification and evidence; trusted policy and accountable decision rights must evaluate the exact new revision before a separate approval can change lifecycle state.",
+  }, "governance_inventory"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -258,7 +264,7 @@ export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "10 published", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, runtime assurance, and detection." },
-  { level: "Enterprise operations", range: "01–09", status: "5 published · 2 pilot · 2 planned", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
+  { level: "Enterprise operations", range: "01–09", status: "6 published · 1 pilot · 2 planned", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
 ];
 
 const road = (code, number, level, title, folder, status, evidence, lessonId = null) => ({ code, number, level, title, folder, status, evidence, lessonId });
@@ -296,7 +302,7 @@ export const roadmapCourses = [
   road("E03", "03", "Enterprise operations", "Incident detection and containment", "roadmap/enterprise/03-agent-incident-detection-and-containment", "Published", "README · incident control-plane lab · OpenTelemetry Python SDK adapter · notebook · diagram · tests · checkpoint", "r-e03"),
   road("E04", "04", "Enterprise operations", "Forensics, recovery, and safe replay", "roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay", "Published", "README · forensic recovery lab · cryptography Ed25519 adapter · notebook · diagram · tests · checkpoint", "r-e04"),
   road("E05", "05", "Enterprise operations", "Release gates and production readiness", "roadmap/enterprise/05-security-release-gates-and-production-readiness", "Published", "README · authenticated release gate · Pydantic v2 adapter · notebook · diagram · tests · checkpoint", "r-e05"),
-  road("E06", "06", "Enterprise operations", "Agent security governance", "roadmap/enterprise/06-agent-security-governance", "Pilot", "README · lab · notebook · needs deeper tests"),
+  road("E06", "06", "Enterprise operations", "Agent security governance", "roadmap/enterprise/06-agent-security-governance", "Published", "README · authenticated governance control plane · Pydantic v2 adapter · notebook · diagram · tests · checkpoint", "r-e06"),
   road("E07", "07", "Enterprise operations", "Enterprise security architecture", "roadmap/enterprise/07-enterprise-agent-security-architecture", "Planned", "Release contract · needs lab, notebook, tests"),
   road("E08", "08", "Enterprise operations", "Architecture review workshop", "roadmap/enterprise/08-agent-security-architecture-review-workshop", "Planned", "Release contract · needs lab, notebook, tests"),
   road("E09", "09", "Enterprise operations", "Production secure-agent capstone", "roadmap/enterprise/09-production-secure-agent-capstone", "Pilot", "README · lab · needs notebook and integrated tests"),
