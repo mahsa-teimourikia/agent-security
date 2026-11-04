@@ -56,7 +56,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [09](roadmap/advanced/09-agent-security-observability-and-runtime-assurance/) **Published** | authoritative event admission, privacy minimization, trace completeness, policy/effect/approval/budget monitors, explicit healthy/degraded/violated/unknown states, real OpenTelemetry Python SDK adapter, notebook, diagram, and tests |
 | [10](roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection/) | threat hunting and anomaly detection |
 
-## Production / enterprise sequence (four published topics, pilots, and planned topics)
+## Production / enterprise sequence (five published topics, pilots, and planned topics)
 
 | Course | Focus |
 | --- | --- |
@@ -64,7 +64,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [02](roadmap/enterprise/02-kill-switches-revocation-and-safe-degradation/) **Published** | independently operated signed control commands, monotonic epochs, scheduling/effect enforcement, stale-state denial, governed diagnostics, in-flight reconciliation, separately approved recovery, OpenFeature adapter, notebook, diagram, and tests |
 | [03](roadmap/enterprise/03-agent-incident-detection-and-containment/) **Published** | authenticated evidence admission, versioned detection, deduplicated incidents, tenant-bounded scope, exact approved containment, verified postconditions, tamper-evident preservation, recovery handoff, OpenTelemetry adapter, notebook, diagram, and tests |
 | [04](roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay/) **Published** | signed evidence admission, per-source chronology and tamper detection, checkpoint validation, provider reconciliation, exact recovery approval, current authorization, stable logical operation IDs, verified replay postconditions, real Ed25519 adapter, notebook, diagram, and tests |
-| [05](roadmap/enterprise/05-security-release-gates-and-production-readiness/) | release gates and production readiness |
+| [05](roadmap/enterprise/05-security-release-gates-and-production-readiness/) **Published** | authenticated exact evidence dossiers, non-compensable severe blockers, bounded risk exceptions, exact single-use release approval, current authorization, verified canary promotion and rollback, Pydantic v2 adapter, notebook, diagram, and tests |
 | [06](roadmap/enterprise/06-agent-security-governance/) | agent security governance |
 | [07](roadmap/enterprise/07-enterprise-agent-security-architecture/) | enterprise security architecture |
 | [08](roadmap/enterprise/08-agent-security-architecture-review-workshop/) | architecture review workshop |

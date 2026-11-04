@@ -1,0 +1,47 @@
+{
+  "id": "enterprise-05-release-readiness",
+  "version": "1.0",
+  "title": "Production Authority Requires Exact Evidence and Verified Outcomes",
+  "subtitle": "Authenticate the dossier, preserve hard blockers, bind exact approval, canary safely, and prove promotion or rollback",
+  "canvas": {"width": 1500, "height": 1180, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "evidence", "label": "HOSTILE INPUT, AUTHENTICATED EVIDENCE, AND EXACT DOSSIER", "x": 40, "y": 130, "w": 1420, "h": 260},
+    {"id": "authority", "label": "NON-COMPENSABLE GATE, EXACT PLAN, AND CURRENT AUTHORITY", "x": 40, "y": 450, "w": 1420, "h": 300},
+    {"id": "delivery", "label": "PROGRESSIVE DELIVERY, POSTCONDITIONS, AND VERIFIED ROLLBACK", "x": 40, "y": 810, "w": 1420, "h": 260}
+  ],
+  "nodes": [
+    {"id": "payloads", "group": "evidence", "type": "untrusted", "label": "Release artifacts", "detail": "CI JSON • attestations • evaluations • approvals • model summaries", "x": 80, "y": 205, "w": 250, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "schema", "group": "evidence", "type": "decision", "label": "Pydantic adapter", "detail": "strict fields • enum parsing • extra fields denied; shape is not trust", "x": 410, "y": 205, "w": 260, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "admission", "group": "evidence", "type": "enforcement", "label": "Evidence admission", "detail": "producer • key • tenant • kind • proof • counts • owner • time", "x": 750, "y": 205, "w": 280, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "dossier", "group": "evidence", "type": "state", "label": "Exact dossier", "detail": "release digest • environment • policy • sources • freshness • coverage", "x": 1120, "y": 205, "w": 290, "h": 120, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "gate", "group": "authority", "type": "decision", "label": "Release gate", "detail": "READY • BLOCKED • INCOMPLETE; severe failures never averaged", "x": 100, "y": 545, "w": 280, "h": 130, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "exception", "group": "authority", "type": "control", "label": "Bounded exception", "detail": "exact blocker • release • owner • authority • expiry • non-waivable floor", "x": 450, "y": 545, "w": 280, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "approval", "group": "authority", "type": "enforcement", "label": "Plan + approval", "detail": "evidence digest • stable target • thresholds • version • separation • single use", "x": 800, "y": 545, "w": 300, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "authorization", "group": "authority", "type": "control", "label": "Current authorization", "detail": "operator • tenant • environment • autonomy • current policy", "x": 1170, "y": 545, "w": 250, "h": 130, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "canary", "group": "delivery", "type": "untrusted", "label": "Canary provider", "detail": "stable operation ID • response or timeout • safety/utility/latency/cost", "x": 120, "y": 885, "w": 300, "h": 120, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "verify", "group": "delivery", "type": "enforcement", "label": "Postcondition verifier", "detail": "authoritative candidate and stable digests • exact provider state", "x": 520, "y": 885, "w": 280, "h": 120, "padding": 16, "ports": {"in": "left", "promote": "right", "rollback": "right"}},
+    {"id": "promote", "group": "delivery", "type": "state", "label": "Promoted", "detail": "thresholds pass and candidate digest is independently verified", "x": 900, "y": 850, "w": 260, "h": 100, "padding": 16, "ports": {"in": "left"}},
+    {"id": "rollback", "group": "delivery", "type": "state", "label": "Rolled back / unknown", "detail": "stable digest verified, or uncertainty retained for reconciliation", "x": 900, "y": 970, "w": 260, "h": 100, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "reconcile", "group": "delivery", "type": "decision", "label": "Reconcile + replan", "detail": "new evidence, version, plan, and approval; never blind retry", "x": 1250, "y": 970, "w": 180, "h": 100, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "payload_schema", "from": "payloads", "from_port": "out", "to": "schema", "to_port": "in", "kind": "untrusted", "label": "hostile JSON", "points": [[330, 265], [410, 265]], "label_at": [370, 180]},
+    {"id": "schema_admission", "from": "schema", "from_port": "out", "to": "admission", "to_port": "in", "kind": "untrusted", "label": "typed input", "points": [[670, 265], [750, 265]], "label_at": [710, 180]},
+    {"id": "admission_dossier", "from": "admission", "from_port": "out", "to": "dossier", "to_port": "in", "kind": "evidence", "label": "authenticated artifact", "points": [[1030, 265], [1120, 265]], "label_at": [1075, 180]},
+    {"id": "dossier_gate", "from": "dossier", "from_port": "out", "to": "gate", "to_port": "in", "kind": "control", "label": "exact evidence set", "points": [[1265, 325], [1265, 420], [240, 420], [240, 545]], "label_at": [750, 405]},
+    {"id": "gate_exception", "from": "gate", "from_port": "out", "to": "exception", "to_port": "in", "kind": "control", "label": "named blockers", "points": [[380, 610], [450, 610]], "label_at": [415, 515]},
+    {"id": "exception_approval", "from": "exception", "from_port": "out", "to": "approval", "to_port": "in", "kind": "control", "label": "READY only", "points": [[730, 610], [800, 610]], "label_at": [765, 515]},
+    {"id": "approval_authorization", "from": "approval", "from_port": "out", "to": "authorization", "to_port": "in", "kind": "enforcement", "label": "exact single-use plan", "points": [[1100, 610], [1170, 610]], "label_at": [1135, 515]},
+    {"id": "authorization_canary", "from": "authorization", "from_port": "out", "to": "canary", "to_port": "in", "kind": "control", "label": "bounded rollout", "points": [[1295, 675], [1295, 780], [270, 780], [270, 885]], "label_at": [780, 765]},
+    {"id": "canary_verify", "from": "canary", "from_port": "out", "to": "verify", "to_port": "in", "kind": "untrusted", "label": "response / timeout", "points": [[420, 945], [520, 945]], "label_at": [470, 860]},
+    {"id": "verify_promote", "from": "verify", "from_port": "promote", "to": "promote", "to_port": "in", "kind": "evidence", "label": "all thresholds pass", "points": [[800, 920], [850, 920], [850, 900], [900, 900]], "label_at": [850, 835]},
+    {"id": "verify_rollback", "from": "verify", "from_port": "rollback", "to": "rollback", "to_port": "in", "kind": "control", "label": "failure / incomplete", "points": [[800, 970], [850, 970], [850, 1020], [900, 1020]], "label_at": [850, 1085]},
+    {"id": "rollback_reconcile", "from": "rollback", "from_port": "out", "to": "reconcile", "to_port": "in", "kind": "control", "label": "unknown outcome", "points": [[1160, 1020], [1250, 1020]], "label_at": [1205, 1085]}
+  ],
+  "output": {
+    "svg": "architecture.svg",
+    "medium": "documentation and notebook",
+    "alt_text": "Release artifacts begin as hostile inputs. Pydantic validates shape but does not grant trust. Evidence admission authenticates producer, key, tenant, evidence kind, proof, counts, owner, and time. The exact dossier binds release digest, environment, policy, sources, freshness, and coverage. The release gate distinguishes ready, blocked, and incomplete states and keeps severe failures outside averages. Exceptions are exact, owned, expiring, and cannot cross the non-waivable floor. A plan and separate single-use approval bind the evidence digest, stable target, thresholds, and record version before current authorization permits a canary. Provider state and canary metrics are independently verified. Passing thresholds lead to a verified promotion; failure leads to a verified stable rollback, while uncertain outcomes remain explicit and require reconciliation and a new plan rather than blind retry."
+  },
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
