@@ -56,7 +56,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [09](roadmap/advanced/09-agent-security-observability-and-runtime-assurance/) **Published** | authoritative event admission, privacy minimization, trace completeness, policy/effect/approval/budget monitors, explicit healthy/degraded/violated/unknown states, real OpenTelemetry Python SDK adapter, notebook, diagram, and tests |
 | [10](roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection/) | threat hunting and anomaly detection |
 
-## Production / enterprise sequence (eight published topics and one pilot)
+## Production / enterprise sequence (nine published topics)
 
 | Course | Focus |
 | --- | --- |
@@ -68,7 +68,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [06](roadmap/enterprise/06-agent-security-governance/) **Published** | versioned agent inventory, producer-authenticated evidence, proportional risk tiers, material-change invalidation, bounded exceptions, non-waivable severe blockers, separate single-use approval, optimistic concurrency, Pydantic v2 adapter, notebook, diagram, and tests |
 | [07](roadmap/enterprise/07-enterprise-agent-security-architecture/) **Published** | multi-zone authority graph, path-level mediation and owner coverage, workload and tenant binding, data/effect/protocol gateways, control-plane resilience, residual-risk closure, real OpenTelemetry adapter, notebook, diagram, and tests |
 | [08](roadmap/enterprise/08-agent-security-architecture-review-workshop/) **Published** | strict review-packet admission, authority/effect path analysis, actionable finding contracts, version-bound evidence, remediation verification, exact review metrics, Pydantic v2 adapter, notebook, diagram, and tests |
-| [09](roadmap/enterprise/09-production-secure-agent-capstone/) | production secure-agent capstone |
+| [09](roadmap/enterprise/09-production-secure-agent-capstone/) **Published** | integrated identity, authorization-aware retrieval, memory and delegation controls, MCP admission, exact approval, idempotent effects, durable reconciliation, kill/recovery epochs, OpenAI Agents SDK and OpenTelemetry adapters, 16-case evaluation, exact release dossier, notebook, diagram, and tests |
 
 The Learning Hub is the authoritative status view. Each course page states its
 current Reading, Pilot, or Planned status and the artifacts still required for
