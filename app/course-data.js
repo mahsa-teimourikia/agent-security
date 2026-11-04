@@ -210,6 +210,12 @@ export const publishedLessons = [
     correct: 2,
     explanation: "mTLS authenticates the shared peer and protects transport; it does not carry exact delegated user/tenant scope or prove resource ownership. Authority can change after planning, so the protected effect boundary must enforce the current request using trusted application state rather than model arguments.",
   }, "enterprise_security_architecture"),
+  lesson("r-e08", "Enterprise", "08", "Agent security architecture review workshop", "Turn a versioned design packet into reproducible, evidence-backed findings by tracing tenant, authority, effect, failure, ownership, and remediation paths.", "Compare a diagram-only baseline with deterministic invariant review, detect direct and encoded bypasses, preserve evidence outage as unknown, verify a versioned repair with current control tests, and report exact precision, severe-gap recall, remediation quality, and reviewer agreement.", "roadmap/enterprise/08-agent-security-architecture-review-workshop", "lab", {
+    prompt: "Two reviewers agree that mTLS and an ‘authorized’ diagram label make a shared-identity refund path safe. What must happen before the finding can close?",
+    options: ["Close it because independent reviewers agree", "Require the refund owner to enforce current identity, tenant/resource ownership, exact capability, approval and idempotency, then admit current negative and postcondition tests", "Ask a model to restate the reviewers’ reasoning"],
+    correct: 1,
+    explanation: "Agreement and diagram labels do not prove authorization or effect behavior. The accountable effect owner must implement the invariant at its boundary, bind evidence to the exact packet version and tenant, and pass an independent re-review before release authority can change.",
+  }, "architecture_review_workshop"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -270,7 +276,7 @@ export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "10 published", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, runtime assurance, and detection." },
-  { level: "Enterprise operations", range: "01–09", status: "7 published · 1 pilot · 1 planned", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone." },
+  { level: "Enterprise operations", range: "01–09", status: "8 published · 1 pilot", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture review, and capstone." },
 ];
 
 const road = (code, number, level, title, folder, status, evidence, lessonId = null) => ({ code, number, level, title, folder, status, evidence, lessonId });
@@ -310,6 +316,6 @@ export const roadmapCourses = [
   road("E05", "05", "Enterprise operations", "Release gates and production readiness", "roadmap/enterprise/05-security-release-gates-and-production-readiness", "Published", "README · authenticated release gate · Pydantic v2 adapter · notebook · diagram · tests · checkpoint", "r-e05"),
   road("E06", "06", "Enterprise operations", "Agent security governance", "roadmap/enterprise/06-agent-security-governance", "Published", "README · authenticated governance control plane · Pydantic v2 adapter · notebook · diagram · tests · checkpoint", "r-e06"),
   road("E07", "07", "Enterprise operations", "Enterprise security architecture", "roadmap/enterprise/07-enterprise-agent-security-architecture", "Published", "README · authority-graph evaluator · effect gateway · OpenTelemetry SDK adapter · notebook · diagram · tests · checkpoint", "r-e07"),
-  road("E08", "08", "Enterprise operations", "Architecture review workshop", "roadmap/enterprise/08-agent-security-architecture-review-workshop", "Planned", "Release contract · needs lab, notebook, tests"),
+  road("E08", "08", "Enterprise operations", "Architecture review workshop", "roadmap/enterprise/08-agent-security-architecture-review-workshop", "Published", "README · evidence-backed review engine · Pydantic v2 adapter · notebook · diagram · tests · checkpoint", "r-e08"),
   road("E09", "09", "Enterprise operations", "Production secure-agent capstone", "roadmap/enterprise/09-production-secure-agent-capstone", "Pilot", "README · lab · needs notebook and integrated tests"),
 ];
