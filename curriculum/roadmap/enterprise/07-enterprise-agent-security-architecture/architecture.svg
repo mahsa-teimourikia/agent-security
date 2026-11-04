@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1120" viewBox="0 0 1500 1120" role="img" aria-labelledby="title desc">
+<title id="title">Mediate Every Authority-Changing Path</title>
+<desc id="desc">An authenticated edge request reaches a bounded orchestrator and tenant-isolated runtime. The model and context can propose but remain untrusted. Every data, effect, and protocol path terminates at a dedicated gateway that enforces workload identity, tenant binding, current policy, evidence, and boundary-specific data or egress controls. A separate highly available identity, policy, and revocation plane produces versioned decisions. Minimized admitted evidence feeds independently operated containment and recovery controls.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="context-stroke"/></marker></defs>
+<rect width="100%" height="100%" fill="#F7F9FC"/>
+<text x="45" y="55" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="#16324F">Mediate Every Authority-Changing Path</text>
+<text x="45" y="91" font-family="Inter,Arial,sans-serif" font-size="16" fill="#52606D">Authenticate identity, bind tenant and capability, enforce current policy, constrain egress, and retain evidence at the owning boundary</text>
+<rect x="40" y="130" width="1420" height="270" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="162" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">REQUEST, ORCHESTRATION, AND TENANT EXECUTION PLANE</text>
+<rect x="40" y="470" width="1420" height="250" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="502" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">DATA, EFFECT, AND PROTOCOL ENFORCEMENT</text>
+<rect x="40" y="790" width="1420" height="220" rx="18" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+<text x="56" y="822" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">INDEPENDENT CONTROL, EVIDENCE, AND RESPONSE PLANE</text>
+<polyline points="330,270 430,270" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="305.75" y="172" width="148.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="380" y="185" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">authenticated request</text>
+<polyline points="690,270 790,270" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="698.25" y="172" width="83.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="740" y="185" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">bounded run</text>
+<polyline points="1050,270 1150,270" fill="none" stroke="#7667E8" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="1051.75" y="172" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1100" y="185" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#7667E8">proposal only</text>
+<polyline points="875,325 875,435 300,435 300,555" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="526.75" y="407" width="96.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="575" y="420" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">customer.read</text>
+<polyline points="920,325 920,450 750,450 750,555" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="783.5" y="422" width="103.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="835" y="435" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">ticket.resolve</text>
+<polyline points="965,325 965,435 1200,435 1200,555" fill="none" stroke="#2F6BFF" stroke-width="2.3" marker-end="url(#arrow)"/>
+<rect x="1041.5" y="407" width="77.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="1080" y="420" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#2F6BFF">mcp.invoke</text>
+<polyline points="490,902 585,902" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="470.25" y="807" width="135.5" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="538" y="820" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">versioned decisions</text>
+<polyline points="915,902 1010,902" fill="none" stroke="#52606D" stroke-width="2.3" marker-end="url(#arrow)" stroke-dasharray="7 5"/>
+<rect x="905.0" y="807" width="116.0" height="18" rx="4" fill="#FFFFFF" fill-opacity="0.94"/>
+<text x="963" y="820" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="650" fill="#52606D">admitted signals</text>
+<rect x="80" y="215" width="250" height="110" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="205.0" y="246" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Edge gateway</text>
+<text x="205.0" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">user/client auth • request</text>
+<text x="205.0" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">context • budget • rate</text>
+<rect x="430" y="215" width="260" height="110" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="560.0" y="246" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Orchestrator</text>
+<text x="560.0" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">bounded plan • capability</text>
+<text x="560.0" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">selection • durable state</text>
+<rect x="790" y="215" width="260" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="920.0" y="246" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Tenant runtime</text>
+<text x="920.0" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">workload identity • isolation</text>
+<text x="920.0" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• attenuated tools</text>
+<rect x="1150" y="215" width="260" height="110" rx="14" fill="#F0EEFF" stroke="#7667E8" stroke-width="2"/>
+<text x="1280.0" y="246" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Model + context</text>
+<text x="1280.0" y="270" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">proposes; retrieved/tool/peer</text>
+<text x="1280.0" y="286" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">content stays untrusted</text>
+<rect x="160" y="555" width="280" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="300.0" y="586" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Data gateway</text>
+<text x="300.0" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">authorize before retrieval •</text>
+<text x="300.0" y="626" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">provenance • lifecycle</text>
+<rect x="610" y="555" width="280" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="750.0" y="586" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Effect gateway</text>
+<text x="750.0" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">exact auth • approval •</text>
+<text x="750.0" y="626" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">idempotency • verification</text>
+<rect x="1060" y="555" width="280" height="110" rx="14" fill="#E5F7F6" stroke="#0B7A75" stroke-width="2"/>
+<text x="1200.0" y="586" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Protocol gateway</text>
+<text x="1200.0" y="610" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">MCP/A2A registry • peer identity</text>
+<text x="1200.0" y="626" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">• egress • validation</text>
+<rect x="160" y="850" width="330" height="105" rx="14" fill="#EAF1FF" stroke="#2F6BFF" stroke-width="2"/>
+<text x="325.0" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Identity + policy + revocation</text>
+<text x="325.0" y="905" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">versioned • highly available •</text>
+<text x="325.0" y="921" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">independently operated</text>
+<rect x="585" y="850" width="330" height="105" rx="14" fill="#FFFFFF" stroke="#52606D" stroke-width="2"/>
+<text x="750.0" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Evidence + observability</text>
+<text x="750.0" y="905" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">admitted receipts • minimized</text>
+<text x="750.0" y="921" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">telemetry • retention</text>
+<rect x="1010" y="850" width="330" height="105" rx="14" fill="#E5F7F6" stroke="#16A3A5" stroke-width="2"/>
+<text x="1175.0" y="881" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#16324F">Containment + recovery</text>
+<text x="1175.0" y="905" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">kill switch • postconditions •</text>
+<text x="1175.0" y="921" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D">separate recovery authority</text>
+<g font-family="Inter,Arial,sans-serif" font-size="12" fill="#52606D"><circle cx="50" cy="880" r="5" fill="#2F6BFF"/><text x="62" y="884">trusted control</text><circle cx="190" cy="880" r="5" fill="#7667E8"/><text x="202" y="884">untrusted data/proposal</text><circle cx="385" cy="880" r="5" fill="#16A3A5"/><text x="397" y="884">decision/enforcement</text></g>
+</svg>

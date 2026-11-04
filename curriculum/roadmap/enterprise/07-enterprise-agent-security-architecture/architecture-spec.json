@@ -1,0 +1,36 @@
+{
+  "id": "enterprise-07-security-architecture",
+  "version": "1.0",
+  "title": "Mediate Every Authority-Changing Path",
+  "subtitle": "Authenticate identity, bind tenant and capability, enforce current policy, constrain egress, and retain evidence at the owning boundary",
+  "canvas": {"width": 1500, "height": 1120, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "data", "label": "REQUEST, ORCHESTRATION, AND TENANT EXECUTION PLANE", "x": 40, "y": 130, "w": 1420, "h": 270},
+    {"id": "effects", "label": "DATA, EFFECT, AND PROTOCOL ENFORCEMENT", "x": 40, "y": 470, "w": 1420, "h": 250},
+    {"id": "control", "label": "INDEPENDENT CONTROL, EVIDENCE, AND RESPONSE PLANE", "x": 40, "y": 790, "w": 1420, "h": 220}
+  ],
+  "nodes": [
+    {"id": "edge", "group": "data", "type": "untrusted", "label": "Edge gateway", "detail": "user/client auth • request context • budget • rate", "x": 80, "y": 215, "w": 250, "h": 110, "padding": 16, "ports": {"out": "right"}},
+    {"id": "orchestrator", "group": "data", "type": "decision", "label": "Orchestrator", "detail": "bounded plan • capability selection • durable state", "x": 430, "y": 215, "w": 260, "h": 110, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "runtime", "group": "data", "type": "enforcement", "label": "Tenant runtime", "detail": "workload identity • isolation • attenuated tools", "x": 790, "y": 215, "w": 260, "h": 110, "padding": 16, "ports": {"in": "left", "data": "bottom", "effect": "bottom", "protocol": "bottom"}},
+    {"id": "model", "group": "data", "type": "untrusted", "label": "Model + context", "detail": "proposes; retrieved/tool/peer content stays untrusted", "x": 1150, "y": 215, "w": 260, "h": 110, "padding": 16, "ports": {"in": "left"}},
+    {"id": "data_gateway", "group": "effects", "type": "enforcement", "label": "Data gateway", "detail": "authorize before retrieval • provenance • lifecycle", "x": 160, "y": 555, "w": 280, "h": 110, "padding": 16, "ports": {"in": "top", "control": "bottom"}},
+    {"id": "effect_gateway", "group": "effects", "type": "enforcement", "label": "Effect gateway", "detail": "exact auth • approval • idempotency • verification", "x": 610, "y": 555, "w": 280, "h": 110, "padding": 16, "ports": {"in": "top", "control": "bottom", "evidence": "bottom"}},
+    {"id": "protocol_gateway", "group": "effects", "type": "enforcement", "label": "Protocol gateway", "detail": "MCP/A2A registry • peer identity • egress • validation", "x": 1060, "y": 555, "w": 280, "h": 110, "padding": 16, "ports": {"in": "top", "control": "bottom"}},
+    {"id": "policy", "group": "control", "type": "control", "label": "Identity + policy + revocation", "detail": "versioned • highly available • independently operated", "x": 160, "y": 850, "w": 330, "h": 105, "padding": 16, "ports": {"out": "right"}},
+    {"id": "evidence", "group": "control", "type": "state", "label": "Evidence + observability", "detail": "admitted receipts • minimized telemetry • retention", "x": 585, "y": 850, "w": 330, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "response", "group": "control", "type": "decision", "label": "Containment + recovery", "detail": "kill switch • postconditions • separate recovery authority", "x": 1010, "y": 850, "w": 330, "h": 105, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "edge_orchestrator", "from": "edge", "from_port": "out", "to": "orchestrator", "to_port": "in", "kind": "untrusted", "label": "authenticated request", "points": [[330, 270], [430, 270]], "label_at": [380, 185]},
+    {"id": "orchestrator_runtime", "from": "orchestrator", "from_port": "out", "to": "runtime", "to_port": "in", "kind": "control", "label": "bounded run", "points": [[690, 270], [790, 270]], "label_at": [740, 185]},
+    {"id": "runtime_model", "from": "runtime", "from_port": "effect", "to": "model", "to_port": "in", "kind": "untrusted", "label": "proposal only", "points": [[1050, 270], [1150, 270]], "label_at": [1100, 185]},
+    {"id": "runtime_data", "from": "runtime", "from_port": "data", "to": "data_gateway", "to_port": "in", "kind": "control", "label": "customer.read", "points": [[875, 325], [875, 435], [300, 435], [300, 555]], "label_at": [575, 420]},
+    {"id": "runtime_effect", "from": "runtime", "from_port": "effect", "to": "effect_gateway", "to_port": "in", "kind": "control", "label": "ticket.resolve", "points": [[920, 325], [920, 450], [750, 450], [750, 555]], "label_at": [835, 435]},
+    {"id": "runtime_protocol", "from": "runtime", "from_port": "protocol", "to": "protocol_gateway", "to_port": "in", "kind": "control", "label": "mcp.invoke", "points": [[965, 325], [965, 435], [1200, 435], [1200, 555]], "label_at": [1080, 420]},
+    {"id": "policy_evidence", "from": "policy", "from_port": "out", "to": "evidence", "to_port": "in", "kind": "evidence", "label": "versioned decisions", "points": [[490, 902], [585, 902]], "label_at": [538, 820]},
+    {"id": "evidence_response", "from": "evidence", "from_port": "out", "to": "response", "to_port": "in", "kind": "evidence", "label": "admitted signals", "points": [[915, 902], [1010, 902]], "label_at": [963, 820]}
+  ],
+  "output": {"svg": "architecture.svg", "medium": "documentation and notebook", "alt_text": "An authenticated edge request reaches a bounded orchestrator and tenant-isolated runtime. The model and context can propose but remain untrusted. Every data, effect, and protocol path terminates at a dedicated gateway that enforces workload identity, tenant binding, current policy, evidence, and boundary-specific data or egress controls. A separate highly available identity, policy, and revocation plane produces versioned decisions. Minimized admitted evidence feeds independently operated containment and recovery controls."},
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}

@@ -56,7 +56,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [09](roadmap/advanced/09-agent-security-observability-and-runtime-assurance/) **Published** | authoritative event admission, privacy minimization, trace completeness, policy/effect/approval/budget monitors, explicit healthy/degraded/violated/unknown states, real OpenTelemetry Python SDK adapter, notebook, diagram, and tests |
 | [10](roadmap/advanced/10-threat-hunting-and-behavioral-anomaly-detection/) | threat hunting and anomaly detection |
 
-## Production / enterprise sequence (six published topics, one pilot, and two planned topics)
+## Production / enterprise sequence (seven published topics, one pilot, and one planned topic)
 
 | Course | Focus |
 | --- | --- |
@@ -66,7 +66,7 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [04](roadmap/enterprise/04-agent-forensics-recovery-and-safe-replay/) **Published** | signed evidence admission, per-source chronology and tamper detection, checkpoint validation, provider reconciliation, exact recovery approval, current authorization, stable logical operation IDs, verified replay postconditions, real Ed25519 adapter, notebook, diagram, and tests |
 | [05](roadmap/enterprise/05-security-release-gates-and-production-readiness/) **Published** | authenticated exact evidence dossiers, non-compensable severe blockers, bounded risk exceptions, exact single-use release approval, current authorization, verified canary promotion and rollback, Pydantic v2 adapter, notebook, diagram, and tests |
 | [06](roadmap/enterprise/06-agent-security-governance/) **Published** | versioned agent inventory, producer-authenticated evidence, proportional risk tiers, material-change invalidation, bounded exceptions, non-waivable severe blockers, separate single-use approval, optimistic concurrency, Pydantic v2 adapter, notebook, diagram, and tests |
-| [07](roadmap/enterprise/07-enterprise-agent-security-architecture/) | enterprise security architecture |
+| [07](roadmap/enterprise/07-enterprise-agent-security-architecture/) **Published** | multi-zone authority graph, path-level mediation and owner coverage, workload and tenant binding, data/effect/protocol gateways, control-plane resilience, residual-risk closure, real OpenTelemetry adapter, notebook, diagram, and tests |
 | [08](roadmap/enterprise/08-agent-security-architecture-review-workshop/) | architecture review workshop |
 | [09](roadmap/enterprise/09-production-secure-agent-capstone/) | production secure-agent capstone |
 
