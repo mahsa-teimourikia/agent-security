@@ -1,0 +1,32 @@
+{
+  "id": "enterprise-06-agent-security-governance",
+  "version": "1.0",
+  "title": "Governance Is an Authenticated Lifecycle Control Plane",
+  "subtitle": "Bind one exact agent revision to admitted evidence, bounded exceptions, separate approval, and verified state",
+  "canvas": {"width": 1500, "height": 940, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "record", "label": "HOSTILE INVENTORY AND AUTHENTICATED EVIDENCE", "x": 40, "y": 130, "w": 1420, "h": 280},
+    {"id": "decision", "label": "VERSIONED DECISION RIGHTS AND LIFECYCLE ENFORCEMENT", "x": 40, "y": 480, "w": 1420, "h": 330}
+  ],
+  "nodes": [
+    {"id": "payload", "group": "record", "type": "untrusted", "label": "Inventory payload", "detail": "tenant • agent • owners • authority • data • dependencies • revision", "x": 80, "y": 220, "w": 270, "h": 120, "padding": 16, "ports": {"out": "right"}},
+    {"id": "schema", "group": "record", "type": "decision", "label": "Pydantic boundary", "detail": "strict types • unknown fields denied; valid shape is not trust", "x": 430, "y": 220, "w": 270, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "admission", "group": "record", "type": "enforcement", "label": "Evidence admission", "detail": "producer • key • tenant • kind • revision • proof • time • conflict", "x": 780, "y": 220, "w": 280, "h": 120, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "set", "group": "record", "type": "state", "label": "Exact evidence set", "detail": "policy/control versions • counts • freshness • severe outcomes", "x": 1140, "y": 220, "w": 270, "h": 120, "padding": 16, "ports": {"in": "left", "out": "bottom"}},
+    {"id": "policy", "group": "decision", "type": "decision", "label": "Governance evaluator", "detail": "risk tier • transition • required evidence • hard blockers", "x": 100, "y": 580, "w": 280, "h": 130, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "exception", "group": "decision", "type": "control", "label": "Bounded exception", "detail": "exact blocker • owner • independent authority • expiry • hard floor", "x": 450, "y": 580, "w": 280, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "approval", "group": "decision", "type": "enforcement", "label": "Current exact approval", "detail": "decision digest • target • revision • separation • single use", "x": 800, "y": 580, "w": 280, "h": 130, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "lifecycle", "group": "decision", "type": "state", "label": "Lifecycle mutation", "detail": "expected revision • optimistic concurrency • terminal retirement", "x": 1150, "y": 580, "w": 260, "h": 130, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "payload_schema", "from": "payload", "from_port": "out", "to": "schema", "to_port": "in", "kind": "untrusted", "label": "hostile JSON", "points": [[350, 280], [430, 280]], "label_at": [390, 195]},
+    {"id": "schema_admission", "from": "schema", "from_port": "out", "to": "admission", "to_port": "in", "kind": "untrusted", "label": "typed claim", "points": [[700, 280], [780, 280]], "label_at": [740, 195]},
+    {"id": "admission_set", "from": "admission", "from_port": "out", "to": "set", "to_port": "in", "kind": "evidence", "label": "admitted proof", "points": [[1060, 280], [1140, 280]], "label_at": [1100, 195]},
+    {"id": "set_policy", "from": "set", "from_port": "out", "to": "policy", "to_port": "in", "kind": "control", "label": "exact revision", "points": [[1275, 340], [1275, 445], [240, 445], [240, 580]], "label_at": [760, 430]},
+    {"id": "policy_exception", "from": "policy", "from_port": "out", "to": "exception", "to_port": "in", "kind": "control", "label": "named blockers", "points": [[380, 645], [450, 645]], "label_at": [415, 555]},
+    {"id": "exception_approval", "from": "exception", "from_port": "out", "to": "approval", "to_port": "in", "kind": "control", "label": "READY only", "points": [[730, 645], [800, 645]], "label_at": [765, 555]},
+    {"id": "approval_lifecycle", "from": "approval", "from_port": "out", "to": "lifecycle", "to_port": "in", "kind": "enforcement", "label": "exact single-use authority", "points": [[1080, 645], [1150, 645]], "label_at": [1115, 555]}
+  ],
+  "output": {"svg": "architecture.svg", "medium": "documentation and notebook", "alt_text": "An inventory payload begins as hostile JSON. Pydantic validates strict shape but does not grant trust. Evidence admission authenticates producer, key, tenant, evidence kind, agent revision, proof, time, and conflicting delivery. The exact evidence set binds policy and control versions, counts, freshness, and severe outcomes. A governance evaluator applies risk tier, transition policy, evidence requirements, and hard blockers. Exceptions are exact, owned, independently approved, expiring, and cannot cross the hard floor. A separate current single-use approval binds the decision digest and target before optimistic-concurrency mutation changes lifecycle state; retirement is terminal."},
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
