@@ -216,6 +216,12 @@ export const publishedLessons = [
     correct: 1,
     explanation: "Agreement and diagram labels do not prove authorization or effect behavior. The accountable effect owner must implement the invariant at its boundary, bind evidence to the exact packet version and tenant, and pass an independent re-review before release authority can change.",
   }, "architecture_review_workshop"),
+  lesson("r-e09", "Enterprise", "09", "Production secure-agent capstone", "Integrate trusted identity, authorization-aware retrieval, scoped memory, attenuated delegation, MCP admission, exact approval, idempotent effects, durable recovery, incident controls, telemetry, and release evidence into one production decision.", "Run declared valid, attack, and failure populations against an application-owned control plane, reconcile unknown effects, exercise a real OpenAI Agents SDK boundary and OpenTelemetry adapter, and distinguish exact technical readiness from deployment authority.", "roadmap/enterprise/09-production-secure-agent-capstone", "lab", {
+    prompt: "An approved case update times out, the provider query is unavailable, and a recovery approver offers a new idempotency key. What should the effect boundary do?",
+    options: ["Retry because approval already established authority", "Use the new key because it cannot collide with the old request", "Preserve reconciliation-required for the original logical operation, restore provider evidence, and only then record the commit or independently authorize one exact new proposal under current policy"],
+    correct: 2,
+    explanation: "The original provider outcome is unknown, so a new key can duplicate a real commit. Approval and recovery authority cannot manufacture postcondition evidence or current effect authorization; reconcile first, then make one exact current decision.",
+  }, "production_secure_agent_capstone"),
   lesson("b1", "Beginner", "01", "Security foundations and tool policy", "Place authorization, approval, budgets, and audit controls at trusted boundaries.", "Design a narrow action contract and prove that unauthorized side effects are rejected.", "beginner/01-tool-policy", "01_tool_policy", {
     prompt: "An SDK validates a submit-claim schema and pauses for approval. What must still happen immediately before execution?",
     options: ["Trust the SDK result", "Reauthorize the authenticated actor, resources, and exact approved arguments under current policy", "Ask the model whether the action is safe"],
@@ -276,7 +282,7 @@ export const roadmapTracks = [
   { level: "Foundation", range: "01–07", status: "7 published", summary: "Trust boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security." },
   { level: "State & execution", range: "01–10", status: "10 published", summary: "Memory, durable state, identity, credentials, sandboxing, egress, poisoned output, RAG, MCP, and approval." },
   { level: "Distributed adversaries", range: "01–10", status: "10 published", summary: "Delegation, cross-agent injection, cascading failures, protocols, supply chain, fuzzing, evaluation, runtime assurance, and detection." },
-  { level: "Enterprise operations", range: "01–09", status: "8 published · 1 pilot", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture review, and capstone." },
+  { level: "Enterprise operations", range: "01–09", status: "9 published", summary: "Long-running agents, revocation, incidents, forensics, release gates, governance, architecture review, and an integrated production secure-agent capstone." },
 ];
 
 const road = (code, number, level, title, folder, status, evidence, lessonId = null) => ({ code, number, level, title, folder, status, evidence, lessonId });
@@ -317,5 +323,5 @@ export const roadmapCourses = [
   road("E06", "06", "Enterprise operations", "Agent security governance", "roadmap/enterprise/06-agent-security-governance", "Published", "README · authenticated governance control plane · Pydantic v2 adapter · notebook · diagram · tests · checkpoint", "r-e06"),
   road("E07", "07", "Enterprise operations", "Enterprise security architecture", "roadmap/enterprise/07-enterprise-agent-security-architecture", "Published", "README · authority-graph evaluator · effect gateway · OpenTelemetry SDK adapter · notebook · diagram · tests · checkpoint", "r-e07"),
   road("E08", "08", "Enterprise operations", "Architecture review workshop", "roadmap/enterprise/08-agent-security-architecture-review-workshop", "Published", "README · evidence-backed review engine · Pydantic v2 adapter · notebook · diagram · tests · checkpoint", "r-e08"),
-  road("E09", "09", "Enterprise operations", "Production secure-agent capstone", "roadmap/enterprise/09-production-secure-agent-capstone", "Pilot", "README · lab · needs notebook and integrated tests"),
+  road("E09", "09", "Enterprise operations", "Production secure-agent capstone", "roadmap/enterprise/09-production-secure-agent-capstone", "Published", "README · integrated control plane · OpenAI Agents SDK and OpenTelemetry adapters · notebook · diagram · 16-case evaluation · tests · checkpoint", "r-e09"),
 ];

@@ -1,0 +1,50 @@
+{
+  "id": "enterprise-09-production-secure-agent-capstone",
+  "version": "1.0",
+  "title": "Production Secure-Agent Authority and Evidence Flow",
+  "subtitle": "Keep proposals separate from authority, verify every effect, reconcile ambiguity, and release only exact evidence",
+  "canvas": {"width": 1560, "height": 1260, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "request", "label": "AUTHENTICATED REQUEST AND ADMITTED EVIDENCE", "x": 40, "y": 130, "w": 1480, "h": 230},
+    {"id": "runtime", "label": "AGENT RUNTIME — PROPOSALS, NOT AUTHORITY", "x": 40, "y": 420, "w": 1480, "h": 230},
+    {"id": "effect", "label": "APPLICATION-OWNED EFFECT AND DURABLE CONTROL PLANE", "x": 40, "y": 710, "w": 1480, "h": 230},
+    {"id": "release", "label": "INDEPENDENT EVIDENCE AND RELEASE DECISION", "x": 40, "y": 1000, "w": 1480, "h": 190}
+  ],
+  "nodes": [
+    {"id": "identity", "group": "request", "type": "control", "label": "Trusted identity + scope", "detail": "user • workload • tenant • case • policy", "x": 80, "y": 195, "w": 280, "h": 105, "padding": 16, "ports": {"out": "right"}},
+    {"id": "retrieval", "group": "request", "type": "enforcement", "label": "Authorize before rank", "detail": "tenant • subject • use • freshness", "x": 455, "y": 195, "w": 280, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "evidence", "group": "request", "type": "untrusted", "label": "Admitted untrusted data", "detail": "documents • memory • tool output", "x": 830, "y": 195, "w": 280, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "grant", "group": "request", "type": "state", "label": "Attenuated grant", "detail": "audience • capability • expiry • epoch", "x": 1205, "y": 195, "w": 270, "h": 105, "padding": 16, "ports": {"in": "left", "down": "bottom"}},
+    {"id": "triage", "group": "runtime", "type": "untrusted", "label": "Triage agent", "detail": "reason • retrieve • draft • route", "x": 120, "y": 485, "w": 280, "h": 105, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "specialist", "group": "runtime", "type": "untrusted", "label": "Specialist handoff", "detail": "bounded drafting under same authority", "x": 500, "y": 485, "w": 280, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "proposal", "group": "runtime", "type": "decision", "label": "Strict action proposal", "detail": "resource • arguments • logical operation ID", "x": 880, "y": 485, "w": 280, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right", "down": "bottom"}},
+    {"id": "approval", "group": "runtime", "type": "control", "label": "Exact separate approval", "detail": "principal • digest • resource • policy • expiry", "x": 1260, "y": 485, "w": 220, "h": 105, "padding": 16, "ports": {"in": "left", "down": "bottom"}},
+    {"id": "gateway", "group": "effect", "type": "enforcement", "label": "Effect gateway", "detail": "identity • grant • MCP • approval • epoch", "x": 100, "y": 775, "w": 300, "h": 105, "padding": 16, "ports": {"proposal": "top", "approval": "right", "out": "right", "kill": "bottom"}},
+    {"id": "provider", "group": "effect", "type": "state", "label": "Case provider", "detail": "idempotent effect • authoritative postcondition", "x": 500, "y": 775, "w": 280, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "durable", "group": "effect", "type": "decision", "label": "Durable state + reconcile", "detail": "checkpoint digest • UNKNOWN • current policy", "x": 880, "y": 775, "w": 280, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "incident", "group": "effect", "type": "control", "label": "Kill + separate recovery", "detail": "monotonic control epoch • stale denial", "x": 1260, "y": 775, "w": 220, "h": 105, "padding": 16, "ports": {"in": "left", "up": "top", "down": "bottom"}},
+    {"id": "telemetry", "group": "release", "type": "state", "label": "Minimized evidence", "detail": "stable IDs • decision • drills • tests", "x": 150, "y": 1045, "w": 300, "h": 100, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "dossier", "group": "release", "type": "state", "label": "Exact candidate dossier", "detail": "producer • tenant • digest • policy • expiry", "x": 630, "y": 1045, "w": 300, "h": 100, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "gate", "group": "release", "type": "control", "label": "Independent release gate", "detail": "READY • BLOCKED • INCOMPLETE; not deploy approval", "x": 1110, "y": 1045, "w": 300, "h": 100, "padding": 16, "ports": {"in": "left"}}
+  ],
+  "edges": [
+    {"id": "identity_retrieval", "from": "identity", "from_port": "out", "to": "retrieval", "to_port": "in", "kind": "control", "label": "trusted scope", "points": [[360, 248], [455, 248]], "label_at": [408, 165]},
+    {"id": "retrieval_evidence", "from": "retrieval", "from_port": "out", "to": "evidence", "to_port": "in", "kind": "evidence", "label": "admitted manifest", "points": [[735, 248], [830, 248]], "label_at": [783, 165]},
+    {"id": "evidence_grant", "from": "evidence", "from_port": "out", "to": "grant", "to_port": "in", "kind": "untrusted", "label": "data, no authority", "points": [[1110, 248], [1205, 248]], "label_at": [1158, 165]},
+    {"id": "grant_triage", "from": "grant", "from_port": "down", "to": "triage", "to_port": "in", "kind": "control", "label": "bounded task context", "points": [[1340, 300], [1340, 390], [260, 390], [260, 485]], "label_at": [800, 375]},
+    {"id": "triage_specialist", "from": "triage", "from_port": "out", "to": "specialist", "to_port": "in", "kind": "untrusted", "label": "handoff proposal", "points": [[400, 538], [500, 538]], "label_at": [450, 455]},
+    {"id": "specialist_proposal", "from": "specialist", "from_port": "out", "to": "proposal", "to_port": "in", "kind": "untrusted", "label": "draft action", "points": [[780, 538], [880, 538]], "label_at": [830, 455]},
+    {"id": "proposal_approval", "from": "proposal", "from_port": "out", "to": "approval", "to_port": "in", "kind": "control", "label": "canonical digest", "points": [[1160, 538], [1260, 538]], "label_at": [1210, 455]},
+    {"id": "proposal_gateway", "from": "proposal", "from_port": "down", "to": "gateway", "to_port": "proposal", "kind": "untrusted", "label": "proposal only", "points": [[1020, 590], [1020, 680], [250, 680], [250, 775]], "label_at": [635, 665]},
+    {"id": "approval_gateway", "from": "approval", "from_port": "down", "to": "gateway", "to_port": "approval", "kind": "control", "label": "exact receipt", "points": [[1370, 590], [1370, 665], [430, 665], [430, 828], [400, 828]], "label_at": [900, 650]},
+    {"id": "gateway_provider", "from": "gateway", "from_port": "out", "to": "provider", "to_port": "in", "kind": "control", "label": "authorized effect", "points": [[400, 828], [500, 828]], "label_at": [450, 745]},
+    {"id": "provider_durable", "from": "provider", "from_port": "out", "to": "durable", "to_port": "in", "kind": "evidence", "label": "confirmed / unknown", "points": [[780, 828], [880, 828]], "label_at": [830, 745]},
+    {"id": "durable_incident", "from": "durable", "from_port": "out", "to": "incident", "to_port": "in", "kind": "control", "label": "resume evidence", "points": [[1160, 828], [1260, 828]], "label_at": [1210, 745]},
+    {"id": "incident_gateway", "from": "incident", "from_port": "up", "to": "gateway", "to_port": "kill", "kind": "control", "label": "epoch revocation", "points": [[1370, 775], [1370, 690], [250, 690], [250, 880]], "label_at": [810, 675]},
+    {"id": "incident_telemetry", "from": "incident", "from_port": "down", "to": "telemetry", "to_port": "in", "kind": "evidence", "label": "decisions + drills", "points": [[1370, 880], [1370, 970], [300, 970], [300, 1045]], "label_at": [835, 955]},
+    {"id": "telemetry_dossier", "from": "telemetry", "from_port": "out", "to": "dossier", "to_port": "in", "kind": "evidence", "label": "authenticated artifacts", "points": [[450, 1095], [630, 1095]], "label_at": [540, 1015]},
+    {"id": "dossier_gate", "from": "dossier", "from_port": "out", "to": "gate", "to_port": "in", "kind": "control", "label": "exact release subject", "points": [[930, 1095], [1110, 1095]], "label_at": [1020, 1015]}
+  ],
+  "output": {"svg": "architecture.svg", "medium": "documentation and notebook", "alt_text": "An authenticated user and workload provide trusted tenant, case, and policy scope to authorization-before-ranking retrieval. Admitted documents, memory, and tool output remain untrusted data. An attenuated grant bounds triage and specialist agents, which produce a strict action proposal and exact separate approval. An application-owned effect gateway rechecks identity, grant, MCP registration, approval, policy, and control epoch before an idempotent provider effect. Durable state reconciles unknown outcomes, while independently authorized kill and recovery advance a monotonic epoch. Minimized decision evidence and drills form an exact-candidate dossier for an independent READY, BLOCKED, or INCOMPLETE technical-readiness gate that is not deployment approval."},
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
