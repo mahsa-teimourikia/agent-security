@@ -1,0 +1,41 @@
+{
+  "id": "enterprise-08-architecture-review-workshop",
+  "version": "1.0",
+  "title": "Architecture Review as an Evidence Loop",
+  "subtitle": "Trace authority and effects, admit current evidence, issue actionable findings, and verify remediation before release",
+  "canvas": {"width": 1500, "height": 1120, "background": "#F7F9FC"},
+  "groups": [
+    {"id": "packet", "label": "UNTRUSTED DESIGN PACKET AND REVIEW SCOPE", "x": 40, "y": 130, "w": 1420, "h": 250},
+    {"id": "review", "label": "DETERMINISTIC REVIEW AND EVIDENCE ADMISSION", "x": 40, "y": 445, "w": 1420, "h": 270},
+    {"id": "closure", "label": "OWNED REMEDIATION, RE-TEST, AND RELEASE DECISION", "x": 40, "y": 780, "w": 1420, "h": 220}
+  ],
+  "nodes": [
+    {"id": "packet_input", "group": "packet", "type": "untrusted", "label": "Versioned design packet", "detail": "assets • flows • owners • tests • tenant scope", "x": 80, "y": 205, "w": 270, "h": 110, "padding": 16, "ports": {"out": "right"}},
+    {"id": "schema", "group": "packet", "type": "enforcement", "label": "Strict schema boundary", "detail": "reject extras • no coercion • stable IDs", "x": 445, "y": 205, "w": 260, "h": 110, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "graph", "group": "packet", "type": "decision", "label": "Authority + effect graph", "detail": "direct • indirect • failure • recovery paths", "x": 800, "y": 205, "w": 270, "h": 110, "padding": 16, "ports": {"in": "left", "out": "right", "down": "bottom"}},
+    {"id": "reviewer", "group": "packet", "type": "untrusted", "label": "Human / model proposals", "detail": "enumerate threats; never grants authority", "x": 1165, "y": 205, "w": 250, "h": 110, "padding": 16, "ports": {"in": "left", "down": "bottom"}},
+    {"id": "evidence", "group": "review", "type": "state", "label": "Evidence admission", "detail": "producer • tenant • subject • version • freshness", "x": 90, "y": 525, "w": 280, "h": 110, "padding": 16, "ports": {"out": "right"}},
+    {"id": "rules", "group": "review", "type": "enforcement", "label": "Versioned invariants", "detail": "tenant • authority • effect • failure • owner", "x": 455, "y": 525, "w": 280, "h": 110, "padding": 16, "ports": {"in": "left", "graph": "top", "out": "right"}},
+    {"id": "findings", "group": "review", "type": "decision", "label": "Actionable findings", "detail": "path • asset • severity • evidence • owner • test", "x": 820, "y": 525, "w": 280, "h": 110, "padding": 16, "ports": {"in": "left", "reviewer": "top", "out": "right", "down": "bottom"}},
+    {"id": "receipt", "group": "review", "type": "control", "label": "Review disposition", "detail": "PASS • BLOCK • UNKNOWN • packet-bound receipt", "x": 1185, "y": 525, "w": 250, "h": 110, "padding": 16, "ports": {"in": "left", "down": "bottom"}},
+    {"id": "owner", "group": "closure", "type": "decision", "label": "Control + risk owners", "detail": "bounded repair • no self-approval", "x": 180, "y": 845, "w": 300, "h": 105, "padding": 16, "ports": {"in": "top", "out": "right"}},
+    {"id": "verify", "group": "closure", "type": "enforcement", "label": "Independent re-test", "detail": "new version • current control evidence • no regression", "x": 600, "y": 845, "w": 300, "h": 105, "padding": 16, "ports": {"in": "left", "out": "right"}},
+    {"id": "release", "group": "closure", "type": "control", "label": "Authorized release gate", "detail": "separate approval • residual risk • retained evidence", "x": 1020, "y": 845, "w": 300, "h": 105, "padding": 16, "ports": {"in": "left", "review": "top"}}
+  ],
+  "edges": [
+    {"id": "packet_schema", "from": "packet_input", "from_port": "out", "to": "schema", "to_port": "in", "kind": "untrusted", "label": "untrusted payload", "points": [[350, 260], [445, 260]], "label_at": [398, 175]},
+    {"id": "schema_graph", "from": "schema", "from_port": "out", "to": "graph", "to_port": "in", "kind": "control", "label": "validated structure", "points": [[705, 260], [800, 260]], "label_at": [753, 175]},
+    {"id": "graph_reviewer", "from": "graph", "from_port": "out", "to": "reviewer", "to_port": "in", "kind": "untrusted", "label": "review context", "points": [[1070, 260], [1165, 260]], "label_at": [1118, 175]},
+    {"id": "graph_rules", "from": "graph", "from_port": "down", "to": "rules", "to_port": "graph", "kind": "control", "label": "typed paths", "points": [[935, 315], [935, 410], [595, 410], [595, 525]], "label_at": [765, 395]},
+    {"id": "evidence_rules", "from": "evidence", "from_port": "out", "to": "rules", "to_port": "in", "kind": "evidence", "label": "admitted proof", "points": [[370, 580], [455, 580]], "label_at": [413, 495]},
+    {"id": "rules_findings", "from": "rules", "from_port": "out", "to": "findings", "to_port": "in", "kind": "control", "label": "violations", "points": [[735, 580], [820, 580]], "label_at": [778, 495]},
+    {"id": "reviewer_findings", "from": "reviewer", "from_port": "down", "to": "findings", "to_port": "reviewer", "kind": "untrusted", "label": "proposals only", "points": [[1290, 315], [1290, 420], [960, 420], [960, 525]], "label_at": [1125, 405]},
+    {"id": "findings_receipt", "from": "findings", "from_port": "out", "to": "receipt", "to_port": "in", "kind": "control", "label": "finding keys", "points": [[1100, 580], [1185, 580]], "label_at": [1143, 495]},
+    {"id": "findings_owner", "from": "findings", "from_port": "down", "to": "owner", "to_port": "in", "kind": "control", "label": "assigned remediation", "points": [[960, 635], [960, 750], [330, 750], [330, 845]], "label_at": [645, 735]},
+    {"id": "owner_verify", "from": "owner", "from_port": "out", "to": "verify", "to_port": "in", "kind": "evidence", "label": "versioned repair", "points": [[480, 898], [600, 898]], "label_at": [540, 815]},
+    {"id": "verify_release", "from": "verify", "from_port": "out", "to": "release", "to_port": "in", "kind": "evidence", "label": "verified closure", "points": [[900, 898], [1020, 898]], "label_at": [960, 815]},
+    {"id": "receipt_release", "from": "receipt", "from_port": "down", "to": "release", "to_port": "review", "kind": "control", "label": "review state; not approval", "points": [[1310, 635], [1310, 745], [1170, 745], [1170, 845]], "label_at": [1240, 730]}
+  ],
+  "output": {"svg": "architecture.svg", "medium": "documentation and notebook", "alt_text": "A versioned but untrusted design packet passes strict schema validation and becomes an authority and effect graph. Human or model reviewers may propose threats, while deterministic versioned invariants consume producer-authenticated, tenant-bound, current evidence. Violations become actionable findings and a packet-bound PASS, BLOCK, or UNKNOWN review receipt. Named control and risk owners make a versioned repair, independent tests admit new evidence, and a separate authorized release gate decides whether to deploy."},
+  "validation": {"no_overlaps": true, "route_around_nodes": true, "min_text_padding": 16, "min_connector_clearance": 12, "verify_port_attachment": true, "verify_contrast": true}
+}
