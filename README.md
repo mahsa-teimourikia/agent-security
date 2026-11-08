@@ -6,57 +6,45 @@ A comprehensive, source-linked curriculum for securing AI agents, agentic workfl
 
 **[Open the Agent Security Learning Hub →](https://mahsa-teimourikia.github.io/agent-security/)**
 
-The Hub is organized into Foundation, Beginner, Intermediate, and Advanced published paths. Each published lesson follows **Learn → Lab → Checkpoint**, links to a credential-free notebook and reusable Python lab, uses a focused checkpoint, and records completion locally in the browser. Roadmap material is shown separately and cannot be marked complete before its runnable artifacts and evaluation are ready.
+The Hub presents the complete 36-course curriculum across Foundation, State and
+Execution, Distributed Adversaries, and Enterprise Operations, alongside the
+compact original path. Every published lesson follows **Learn → Lab →
+Checkpoint**, links to a credential-free notebook and reusable Python lab, uses
+a focused checkpoint, and records completion locally in the browser.
 
 ### Knowledge check
 
 Ready to test your understanding? Take the interactive [Agent Security Knowledge Check](https://mahsa-teimourikia.github.io/agent-security/quiz/) after completing the lessons. It includes multi-select questions, explanations, scoring, and retry support.
 
-## Published curriculum
+## Current 36-course curriculum
 
-### Foundation
+All courses in the expanded sequence have passed the publication gate. Use the
+[complete syllabus](curriculum/README.md) for the course-by-course focus and the
+[course map](COURSE_MAP.md) for navigation between the current and compact
+paths.
 
-| # | Title | Lab | Notebook |
-|---|---|---|---|
-| 01 | [Agent Security Architecture and Trust Boundaries](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/README.md) | [lab.py](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/01-agent-security-architecture-and-trust-boundaries/lab.ipynb) |
-| 02 | [Threat Modeling Agentic Systems](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/README.md) | [lab.py](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/02-threat-modeling-agentic-systems/lab.ipynb) |
-| 03 | [Security Invariants and Blast Radius](curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/README.md) | [lab.py](curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/03-security-invariants-and-blast-radius/lab.ipynb) |
-| 04 | [Secure Tool and Action Interface Design](curriculum/roadmap/beginner/04-secure-tool-and-action-interface-design/README.md) | [lab.py](curriculum/roadmap/beginner/04-secure-tool-and-action-interface-design/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/04-secure-tool-and-action-interface-design/lab.ipynb) |
-| 05 | [Authorization, Approval, and Least Privilege](curriculum/roadmap/beginner/05-authorization-approval-and-least-privilege/README.md) | [lab.py](curriculum/roadmap/beginner/05-authorization-approval-and-least-privilege/lab.py) | [lab.ipynb](curriculum/roadmap/beginner/05-authorization-approval-and-least-privilege/lab.ipynb) |
+| Track | IDs | Courses | Focus |
+|---|---|---:|---|
+| [Foundation](curriculum/README.md#foundation-sequence-seven-published) | F01–F07 | 7 | boundaries, threat models, invariants, narrow tools, authorization, injection, and evidence security |
+| [State and execution](curriculum/README.md#intermediate-sequence-ten-published-topics) | I01–I10 | 10 | memory, durable state, identity, credentials, sandboxing, egress, RAG, MCP, and human review |
+| [Distributed adversaries](curriculum/README.md#advanced-sequence-ten-published-topics) | A01–A10 | 10 | delegation, cross-agent attacks, cascading failures, protocols, supply chain, testing, assurance, and hunting |
+| [Enterprise operations](curriculum/README.md#production--enterprise-sequence-nine-published-topics) | E01–E09 | 9 | long-running agents, revocation, incidents, forensics, release gates, governance, architecture, and capstone |
 
-### Beginner
+## Compact original path
 
-| # | Title | Lab | Notebook |
-|---|---|---|---|
-| 01 | [Security Foundations and Tool Policy](curriculum/beginner/01-tool-policy/README.md) | [01_tool_policy.py](curriculum/beginner/01-tool-policy/01_tool_policy.py) | [01_tool_policy.ipynb](curriculum/beginner/01-tool-policy/01_tool_policy.ipynb) |
-| 02 | Prompt Injection and Untrusted Content | [02_prompt_injection.py](curriculum/beginner/02-prompt-injection/02_prompt_injection.py) | [02_prompt_injection.ipynb](curriculum/beginner/02-prompt-injection/02_prompt_injection.ipynb) |
-| 03 | Secure Research Agent | [03_secure_research_agent.py](curriculum/beginner/03-secure-research-agent/03_secure_research_agent.py) | [03_secure_research_agent.ipynb](curriculum/beginner/03-secure-research-agent/03_secure_research_agent.ipynb) |
+The original nine-course path remains published for learners who want a shorter
+route through the core controls. Its README chapters, reusable labs, and
+notebooks are linked in the [course map](COURSE_MAP.md#compact-legacy-path).
 
-### Intermediate
-
-| # | Title | Lab |
-|---|---|---|
-| 01 | Identity Propagation and Memory Security | [01_identity_propagation.py](curriculum/intermediate/01-identity-propagation/01_identity_propagation.py) |
-| 02 | MCP Gateway Security | [02_mcp_gateway.py](curriculum/intermediate/02-mcp-gateway/02_mcp_gateway.py) |
-| 03 | Incident Response and Recovery | [03_incident_recovery.py](curriculum/intermediate/03-incident-recovery/03_incident_recovery.py) |
-
-### Advanced
-
-| # | Title | Lab |
-|---|---|---|
-| 01 | Security Attack Evaluation | [01_attack_evaluation.py](curriculum/advanced/01-attack-evaluation/01_attack_evaluation.py) |
-| 02 | Multi-Agent Delegation and Security | [02_multi_agent_security.py](curriculum/advanced/02-multi-agent-security/02_multi_agent_security.py) |
-| 03 | Governance and Production Readiness | [03_production_gate.py](curriculum/advanced/03-production-gate/03_production_gate.py) |
-
-## 36-course expansion roadmap
-
-The [AI Agent Security Engineering expansion map](curriculum/README.md) grows the published path across state and identity, execution and egress, MCP/A2A and multi-agent security, runtime assurance, incident operations, governance, and enterprise architecture. The Learning Hub lists each course’s current status and the exact gate remaining before publication.
-
-Roadmap pages are intentionally labelled as reading sequences or pilot labs. A roadmap entry becomes published only when its chapter, credential-free notebook, reusable lab, failure injection, evaluation, production guidance, and focused checkpoint run together.
+| Level | Courses | Focus |
+|---|---:|---|
+| Beginner | 3 | tool policy, prompt injection containment, and secure research |
+| Intermediate | 3 | identity propagation, MCP gateway security, and incident recovery |
+| Advanced | 3 | attack evaluation, multi-agent delegation, and production readiness |
 
 ## Running locally
 
-The core labs use only the Python standard library and deterministic fixtures. No credentials, API keys, or cloud services are required.
+The core labs use deterministic fixtures and have a credential-free path. No API keys or cloud services are required.
 
 ```bash
 # Run Lesson 01 scenario evaluation

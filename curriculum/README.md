@@ -1,10 +1,10 @@
-# AI Agent Security Engineering expansion roadmap
+# AI Agent Security Engineering curriculum
 
-This map defines the next 36-course learning path. Course numbers restart at
+This map defines the complete published 36-course learning path. Course numbers restart at
 `01` within each level; the Learning Hub prefixes them with `F`, `I`, `A`, or
-`E` when a globally unique label is useful. The currently published course
-catalog remains listed in the repository root and Learning Hub while the remaining
-topics pass their delivery gates. The expansion follows one
+`E` when a globally unique label is useful. The compact original curriculum
+remains available from the repository root and [course map](../COURSE_MAP.md).
+The 36-course sequence follows one
 enterprise research-and-support scenario: an apparently helpful agent gains
 RAG, memory, tool access, a specialist, MCP, durable state, and eventually
 production authority. Each stage adds a trust boundary and an attack that must
@@ -70,9 +70,10 @@ notebook, focused tests, and a Learning Hub checkpoint.
 | [08](roadmap/enterprise/08-agent-security-architecture-review-workshop/) **Published** | strict review-packet admission, authority/effect path analysis, actionable finding contracts, version-bound evidence, remediation verification, exact review metrics, Pydantic v2 adapter, notebook, diagram, and tests |
 | [09](roadmap/enterprise/09-production-secure-agent-capstone/) **Published** | integrated identity, authorization-aware retrieval, memory and delegation controls, MCP admission, exact approval, idempotent effects, durable reconciliation, kill/recovery epochs, OpenAI Agents SDK and OpenTelemetry adapters, 16-case evaluation, exact release dossier, notebook, diagram, and tests |
 
-The Learning Hub is the authoritative status view. Each course page states its
-current Reading, Pilot, or Planned status and the artifacts still required for
-promotion.
+All 36 courses have passed the publication gate. Each owns a substantive
+chapter, credential-free reusable lab, executable notebook, focused tests, and
+a Learning Hub checkpoint. The [Learning Hub](https://mahsa-teimourikia.github.io/agent-security/)
+is the authoritative interactive catalog.
 
 ## Shared lab
 
@@ -88,5 +89,5 @@ receipts. It does not expose private model reasoning.
 
 The runtime lab adds delegation attenuation, resolved-address egress checks,
 checkpoint resume checks, idempotent effects, revocation, and release-gate
-evidence. It is a shared pilot baseline for several courses; sharing it does not
-by itself make a roadmap topic complete.
+evidence. It remains a shared reference baseline; every published course still
+owns its course-specific implementation, evaluation, notebook, and tests.
