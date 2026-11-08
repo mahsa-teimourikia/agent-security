@@ -31,7 +31,11 @@ valid task that must remain usable. Report severe cases outside averages.
 
 ## Local validation
 
+Use Node.js 20.19+ or 22.12+ for the Learning Hub tooling. The checked-in
+`.nvmrc` selects the same Node 22 line used by CI.
+
 ```bash
+nvm use
 python3 -m venv .venv
 .venv/bin/pip install -e '.[contributor]'
 npm ci
