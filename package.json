@@ -11,8 +11,8 @@
     "check:pages-links": "node scripts/validate-learning-links.mjs"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "vite": "^8.3.6"
