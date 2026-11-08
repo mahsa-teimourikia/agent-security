@@ -37,8 +37,11 @@ Use Node.js 20.19+ or 22.12+ for the Learning Hub tooling. The checked-in
 ```bash
 nvm use
 python3 -m venv .venv
+.venv/bin/pip install --upgrade pip 'setuptools>=84.1.0'
 .venv/bin/pip install -e '.[contributor]'
 npm ci
+.venv/bin/python -m pip_audit
+npm audit --audit-level=high
 PYTHONPATH=. .venv/bin/pytest -q
 PYTHONPATH=. .venv/bin/python scripts/execute-notebooks.py --timeout 90
 npm run test:pages
