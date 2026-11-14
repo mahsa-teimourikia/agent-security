@@ -278,7 +278,7 @@ purpose, budget, and audit path.
 | Google Workload Identity Federation | exchanges external OIDC/SAML/AWS credentials for short-lived Google credentials | use immutable claims, tenant conditions, exact audiences, and collision-resistant mappings |
 | AWS STS role chaining and source identity | temporary role sessions and original-identity attribution | source identity improves audit attribution; it does not grant resource permission |
 | OPA/Rego or Cedar | deterministic application authorization from typed facts | policy input must be authenticated, current, tenant-bound, and evaluated at the resource boundary |
-| OpenAI Agents SDK 0.22.x | typed `RunContextWrapper` and strict tools | runtime context can carry trusted services; the application still owns identity, grants, and resource authorization |
+| OpenAI Agents SDK 0.22.2–0.24.x | typed `RunContextWrapper` and strict tools | runtime context can carry trusted services; the application still owns identity, grants, and resource authorization |
 
 ### Established, emerging, and open
 

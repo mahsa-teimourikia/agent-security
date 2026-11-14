@@ -222,7 +222,7 @@ distributed network offers magical exactly-once delivery.
 
 | Runtime or SDK | Durable mechanism | Security boundary to add or verify |
 | --- | --- | --- |
-| OpenAI Agents SDK 0.22.x | `RunState.to_json()` / `from_json()`, interruptions, approve/reject, and resume | serialization reconstructs execution state; the application must authenticate the opaque snapshot, caller, approval decision, current policy, and atomic consumption |
+| OpenAI Agents SDK 0.22.2–0.24.x | `RunState.to_json()` / `from_json()`, interruptions, approve/reject, and resume | serialization reconstructs execution state; the application must authenticate the opaque snapshot, caller, approval decision, current policy, and atomic consumption |
 | OpenAI Agents API | managed agent runs, durable sessions, tool calls, approvals, and recovery | preserve application authorization, data governance, exact effect binding, and provider outcome semantics around the managed runtime |
 | LangGraph | checkpoints by thread, interrupts, retries, and configurable durability modes | pre-interrupt node code can rerun; isolate effects, protect `thread_id`, define checkpointer isolation, and test sync/async durability loss windows |
 | Temporal | event history, deterministic workflow replay, activities, retries, signals/updates, and workflow versioning | keep LLM and external I/O in activities, authorize signals/updates, protect namespaces and payloads, and design activity idempotency/reconciliation |

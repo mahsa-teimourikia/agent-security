@@ -280,7 +280,7 @@ in depth.
 | OpenFGA | relationship tuples, authorization models, checks, conditional relationships | combine fast-changing request attributes and lifecycle deliberately |
 | OAuth 2.0 / RFC 9700 | protected authorization flows, sender constraints, audience and privilege restriction | tokens and scopes do not replace resource authorization |
 | OAuth Rich Authorization Requests / RFC 9396 | structured `authorization_details` for requested authorization | authorization-server consent is not a current application PDP decision |
-| OpenAI Agents SDK 0.22.x | typed function tools and static or dynamic `needs_approval` interruptions | a workflow pause does not replace final application authorization |
+| OpenAI Agents SDK 0.22.2–0.24.x | typed function tools and static or dynamic `needs_approval` interruptions | a workflow pause does not replace final application authorization |
 
 AuthZEN 1.0 defines an interoperable access-evaluation information model and a
 Boolean `decision`. Its optional response context can carry implementation-

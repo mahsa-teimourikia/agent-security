@@ -10,7 +10,7 @@
 - **Prerequisites:** [I02 checkpoint and durable execution security](../../intermediate/02-state-checkpoint-and-durable-execution-security/), [I03 identity and delegated authority](../../intermediate/03-agent-identity-and-delegated-authority/), [I10 human-in-the-loop security](../../intermediate/10-human-in-the-loop-security/), and [A09 runtime assurance](../../advanced/09-agent-security-observability-and-runtime-assurance/)
 - **Primary artifact:** [`secure_long_running_agents.ipynb`](secure_long_running_agents.ipynb)
 - **Reusable implementation:** [`secure_long_running_agents.py`](secure_long_running_agents.py)
-- **Production SDK bridge:** [`sdk_adapter.py`](sdk_adapter.py), using `openai-agents>=0.22.2,<0.23`
+- **Production SDK bridge:** [`sdk_adapter.py`](sdk_adapter.py), using `openai-agents>=0.22.2,<0.25` (validated with 0.24.0)
 - **Checkpoint:** available in the Learning Hub
 
 ## Capability

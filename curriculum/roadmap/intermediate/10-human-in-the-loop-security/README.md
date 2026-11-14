@@ -210,7 +210,7 @@ That mechanism pauses agent execution; the application still owns the security w
 
 SDK approval state can apply to matching tool identities during a resumed run. Treat it as workflow coordination, not a reusable business authorization. Tools with broad argument surfaces—especially shell or patch tools—must not share one sticky approval merely because they share a tool name. Keep consequential tools narrow, bind application approval to exact arguments, and reauthorize each effect.
 
-This repository pins `openai-agents>=0.22.2,<0.23`; the adapter is tested against that supported line. The upstream SDK was at `0.24.0` when this course was reviewed. SDK 0.x APIs can evolve, so pin the deployed version, review release notes, and rerun the adapter tests before upgrading.
+This repository supports `openai-agents>=0.22.2,<0.25`; the current validated environment resolves 0.24.0. SDK 0.x APIs can evolve, so pin the deployed version, review release notes, and rerun the adapter tests before widening the supported range.
 
 ## Exact grant and secure resume
 

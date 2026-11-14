@@ -170,7 +170,7 @@ Trusted code resolves fact values and constructs the final string. Raw CRM prose
 
 ## 7. OpenAI Agents SDK boundary
 
-This repository pins `openai-agents>=0.22.2,<0.23`; the tested environment uses 0.22.3. `sdk_adapter.py` exposes only `case_id` through a strict `function_tool`. Workload, tenant, connector trust, request/result integrity, policy, and allowed actions remain in local application context.
+This repository supports `openai-agents>=0.22.2,<0.25`; the current validated environment resolves 0.24.0. `sdk_adapter.py` exposes only `case_id` through a strict `function_tool`. Workload, tenant, connector trust, request/result integrity, policy, and allowed actions remain in local application context.
 
 The adapter attaches a real tool-output guardrail to the function tool. Current [OpenAI guardrail documentation](https://developers.openai.com/api/docs/guides/agents/guardrails-approvals) distinguishes agent input/output guardrails from tool guardrails: checks around each custom function-tool result belong on the tool, while final-output guardrails apply only to the final agent. The Python SDK’s [guardrail reference](https://openai.github.io/openai-agents-python/guardrails/) also documents that function-tool guardrails can allow, replace, or halt results and do not wrap every hosted or built-in tool surface.
 

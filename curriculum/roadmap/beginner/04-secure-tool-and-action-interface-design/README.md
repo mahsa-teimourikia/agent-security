@@ -222,7 +222,7 @@ provider that supports idempotency and lookup.
 | MCP 2026-07-28 | named tools, input schema, optional output schema, structured content | that a name or annotation is a capability |
 | Pydantic 2 | strict parsing, constraints, generated schema, `extra="forbid"` | application authorization or provider truth |
 | OpenAI function calling | strict function schema and application-controlled execution loop | that a suggested call is authorized |
-| OpenAI Agents SDK 0.22.x | typed tools, strict schema, output schema, approval hooks, guardrails, timeout | that a workflow hook replaces current resource authorization |
+| OpenAI Agents SDK 0.22.2–0.24.x | typed tools, strict schema, output schema, approval hooks, guardrails, timeout | that a workflow hook replaces current resource authorization |
 
 The current MCP tool specification requires servers to validate inputs and
 recommends that clients validate results; it also warns clients to treat tool
