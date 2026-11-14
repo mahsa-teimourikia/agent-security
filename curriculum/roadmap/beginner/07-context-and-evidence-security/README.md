@@ -217,7 +217,7 @@ deterministic.
 | OpenLineage 1.53 | versioned facets for dataset, job, run, field, and transformation lineage | lineage observability does not replace source access control or claim authority |
 | OpenAI Retrieval | vector-store metadata filters and results with chunks, scores, and file origin | similarity is not authority; deletion is eventually consistent |
 | OpenAI citation formatting | stable citable units, source IDs, locators, parsing, and rendering | validate support and admission before display |
-| OpenAI Agents SDK 0.22.x | typed run context and strict function-tool schemas | run context is app-visible state; conversation history is model-visible data |
+| OpenAI Agents SDK 0.22.2–0.24.x | typed run context and strict function-tool schemas | run context is app-visible state; conversation history is model-visible data |
 | RAGChecker | claim-level diagnostics for retrieval and generation behavior | benchmark metrics do not prove tenant isolation, lifecycle, or release safety |
 | ALCE | evaluation of citation correctness and completeness | citation quality is one evaluation axis, not an authorization decision |
 

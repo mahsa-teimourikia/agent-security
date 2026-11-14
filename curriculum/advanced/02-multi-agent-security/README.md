@@ -233,10 +233,10 @@ states that AutoGen is archived and no longer maintained, and directs new
 projects to Microsoft Agent Framework. Treat framework status as changing
 information: verify it again before selecting a production stack.
 
-This repository pins `openai-agents>=0.22.2,<0.23`; the companion was tested
-with 0.22.3 and compatibility-checked against 0.24.0, the latest release at the
-review date. In the current SDK, `is_enabled` runs before handoff arguments are
-parsed, so it cannot authorize fields from those arguments. If authorization
+This repository supports `openai-agents>=0.22.2,<0.25`; the current validated
+environment resolves 0.24.0. In the current SDK, `is_enabled` runs before
+handoff arguments are parsed, so it cannot authorize fields from those
+arguments. If authorization
 depends on parsed input, it must run at the start of `on_handoff` and raise on
 denial; returning normally allows the transfer to continue. Handoff tool-input
 guardrails do not replace this check. The point is not to endorse one

@@ -225,7 +225,7 @@ retry and replication window.
 | Tool or standard | Useful mechanism | Security boundary to add or verify |
 | --- | --- | --- |
 | OpenAI Agents API | managed durable sessions, orchestration, compaction, and recovery for new agent applications | a durable session retains work; it does not define domain memory truth, consent, authority, or retention |
-| OpenAI Agents SDK 0.22.x | code-first agents, strict function tools, run context, and `SQLiteSession` | the SDK is feature complete/maintenance; trusted application policy must still own memory admission and reads |
+| OpenAI Agents SDK 0.22.2–0.24.x | code-first agents, strict function tools, run context, and `SQLiteSession` | the evolving pre-1.0 SDK does not own memory admission or read policy; trusted application policy must enforce both |
 | LangMem | semantic, episodic, and procedural concepts; profile/collection patterns; hot-path/background formation; namespaced stores | model extraction and namespace configuration still need authenticated scope, source authority, consent, deletion, and failure semantics |
 | Mem0 | LLM extraction, vector retrieval, contradiction handling, graph relationships, add/search APIs | evaluate tenant isolation, source binding, sensitive-data policy, correction, retention, and deletion across every configured store |
 | Letta | persistent memory blocks, read-only blocks, attach/detach, and archival tools | attached blocks enter model context; read-write defaults, sharing, access revocation, and destructive edits need explicit governance |
