@@ -452,8 +452,9 @@ valid work blocked, and cost per successful compliant task.
 
 ## 15. OpenAI Agents SDK boundary
 
-The repository pins `openai-agents>=0.22.2,<0.23`; the adapter is exercised with
-0.22.3 in the contributor environment. The real strict `function_tool` exposes:
+The repository supports `openai-agents>=0.22.2,<0.25`; the adapter is exercised
+with 0.24.0 in the current contributor environment. The real strict
+`function_tool` exposes:
 
 ```json
 {"policy_id": "policy:north:7"}

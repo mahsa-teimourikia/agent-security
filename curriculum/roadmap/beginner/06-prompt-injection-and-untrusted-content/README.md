@@ -223,7 +223,7 @@ It materially reduces the paths by which injected content can exfiltrate data.
 | Technology or source | Useful mechanism | Boundary or limitation to preserve |
 | --- | --- | --- |
 | OpenAI agent safety guidance | avoid placing untrusted variables in developer messages; use structured outputs, tool approvals, guardrails, and evals | guardrails are an initial layer, not a guarantee; validate near the effect |
-| OpenAI Agents SDK 0.22.x | input/output guardrails, tool guardrails, strict function tools, approval hooks | input guardrails apply at defined run boundaries; SDK hooks do not create business authority |
+| OpenAI Agents SDK 0.22.2–0.24.x | input/output guardrails, tool guardrails, strict function tools, approval hooks | input guardrails apply at defined run boundaries; SDK hooks do not create business authority |
 | Microsoft Prompt Shields | detection for user-prompt and document attacks, with spotlighting guidance | test language, modality, latency, false positives, and false negatives for the deployment |
 | Google Cloud Model Armor | prompt/response screening, sensitive-data protection, malicious-URL checks, versioned filters, inspect or block modes | documented limits vary by mode, region, modality, encoding, and request shape; inspect logs rather than infer from model behavior |
 | Meta LlamaFirewall / PromptGuard 2 | open security scanners for prompt attacks plus agent-alignment and code checks | classifiers remain one layer and require workload-specific evaluation |

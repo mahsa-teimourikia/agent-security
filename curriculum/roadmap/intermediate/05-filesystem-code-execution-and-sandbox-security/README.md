@@ -176,7 +176,7 @@ Containment does not make output trustworthy. The lab allows one exact report pa
 
 ### SDK and service review
 
-**OpenAI Agents SDK.** This repository pins `openai-agents==0.22.3`; the executable adapter uses its strict `function_tool` schema and keeps identity and policy in application context. Current documentation also describes Sandbox Agents and multiple sandbox client backends. The local Unix client adds no OS confinement, so it is not an appropriate hostile-code boundary. Migrating to a Docker, hosted, or third-party client requires a fresh version and control review.
+**OpenAI Agents SDK.** This repository supports `openai-agents>=0.22.2,<0.25` and validates the current environment with 0.24.0; the executable adapter uses its strict `function_tool` schema and keeps identity and policy in application context. Current documentation also describes Sandbox Agents and multiple sandbox client backends. The local Unix client adds no OS confinement, so it is not an appropriate hostile-code boundary. Migrating to a Docker, hosted, or third-party client requires a fresh version and control review.
 
 **Cloudflare Sandbox SDK.** It provides isolated execution with process, filesystem, session, and networking APIs. Stable timeout behavior must be read carefully: a client-side execution timeout can close the connection without proving the process ended. Current 1.0 preview documentation adds richer process handles and lifecycle controls. Pin the selected channel and test kill, destruction, Internet policy, and retry behavior.
 

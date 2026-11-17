@@ -186,7 +186,7 @@ These settings are necessary, not sufficient: ordinary client construction still
 
 ## 9. SDK boundary: proposal versus authority
 
-The repository pins `openai-agents>=0.22.2,<0.23`. `sdk_adapter.py` uses a real strict `function_tool`; its JSON schema contains only `url`. Authenticated runtime state lives in `RunContextWrapper`, which the [OpenAI Agents SDK documentation](https://openai.github.io/openai-agents-python/context/) describes as local context not sent to the model. The application—not the model—executes tool logic, consistent with OpenAI’s [function calling flow](https://developers.openai.com/api/docs/guides/function-calling).
+The repository supports `openai-agents>=0.22.2,<0.25` and validates the current environment with 0.24.0. `sdk_adapter.py` uses a real strict `function_tool`; its JSON schema contains only `url`. Authenticated runtime state lives in `RunContextWrapper`, which the [OpenAI Agents SDK documentation](https://openai.github.io/openai-agents-python/context/) describes as local context not sent to the model. The application—not the model—executes tool logic, consistent with OpenAI’s [function calling flow](https://developers.openai.com/api/docs/guides/function-calling).
 
 The returned projection excludes grants, approved addresses, peer addresses, workload attestations, and key identifiers. Deny and error are terminal and return no content. The adapter demonstrates framework integration; the deterministic broker remains the security authority.
 

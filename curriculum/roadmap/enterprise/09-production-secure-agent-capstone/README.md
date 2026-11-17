@@ -104,7 +104,7 @@ effect postcondition, or release risk appetite.
 
 | Tool or standard | Use in a production design | What it does **not** prove |
 | --- | --- | --- |
-| OpenAI Agents SDK 0.22.x | typed tools, handoffs, approval interruption, run-state integration | actor authority, tenant ownership, current policy, or provider outcome |
+| OpenAI Agents SDK 0.22.2–0.24.x | typed tools, handoffs, approval interruption, run-state integration | actor authority, tenant ownership, current policy, or provider outcome |
 | MCP Python SDK v2 | protocol transport and typed server/client primitives | that a server, tool, annotation, or result is trusted |
 | Pydantic v2 | strict parsing and rejection of extra/coerced fields | provenance, freshness, authorization, or semantic safety |
 | OpenTelemetry SDK | trace/span emission and collector interoperability | that attributes are complete, authentic, minimized, or release-grade |

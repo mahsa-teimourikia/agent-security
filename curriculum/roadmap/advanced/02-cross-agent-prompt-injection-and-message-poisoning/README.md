@@ -267,9 +267,8 @@ version-sensitive; verify current documentation before deployment.
 
 ### OpenAI Agents SDK behavior used here
 
-This repository pins `openai-agents>=0.22.2,<0.23` and tests with 0.22.3. The
-adapter was also compatibility-checked against 0.24.0, the latest release at
-the review date.
+This repository supports `openai-agents>=0.22.2,<0.25`; the current validated
+environment resolves 0.24.0.
 
 The SDK documentation makes several boundaries explicit:
 

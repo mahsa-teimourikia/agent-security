@@ -342,9 +342,9 @@ version-sensitive; verify the linked documentation before deployment.
 
 ### OpenAI Agents SDK integration
 
-The repository pins `openai-agents>=0.22.2,<0.23` and the course is tested with
-`0.22.3`. `sdk_adapter.py` creates a real strict `function_tool`, but invokes
-it locally without a model or network call.
+The repository supports `openai-agents>=0.22.2,<0.25`; the current validated
+environment resolves 0.24.0. `sdk_adapter.py` creates a real strict
+`function_tool`, but invokes it locally without a model or network call.
 
 The model-facing schema contains one field:
 

@@ -153,16 +153,16 @@ it can actually enforce a decision.
 
 | Tool or SDK | What it contributes | What the application must still own |
 |---|---|---|
-| **OpenAI Agents SDK 0.22.x** | Pydantic-backed function schemas, per-tool `needs_approval`, run-state interruptions, and input/output guardrails for function tools | Identity, tenant/resource authorization, business policy, durable approval storage, and effect verification. Hosted/built-in execution tools do not all pass through the same function-tool guardrail path. |
+| **OpenAI Agents SDK 0.22.2–0.24.x** | Pydantic-backed function schemas, per-tool `needs_approval`, run-state interruptions, and input/output guardrails for function tools | Identity, tenant/resource authorization, business policy, durable approval storage, and effect verification. Hosted/built-in execution tools do not all pass through the same function-tool guardrail path. |
 | **LangChain / LangGraph** | Human-in-the-loop middleware can interrupt selected tools and persist an approve/edit/reject decision through a checkpointer | Reauthorize edited arguments, protect checkpoint state, and enforce policy at the final tool boundary. A workflow pause is not itself authorization. |
 | **Microsoft Agent Framework** | Function-tool approval modes and middleware provide an approval interception point | Keep authorization independent of model instructions and account for differences between locally executed functions and provider-hosted tools. |
 | **Pydantic v2** | Strict validation and JSON Schema generation reduce ambiguous or coercive inputs | Types do not establish identity, ownership, permission, provenance, or human consent. |
 | **Open Policy Agent (OPA)** | A separate policy decision point, structured decisions, decision IDs/logs, REST and WebAssembly integration | The application remains the policy enforcement point; authenticate policy inputs, secure the OPA API, and fail closed on unavailable or invalid decisions. |
 | **Cedar / Casbin** | Cedar supports analyzable authorization policies; Casbin supports established RBAC/ABAC-style enforcement models | Build policy input from trusted identity and resource state, not model-supplied claims; preserve exact action/resource semantics. |
 
-This repository pins `openai-agents` to `>=0.22.2,<0.23` for the lab. The SDK is
-pre-1.0, so a minor-version boundary is treated as an intentional review point
-for public API or behavioral changes.
+This repository supports `openai-agents>=0.22.2,<0.25` for the lab and validates
+the current environment with 0.24.0. The SDK is pre-1.0, so widening the upper
+bound remains an intentional review point for public API or behavioral changes.
 
 ### Design Selection Guide
 
