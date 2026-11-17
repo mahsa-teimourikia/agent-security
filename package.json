@@ -6,9 +6,10 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
+    "audit:node": "node scripts/audit-node-dependencies.mjs",
     "dev": "vite",
     "build:pages": "vite build --config vite.pages.config.ts && node scripts/copy-quiz-to-pages.mjs",
-    "test:hub": "node --test tests/course-registry.test.mjs",
+    "test:hub": "node --test tests/course-registry.test.mjs tests/node-audit-policy.test.mjs",
     "test:pages": "npm run test:hub && npm run build:pages && node tests/pages-smoke.mjs",
     "test:quiz": "node --test quiz/grading.test.mjs quiz/learning.test.mjs",
     "check:pages-links": "node scripts/validate-learning-links.mjs"
